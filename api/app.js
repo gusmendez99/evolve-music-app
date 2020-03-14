@@ -5,7 +5,9 @@ var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
 var indexRouter = require('./routes/index');
-var usersRouter = require('./routes/users');
+var userRouter = require('./routes/user');
+var roleRouter = require('./routes/role');
+var permissionRouter = require('./routes/permission');
 
 var app = express();
 
@@ -20,7 +22,56 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
-app.use('/users', usersRouter);
+
+// Users
+
+app.get('/users', userRouter.getUsers)
+app.get('/users/:id', userRouter.getUserById)
+app.get('/users/:id/permissions', userRouter.getPermissionsByUser)
+app.post('/users', userRouter.createUser)
+app.put('/users/:id', userRouter.updateUser)
+app.delete('/users/:id', userRouter.deleteUser)
+
+// Roles
+
+app.get('/roles', roleRouter.getUsers)
+app.get('/roles/:id', roleRouter.getUserById)
+app.get('/roles/:id/users', roleRouter.getUsersByRole)
+app.post('/roles', roleRouter.createUser)
+app.put('/roles/:id', roleRouter.updateUser)
+app.delete('/roles/:id', roleRouter.deleteUser)
+
+// Permissions
+
+app.get('/permissions', permissionRouter.getUsers)
+app.get('/permissions/:id', permissionRouter.getUserById)
+app.post('/permissions', permissionRouter.createUser)
+app.put('/permissions/:id', permissionRouter.updateUser)
+app.delete('/permissions/:id', permissionRouter.deleteUser)
+
+// RolePermissions
+
+
+
+// Artist
+
+
+// Album
+
+
+// Genre
+
+
+// MediaType
+
+
+// Track
+
+
+
+
+// 
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

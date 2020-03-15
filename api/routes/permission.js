@@ -1,4 +1,4 @@
-import * as db from "../database";
+const db = require("../database");
 
 const GET_PERMISSIONS = "SELECT * FROM AppPermission ORDER BY Name ASC";
 const GET_PERMISSION_BY_ID = "SELECT * FROM AppPermission WHERE PermissionId = $1";

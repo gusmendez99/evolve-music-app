@@ -1,5 +1,6 @@
-import * as db from "../database";
+const db = require("../database");
 
+const LOGIN = "SELECT * FROM AppUser WHERE UserName = $1 AND Password =  LIMIT 1";
 const GET_USERS = "SELECT * FROM AppUser ORDER BY UserName ASC";
 const GET_USER_BY_ID = "SELECT * FROM AppUser WHERE UserId = $1";
 const ADD_USER = "INSERT INTO AppUser (UserName, Password, FirstName, LastName, City, State, Country, PostalCode, Phone, Email, RoleId) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)";
@@ -7,8 +8,6 @@ const UPDATE_USER = "UPDATE AppUser SET UserName=$1, Password=$2, FirstName=$3, 
 const DELETE_USER = "DELETE FROM AppUser WHERE UserId = $1";
 
 const GET_PERMISSIONS_BY_USER_ID = 'SELECT p.* FROM AppUser u INNER JOIN RolePermission rp ON rp.RoleId = u.RoleId INNER JOIN AppPermission p on p.PermissionId = rp.PermissionId WHERE u.UserId = $1 '
-const GET_USERS_BY_ROLE = "SELECT * FROM AppUser WHERE RoleId=$1 ORDER BY UserName ASC";
-
 
 
 const getUsers = (request, response) => {

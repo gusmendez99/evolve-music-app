@@ -34,21 +34,24 @@ app.delete('/users/:id', userRouter.deleteUser)
 
 // Roles
 
-app.get('/roles', roleRouter.getUsers)
-app.get('/roles/:id', roleRouter.getUserById)
+app.get('/roles', roleRouter.getRoles)
+app.get('/roles/:id', roleRouter.getRoleById)
 app.get('/roles/:id/users', roleRouter.getUsersByRole)
-app.post('/roles', roleRouter.createUser)
-app.put('/roles/:id', roleRouter.updateUser)
-app.delete('/roles/:id', roleRouter.deleteUser)
+app.get('/roles/:id/permissions', roleRouter.getPermissionsByRole)
+app.post('/roles', roleRouter.createRole)
+app.post('/roles/:id/permissions', roleRouter.createRolePermission)
+app.put('/roles/:id', roleRouter.updateRole)
+app.delete('/roles/:id', roleRouter.deleteRole)
+app.delete('/roles/:id/permissions/:pid', roleRouter.deleteRolePermission)
 
 // Permissions
 
-app.get('/permissions', permissionRouter.getUsers)
-app.get('/permissions/:id', permissionRouter.getUserById)
-app.post('/permissions', permissionRouter.createUser)
-app.put('/permissions/:id', permissionRouter.updateUser)
-app.delete('/permissions/:id', permissionRouter.deleteUser)
-
+app.get('/permissions', permissionRouter.getPermissions)
+app.get('/permissions/:id', permissionRouter.getPermissionById)
+app.post('/permissions', permissionRouter.createPermission)
+app.put('/permissions/:id', permissionRouter.updatePermission)
+app.delete('/permissions/:id', permissionRouter.deletePermission)
+ 
 // RolePermissions
 
 

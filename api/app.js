@@ -23,8 +23,11 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 
-// Users
+// Login
 
+app.post('/login', userRouter.login)
+
+// Users
 app.get('/users', userRouter.getUsers)
 app.get('/users/:id', userRouter.getUserById)
 app.get('/users/:id/permissions', userRouter.getPermissionsByUser)
@@ -33,7 +36,6 @@ app.put('/users/:id', userRouter.updateUser)
 app.delete('/users/:id', userRouter.deleteUser)
 
 // Roles
-
 app.get('/roles', roleRouter.getRoles)
 app.get('/roles/:id', roleRouter.getRoleById)
 app.get('/roles/:id/users', roleRouter.getUsersByRole)
@@ -45,17 +47,12 @@ app.delete('/roles/:id', roleRouter.deleteRole)
 app.delete('/roles/:id/permissions/:pid', roleRouter.deleteRolePermission)
 
 // Permissions
-
 app.get('/permissions', permissionRouter.getPermissions)
 app.get('/permissions/:id', permissionRouter.getPermissionById)
 app.post('/permissions', permissionRouter.createPermission)
 app.put('/permissions/:id', permissionRouter.updatePermission)
 app.delete('/permissions/:id', permissionRouter.deletePermission)
  
-// RolePermissions
-
-
-
 // Artist
 
 

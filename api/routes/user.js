@@ -9,6 +9,18 @@ const DELETE_USER = "DELETE FROM AppUser WHERE UserId = $1";
 
 const GET_PERMISSIONS_BY_USER_ID = 'SELECT p.* FROM AppUser u INNER JOIN RolePermission rp ON rp.RoleId = u.RoleId INNER JOIN AppPermission p on p.PermissionId = rp.PermissionId WHERE u.UserId = $1 '
 
+const login = (request, response) => {
+
+  const { username, password } = request.body;
+
+  db.query(LOGIN, [username, password ], (error, results) => {
+    if (error) {
+      throw error;
+    }
+    response.status(200).json(results.rows);
+  });
+};
+
 
 const getUsers = (request, response) => {
   db.query(GET_USERS, (error, results) => {
@@ -87,6 +99,7 @@ const getPermissionsByUser = (request,response) => {
 
 
 module.exports = {
+  login,
   getUsers,
   getUserById,
   createUser,

@@ -4,10 +4,19 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 
+// Aggregation DB
 var indexRouter = require('./routes/index');
 var userRouter = require('./routes/user');
 var roleRouter = require('./routes/role');
 var permissionRouter = require('./routes/permission');
+
+// Original DB
+var albumRouter = require('./routes/album');
+var artistRouter = require('./routes/artist');
+var genreRouter = require('./routes/genre');
+var trackRouter = require('./routes/track');
+var mediaTypeRouter = require('./routes/media-type');
+var reportRouter = require('./routes/report');
 
 var app = express();
 
@@ -54,23 +63,42 @@ app.put('/permissions/:id', permissionRouter.updatePermission)
 app.delete('/permissions/:id', permissionRouter.deletePermission)
  
 // Artist
-
+app.get('/artists', artistRouter.getArtists)
+app.get('/artists/:id', artistRouter.getArtistById)
+app.post('/artists', artistRouter.createArtist)
+app.put('/artists/:id', artistRouter.updateArtist)
+app.delete('/artists/:id', artistRouter.deleteArtist)
 
 // Album
-
+app.get('/albums', albumRouter.getAlbums)
+app.get('/albums/:id', albumRouter.getAlbumById)
+app.post('/albums', albumRouter.createAlbum)
+app.put('/albums/:id', albumRouter.updateAlbum)
+app.delete('/albums/:id', albumRouter.deleteAlbum)
 
 // Genre
-
+app.get('/genres', genreRouter.getGenres)
+app.get('/genres/:id', genreRouter.getGenreById)
+app.post('/genres', genreRouter.createGenre)
+app.put('/genres/:id', genreRouter.updateGenre)
+app.delete('/genres/:id', genreRouter.deleteGenre)
 
 // MediaType
-
+app.get('/mediatypes', mediaTypeRouter.getMediaTypes)
 
 // Track
+app.get('/tracks', trackRouter.getTracks)
+app.get('/tracks/:id', trackRouter.getTrackById)
+//app.post('/tracks', trackRouter.createTrack)
+app.put('/tracks/:id', trackRouter.updateTrack)
+app.delete('/tracks/:id', trackRouter.deleteTrack)
 
-
-
-
-// 
+// Report
+app.get('/reports/genres', reportRouter.getMostCommonGenres)
+app.get('/reports/artists', reportRouter.getMostCommonArtists)
+app.get('/reports/songs', reportRouter.getLongestSongs)
+app.get('/reports/genres-duration', reportRouter.getGenresDurationAvg)
+app.get('/reports/collabs', reportRouter.getMostCollaborativeArtist)
 
 
 // catch 404 and forward to error handler

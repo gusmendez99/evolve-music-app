@@ -1,6 +1,53 @@
 /*******************************************************************************
    Create Tables
 ********************************************************************************/
+/*Entity*/
+DROP TABLE IF EXISTS AppPermission;
+create table AppPermission (
+	PermissionId SERIAL NOT null,
+    Name VARCHAR(120),
+    CONSTRAINT PK_Permission PRIMARY KEY (PermissionId)	
+);
+
+/*Entity*/
+DROP TABLE IF EXISTS AppRole;
+create table AppRole (
+	RoleId SERIAL NOT null,
+    Name VARCHAR(120),
+    CONSTRAINT PK_Role PRIMARY KEY (RoleId)
+);
+
+/*Entity*/
+DROP TABLE IF EXISTS AppUser;
+create table AppUser(
+	UserId SERIAL not null,
+	UserName VARCHAR(40) NOT NULL,
+	Password VARCHAR(40) NOT NULL,
+	FirstName VARCHAR(40) NOT NULL,
+    LastName VARCHAR(20) NOT NULL,
+    City VARCHAR(40),
+    State VARCHAR(40),
+    Country VARCHAR(40),
+    PostalCode VARCHAR(10),
+    Phone VARCHAR(24),
+    Email VARCHAR(60) NOT null,
+    RoleId INT not null,
+    UNIQUE(UserName),
+    FOREIGN KEY (RoleId) REFERENCES AppRole (RoleId) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    CONSTRAINT PK_User PRIMARY KEY (UserId)
+);
+
+
+/*Entity*/
+DROP TABLE IF EXISTS RolePermission;
+create table RolePermission(
+	RoleId INT NOT NULL,
+    PermissionId INT NOT NULL,
+    CONSTRAINT PK_RolePermission PRIMARY KEY (RoleId, PermissionId),
+    FOREIGN KEY (RoleId) REFERENCES AppRole (RoleId) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    FOREIGN KEY (PermissionId) REFERENCES AppPermission (PermissionId) ON DELETE NO ACTION ON UPDATE NO ACTION
+);
+
 DROP TABLE IF EXISTS Artist;
 CREATE TABLE Artist
 (
@@ -167,10 +214,81 @@ DROP INDEX IF EXISTS IFK_TrackGenreId;
 CREATE INDEX IFK_TrackGenreId ON Track (GenreId);
 DROP INDEX IF EXISTS IFK_TrackMediaTypeId;
 CREATE INDEX IFK_TrackMediaTypeId ON Track (MediaTypeId);
+DROP INDEX IF EXISTS IFK_AppUserAppRole;
+CREATE INDEX IFK_AppUserAppRole ON AppUser (RoleId);
+DROP INDEX IF EXISTS IFK_RolePermissionAppRole;
+CREATE INDEX IFK_RolePermissionAppRole ON RolePermission (RoleId);
+DROP INDEX IF EXISTS IFK_RolePermissionAppPermission;
+CREATE INDEX IFK_RolePermissionAppPermission ON RolePermission (PermissionId);
 
 /*******************************************************************************
    Populate Tables
 ********************************************************************************/
+INSERT INTO AppPermission(Name) VALUES ('READ ARTIST');
+INSERT INTO AppPermission(Name) VALUES ('REGISTER ARTIST');
+INSERT INTO AppPermission(Name) VALUES ('UPDATE ARTIST');
+INSERT INTO AppPermission(Name) VALUES ('DELETE ARTIST');
+
+INSERT INTO AppPermission(Name) VALUES ('READ SONG');
+INSERT INTO AppPermission(Name) VALUES ('REGISTER SONG');
+INSERT INTO AppPermission(Name) VALUES ('UPDATE SONG');
+INSERT INTO AppPermission(Name) VALUES ('DELETE SONG');
+INSERT INTO AppPermission(Name) VALUES ('INACTIVATE SONG');
+
+INSERT INTO AppPermission(Name) VALUES ('READ ALBUM');
+INSERT INTO AppPermission(Name) VALUES ('REGISTER ALBUM');
+INSERT INTO AppPermission(Name) VALUES ('UPDATE ALBUM');
+INSERT INTO AppPermission(Name) VALUES ('DELETE ALBUM');
+
+INSERT INTO AppPermission(Name) VALUES ('GENERATE REPORT');
+
+INSERT INTO AppRole(Name) VALUES ('ADMINISTRATOR');
+INSERT INTO AppRole(Name) VALUES ('MANAGER');
+INSERT INTO AppRole(Name) VALUES ('REPORTER');
+INSERT INTO AppRole(Name) VALUES ('READER');
+
+/* ADMINISTRATOR role has all the permissions*/
+INSERT INTO RolePermission(RoleId,PermissionId) VALUES (1,1);
+INSERT INTO RolePermission(RoleId,PermissionId) VALUES (1,2);
+INSERT INTO RolePermission(RoleId,PermissionId) VALUES (1,3);
+INSERT INTO RolePermission(RoleId,PermissionId) VALUES (1,4);
+INSERT INTO RolePermission(RoleId,PermissionId) VALUES (1,5);
+INSERT INTO RolePermission(RoleId,PermissionId) VALUES (1,6);
+INSERT INTO RolePermission(RoleId,PermissionId) VALUES (1,7);
+INSERT INTO RolePermission(RoleId,PermissionId) VALUES (1,8);
+INSERT INTO RolePermission(RoleId,PermissionId) VALUES (1,9);
+INSERT INTO RolePermission(RoleId,PermissionId) VALUES (1,10);
+INSERT INTO RolePermission(RoleId,PermissionId) VALUES (1,11);
+INSERT INTO RolePermission(RoleId,PermissionId) VALUES (1,12);
+INSERT INTO RolePermission(RoleId,PermissionId) VALUES (1,13);
+INSERT INTO RolePermission(RoleId,PermissionId) VALUES (1,14);
+
+/* MANAGER role can CRUD */
+INSERT INTO RolePermission(RoleId,PermissionId) VALUES (2,1);
+INSERT INTO RolePermission(RoleId,PermissionId) VALUES (2,2);
+INSERT INTO RolePermission(RoleId,PermissionId) VALUES (2,3);
+INSERT INTO RolePermission(RoleId,PermissionId) VALUES (2,4);
+INSERT INTO RolePermission(RoleId,PermissionId) VALUES (2,5);
+INSERT INTO RolePermission(RoleId,PermissionId) VALUES (2,6);
+INSERT INTO RolePermission(RoleId,PermissionId) VALUES (2,7);
+INSERT INTO RolePermission(RoleId,PermissionId) VALUES (2,8);
+INSERT INTO RolePermission(RoleId,PermissionId) VALUES (2,9);
+INSERT INTO RolePermission(RoleId,PermissionId) VALUES (2,10);
+INSERT INTO RolePermission(RoleId,PermissionId) VALUES (2,11);
+INSERT INTO RolePermission(RoleId,PermissionId) VALUES (2,12);
+INSERT INTO RolePermission(RoleId,PermissionId) VALUES (2,13);
+
+/* REPORTER role can see reports */
+INSERT INTO RolePermission(RoleId,PermissionId) VALUES (3,14);
+
+/* READER role can only READ songs, albums, artists*/
+INSERT INTO RolePermission(RoleId,PermissionId) VALUES (4,1);
+INSERT INTO RolePermission(RoleId,PermissionId) VALUES (4,5);
+INSERT INTO RolePermission(RoleId,PermissionId) VALUES (4,10);
+
+/*Super User creation*/
+INSERT INTO AppUser(UserName,Password,FirstName,LastName,City,State,Country,PostalCode, Phone,Email,RoleId) VALUES ('admin', '1234', 'Super', 'User', 'GT', 'GT', 'GT','01015', '+502 44891646', 'luis212urbina@gmail.com', 1);
+
 INSERT INTO Genre (GenreId, Name) VALUES (1,'Rock');
 INSERT INTO Genre (GenreId, Name) VALUES (2,'Jazz');
 INSERT INTO Genre (GenreId, Name) VALUES (3,'Metal');

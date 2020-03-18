@@ -1,65 +1,85 @@
-import React from 'react';
-import {
-    BrowserRouter as Router, 
-    Route, 
-		Link,
-		Switch,
-    useRouteMatch} from 'react-router-dom';
+import React, {Component} from 'react';
+import { 
+		Link} from 'react-router-dom';
 
-
-const ManageUsers = ({currentUser}) =>{
-    const {url, path} = useRouteMatch();
-    console.log('User in management',currentUser)
-    return (
-        <div>
-					<Link to={`${url}/newuser`}>Ir</Link>
-					<Link to={`${url}/otheruser`}>Ir</Link>
-
-					<Switch>
-							<Route exact path={path}>
-								<h1>Users nigga</h1>
-							</Route>
-							<Route path={`${path}/:type`}>
-									<h1>LLEGUE</h1>
-							</Route>
-					</Switch>
-        </div>        
-    )
-}
-export default ManageUsers;
-
-// class ManageUsers extends Component {
-//   constructor(){
-//     super();
-//     this.state = {
-//       currentUser: {},
-//     };
-//   };
-// //   componentDidMount(){
-// //     fetch('http://localhost:3000/users/1')
-// //     .then(response => response.json())
-// //     .then(data => {
-// //       this.setState({currentUser: data[0]})
-// //     });
-
-
-// //   }
-//   render(){
+import AddUser from '../AddUser';
+import UserListItem from '../UserListItem';
+// const ManageUsers = ({currentUser}) =>{
 //     const {url, path} = useRouteMatch();
+//     console.log('User in management',currentUser)
 //     return (
-//       <div>
-//         <p>{this.props.currentUser.username}</p>
-//         <Router>
-//           <Link to={`/${this.state.currentUser.username}/manageusers`}>Ir</Link>
-//           <Route exact path={`/${this.state.currentUser.username}/manageusers`}
-//             render={(props) => <ManageUsers {...props} currentUser={this.state.currentUser}/>}
-//             />
-//         </Router>
-//       </div>
-//     );
-//   }
-// }
+//         <div>
+// 					<Link to={`${url}/newuser`}>Add</Link>
+// 					<Link to={`${url}/otheruser`}>edit</Link>
 
+// 					<Switch>
+// 							<Route exact path={path}>
+// 								<h1>Users nigga</h1>
+// 							</Route>
+// 							<Route path={`${path}/newuser`}>
+// 									<h1>newuser</h1>
+// 							</Route>
+// 							<Route path={`${path}/edituser`}>
+// 									<h1>newuser</h1>
+// 							</Route>
+// 					</Switch>
+//         </div>        
+//     )
+// }
 // export default ManageUsers;
+
+class ManageUsers extends Component {
+  constructor(){
+    super()
+    this.state = {
+      users: [],
+    };
+  };
+  componentDidMount(){
+    fetch('http://localhost:3000/users')
+    .then(response => response.json())
+    .then(data => {
+      this.setState({users: data})
+    });
+  }
+  render(){
+    const usersList = this.state.users.map((singleUser, i)=>{
+        return (
+          <UserListItem 
+          key={i}
+          user={singleUser}
+          />
+        );
+    });
+    return (
+      <div>
+        <div className="pa4">
+          <div className="overflow-auto">
+            <table className="f6 w-100 mw9 center" cellSpacing="0">
+              <thead>
+                <tr>
+                  <th className="fw6 bb b--black-20 tc pb3 pr3 bg-white">Username</th>
+                  <th className="fw6 bb b--black-20 tc pb3 pr3 bg-white">Name</th>
+                  <th className="fw6 bb b--black-20 tc pb3 pr3 bg-white">Last Name</th>
+                  <th className="fw6 bb b--black-20 tc pb3 pr3 bg-white">E-Mail</th>
+                  <th className="fw6 bb b--black-20 tc pb3 pr3 bg-white">Phone</th>
+                  <th className="fw6 bb b--black-20 tc pb3 pr3 bg-white">Country</th>
+                  <th className="fw6 bb b--black-20 tc pb3 pr3 bg-white">Role</th>
+                  <th className="fw6 bb b--black-20 tc pb3 pr3 bg-white">Acciones</th>
+                </tr>
+              </thead>
+              <tbody className="lh-copy">
+                {usersList}
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <Link to={`/${this.props.currentUser.username}/manageusers/new`}>Ir</Link>
+      </div>    
+    );
+  }
+}
+
+export default ManageUsers;
 
 

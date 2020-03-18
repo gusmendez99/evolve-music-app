@@ -4,6 +4,7 @@ import {BrowserRouter as Router, Route} from 'react-router-dom';
 
 import Nav from './components/Nav';
 import ManageUsers from './components/ManageUsers';
+import AddUser from './components/AddUser'
 
 import 'tachyons';
 
@@ -33,12 +34,9 @@ class App extends Component {
           <Route exact path={`/${this.state.currentUser.username}/manageusers`}
             render={(props) => <ManageUsers {...props} currentUser={this.state.currentUser}/>}
             />
-          {/* <Route exact path={`/${this.state.currentUser.username}/stats`} component={ManageUsers}/>
-          <Route exact path={`/${this.state.currentUser.username}/manageroles`} component={ManageUsers}/>
-          <Route exact path={`/${this.state.currentUser.username}/signout`} component={ManageUsers}/> */}
-          {/* <Route exact path="/dashboard/:babyId" component={Dashboard} />
-          <Route exact path="/newbaby"
-          render={(props) => <AddBaby {...props} doBabiesExist={true} />}/> */}
+          <Route exact path={`/${this.state.currentUser.username}/manageusers/new`}
+            render={(props) => <AddUser {...props}/>}
+          />
         </Router>
         
       </div>

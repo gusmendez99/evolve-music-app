@@ -42,9 +42,11 @@ app.post('/login', userRouter.login)
 app.get('/users', userRouter.getUsers)
 app.get('/users/:id', userRouter.getUserById)
 app.get('/users/:id/permissions', userRouter.getPermissionsByUser)
+app.get('/users/:id/role', userRouter.getRoleByUserId)
 app.post('/users', userRouter.createUser)
 app.put('/users/:id', userRouter.updateUser)
 app.delete('/users/:id', userRouter.deleteUser)
+
 
 // Roles
 app.get('/roles', roleRouter.getRoles)

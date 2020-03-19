@@ -1,6 +1,6 @@
 const db = require("../database");
 
-const LOGIN = "SELECT * FROM AppUser WHERE UserName = $1 AND Password =  LIMIT 1";
+const LOGIN = "SELECT UserId, UserName, FirstName, LastName, RoleId FROM AppUser WHERE UserName = $1 AND Password = $2  LIMIT 1";
 const GET_USERS = "SELECT * FROM AppUser ORDER BY UserName ASC";
 const GET_USER_BY_ID = "SELECT * FROM AppUser WHERE UserId = $1";
 const ADD_USER = "INSERT INTO AppUser (UserName, Password, FirstName, LastName, City, State, Country, PostalCode, Phone, Email, RoleId) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)";
@@ -10,8 +10,9 @@ const GET_ROLE_BY_USER_ID = 'select r.name from approle r inner join appuser u o
 const GET_PERMISSIONS_BY_USER_ID = 'SELECT p.* FROM AppUser u INNER JOIN RolePermission rp ON rp.RoleId = u.RoleId INNER JOIN AppPermission p on p.PermissionId = rp.PermissionId WHERE u.UserId = $1 '
 
 const login = (request, response) => {
-
+  
   const { username, password } = request.body;
+  console.log(username, " ", password)
 
   db.query(LOGIN, [username, password ], (error, results) => {
     if (error) {

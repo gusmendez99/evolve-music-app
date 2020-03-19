@@ -42,15 +42,15 @@ class ManageUsers extends Component {
       this.setState({users: data})
     });
   }
-  render(){
-    const usersList = this.state.users.map((singleUser, i)=>{
-        return (
-          <UserListItem 
-          key={i}
-          user={singleUser}
-          />
-        );
+  updateState = (index) => {
+    fetch('http://localhost:3000/users')
+    .then(response => response.json())
+    .then(data => {
+      this.setState({users: data})
     });
+  }
+  render(){
+    console.log('data',this.state.users);
     return (
       <div>
         <div className="pa4">
@@ -69,7 +69,19 @@ class ManageUsers extends Component {
                 </tr>
               </thead>
               <tbody className="lh-copy">
-                {usersList}
+                {
+                  this.state.users.map((singleUser, i)=>{
+                    return (
+                      <UserListItem
+                      key={i}
+                      user={singleUser}
+                      currentUser={this.props.currentUser}
+                      updateState={this.updateState}
+                      index={i}
+                      />
+                    );
+                })
+                }
               </tbody>
             </table>
           </div>

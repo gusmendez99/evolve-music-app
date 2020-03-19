@@ -1,6 +1,8 @@
-import React, { Component } from "react";
-import "./App.css";
-import { BrowserRouter as Router, Route } from "react-router-dom";
+
+import React, {Component} from 'react';
+import './App.css';
+import {BrowserRouter as Router, Route} from 'react-router-dom';
+import { createBrowserHistory } from "history";
 
 //Pages
 import HomePage from "./pages/home/home.component";
@@ -19,15 +21,17 @@ class App extends Component {
     this.state = {
       currentUser: {}
     };
+
+  };
+  componentDidMount(){
+    fetch('http://localhost:3000/users/1')
+    .then(response => response.json())
+    .then(data => {
+      this.setState({currentUser: data[0]})
+    });
   }
-  componentDidMount() {
-    fetch("http://localhost:3000/users/1")
-      .then(response => response.json())
-      .then(data => {
-        this.setState({ currentUser: data[0] });
-      });
-  }
-  render() {
+  
+  render(){
     return (
       <div className="wrapper">
         <Router>
@@ -49,9 +53,7 @@ class App extends Component {
             path={`/${this.state.currentUser.username}/manageusers/new`}
             render={props => <AddUser {...props} />}
           />
-
-          
-        </Router>        
+        </Router>
       </div>
     );
   }

@@ -1,0 +1,10 @@
+.sign-in-sign-up-container {
+  width: 850px;
+  display: flex;
+  justify-content: space-between;
+  margin: 30px auto;
+}
+
+.sign-in-sign-up-container > div {
+  margin: 30px;
+}

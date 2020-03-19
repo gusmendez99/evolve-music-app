@@ -1,3 +1,4 @@
+
 import React, {Component} from 'react';
 import './App.css';
 import {BrowserRouter as Router, Route} from 'react-router-dom';
@@ -50,7 +51,7 @@ class App extends Component {
           <Route
             exact
             path={`/${this.state.currentUser.username}/manageusers/new`}
-            render={props => <AddUser {...props} currentUser={this.state.currentUser}/>}
+            render={props => <AddUser {...props} />}
           />
         </Router>
       </div>

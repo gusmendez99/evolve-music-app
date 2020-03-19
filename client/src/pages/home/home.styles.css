@@ -1,0 +1,9 @@
+.home-page {
+  background: url('https://www.itl.cat/pngfile/big/74-747874_palm-trees-tumblr-vintage-palm-springs-palm-trees.jpg');
+  background-repeat: no-repeat; 
+  background-position: center;
+}
+
+.hr {
+  height: 5px;
+}

@@ -1,4 +1,6 @@
 import React, {Component} from 'react';
+import CustomLink from '../CustomLink';
+import { withRouter, Redirect } from "react-router";
 
 class UserListItem extends Component {
     constructor(){
@@ -28,7 +30,6 @@ class UserListItem extends Component {
 		}
 
 		handleUpdate = () => {
-			console.log(JSON.stringify(this.state.user))
 			fetch(`http://localhost:3000/users/${this.state.user.userid}`, {
 				method : 'put',
 				headers : {'Content-type': 'application/json'},
@@ -49,6 +50,16 @@ class UserListItem extends Component {
 			})
 			.then(response => console.log(response.status))   
 		}
+
+		handleDelete =() =>{
+			fetch(`http://localhost:3000/users/${this.state.user.userid}`, {
+				method : 'delete'
+			})
+			.then(response => {if(response.status===200){
+				this.props.updateState(this.state.user.username)
+			}})
+			
+		}
 		handleFieldChange =(event) => {
 			const {name, value} = event.target;
 			const copy = {...this.state.user, [name]: value}
@@ -62,7 +73,7 @@ class UserListItem extends Component {
 			this.setState({user: copy});
 		}
     render(){
-				console.log(this.state);
+			console.log(this.props.index, this.props.user.username);
         return (
             <tr>
                 <td className="pv3 pr3 bb b--black-20">
@@ -111,25 +122,37 @@ class UserListItem extends Component {
 									<select className="db f6 bg-white black pr4 pv1 w-100" name="roleid" onChange={this.handleSelectChange}>
 										{
 										this.state.roles.map((role, i) => {
-											return (
-												<option 
-												defaultValue={this.state.roleName}
-												key={i}
-												value={role.name}>{role.name}</option>
-											);
+											if (this.state.roleName === role.name ){
+												return (
+													<option 
+													key={i}
+													value={role.name}
+													selected>{role.name}</option>
+												);
+											}	else {
+												return (
+													<option 
+													key={i}
+													value={role.name}
+													>{role.name}</option>
+												);
+											}
 										}) 
 										}
 									</select>
-                </td>
-                <td className="pv3 pr3 bb b--black-20 flex justify-center items-center">
-									<button className="b ph3 pv2 input-reset ba b--red red bg-transparent grow pointer f6 dib">Delete</button>
-									<button 
+												</td>
+												<td className="pv3 pr3 bb b--black-20 flex justify-center items-center">
+									<CustomLink
+									to={`/${this.props.currentUser.username}/manageusers`}
+									className="b ph3 pv2 input-reset ba b--red red bg-transparent grow pointer f6 dib"
+									onClick={this.handleDelete}>Delete</CustomLink>
+									<button
 									className="b ph3 pv2 input-reset ba b--blue blue bg-transparent grow pointer f6 dib ma2"
 									onClick={this.handleUpdate}>Update</button>
-                </td>
-            </tr>
-        );
-    }
+								</td>
+							</tr>
+    );
+  }
 }
 
 export default UserListItem;

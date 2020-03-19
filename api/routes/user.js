@@ -77,6 +77,9 @@ const updateUser = (request, response) => {
 
 const deleteUser = (request, response) => {
   const id = parseInt(request.params.id);
+  response.header("Access-Control-Allow-Origin", "*");
+  response.header('Access-Control-Allow-Methods', 'DELETE, PUT');
+  response.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 
   db.query(DELETE_USER, [id], (error, results) => {
     if (error) {

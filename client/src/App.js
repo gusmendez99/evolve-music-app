@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import './App.css';
 import {BrowserRouter as Router, Route} from 'react-router-dom';
+import { createBrowserHistory } from "history";
 
 import Nav from './components/Nav';
 import ManageUsers from './components/ManageUsers';
@@ -21,9 +22,8 @@ class App extends Component {
     .then(data => {
       this.setState({currentUser: data[0]})
     });
-
-
   }
+  
   render(){
     return (
       <div>
@@ -38,7 +38,6 @@ class App extends Component {
             render={(props) => <AddUser {...props}/>}
           />
         </Router>
-        
       </div>
     );
   }

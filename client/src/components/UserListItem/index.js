@@ -1,10 +1,6 @@
-<<<<<<< HEAD
-import React, {Component, Fragment} from 'react';
-=======
 import React, {Component} from 'react';
 import CustomLink from '../CustomLink';
 import { withRouter, Redirect } from "react-router";
->>>>>>> d07cf6cccb22fecac1d81f9d6be9a98eb0789c30
 
 class UserListItem extends Component {
     constructor(){

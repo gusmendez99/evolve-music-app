@@ -44,11 +44,13 @@ const getUserById = (request, response) => {
 };
 
 const createUser = (request, response) => {
-  const { username, firstname, password, lastname, city, state, country, postalCode, phone, email, roleId } = request.body;
-
+  const { username, firstname, password, lastname, city, state, country, postalcode, phone, email, roleid } = request.body;
+  response.header("Access-Control-Allow-Origin", "*");
+  response.header('Access-Control-Allow-Methods', 'DELETE, PUT, POST');
+  response.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   db.query(
     ADD_USER,
-    [ username, firstname, password, lastname, city, state, country, postalCode, phone, email, roleId ],
+    [ username, firstname, password, lastname, city, state, country, postalcode, phone, email, roleid ],
     (error, results) => {
       if (error) {
         throw error;

@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, {Component, Fragment} from 'react';
 import CustomLink from '../CustomLink';
 import { withRouter, Redirect } from "react-router";
 
@@ -75,6 +75,7 @@ class UserListItem extends Component {
     render(){
 			console.log(this.props.index, this.props.user.username);
         return (
+					<Fragment>
             <tr>
                 <td className="pv3 pr3 bb b--black-20">
                   <input name="username" className="input-reset ba b--black-20 pa2 db w-100" 
@@ -149,10 +150,13 @@ class UserListItem extends Component {
 									<button
 									className="b ph3 pv2 input-reset ba b--blue blue bg-transparent grow pointer f6 dib ma2"
 									onClick={this.handleUpdate}>Update</button>
-								</td>
-							</tr>
-    );
-  }
+
+                </td>
+						</tr>
+						
+						</Fragment>
+        );
+		}
 }
 
 export default UserListItem;

@@ -11,6 +11,7 @@ import SignInSignUpPage from "../pages/sign-in-and-sign-up/sign-in-and-sign-up.c
 import Nav from "../components/Nav";
 import ManageUsers from "../components/ManageUsers";
 import AddUser from "../components/AddUser";
+import ManageRoles from "../components/ManageRoles";
 
 const RestrictedRoute = ({ component: Component, authUser, ...props }) => (
   <Route
@@ -46,6 +47,13 @@ class RouterApp extends React.Component {
               component={AddUser}
               authUser={authUser}
             />
+            <RestrictedRoute
+              exact
+              path={`/${authUser.rolename}/manageroles`}
+              component={ManageRoles}
+              authUser={authUser}
+            />
+
           </Fragment>
         )}
         <Redirect to="/" />

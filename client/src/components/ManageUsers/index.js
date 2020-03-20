@@ -72,12 +72,10 @@ class ManageUsers extends Component {
         <div className="tc pa2">
         <Link className="f5 link dim ph4 pv3 m2 dib white bg-green" to={`/${authUser.rolename}/manageusers/new`}>Add User</Link>
         </div>
-        
       </div>    
     );
   }
 }
-
 const mapStateToProps = ({ user }) => {
   const { authUser } = user;
   return { authUser };

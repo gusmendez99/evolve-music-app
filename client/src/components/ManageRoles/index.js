@@ -1,32 +1,8 @@
 import React, {Component} from 'react';
-import { 
-		Link} from 'react-router-dom';
+import { Link} from 'react-router-dom';
+import { connect } from 'react-redux';
 
-import AddUser from '../AddUser';
 import RoleListItem from '../RoleListItem';
-// const ManageUsers = ({currentUser}) =>{
-//     const {url, path} = useRouteMatch();
-//     console.log('User in management',currentUser)
-//     return (
-//         <div>
-// 					<Link to={`${url}/newuser`}>Add</Link>
-// 					<Link to={`${url}/otheruser`}>edit</Link>
-
-// 					<Switch>
-// 							<Route exact path={path}>
-// 								<h1>Users nigga</h1>
-// 							</Route>
-// 							<Route path={`${path}/newuser`}>
-// 									<h1>newuser</h1>
-// 							</Route>
-// 							<Route path={`${path}/edituser`}>
-// 									<h1>newuser</h1>
-// 							</Route>
-// 					</Switch>
-//         </div>        
-//     )
-// }
-// export default ManageUsers;
 
 class ManageRoles extends Component {
   constructor(){
@@ -50,7 +26,7 @@ class ManageRoles extends Component {
     });
   }
   render(){
-    console.log('data',this.state.users);
+    const { authUser } = this.props;
     return (
       <div>
         <div className="pa4">
@@ -83,7 +59,7 @@ class ManageRoles extends Component {
                       <RoleListItem
                       key={i}
                       user={singleUser}
-                      currentUser={this.props.currentUser}
+                      currentUser={authUser}
                       updateState={this.updateState}
                       index={i}
                       />
@@ -94,12 +70,15 @@ class ManageRoles extends Component {
             </table>
           </div>
         </div>
-        <Link to={`/${this.props.currentUser.username}/manageusers/new`}>Ir</Link>
+        <Link to={`/${authUser.rolename}/manageroles/new`}>Ir</Link>
       </div>    
     );
   }
 }
-
-export default ManageRoles;
+const mapStateToProps = ({ user }) => {
+  const { authUser } = user;
+  return { authUser };
+};
+export default connect(mapStateToProps)(ManageRoles);
 
 

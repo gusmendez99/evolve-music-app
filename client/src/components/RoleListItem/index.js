@@ -24,7 +24,7 @@ class RoleListItem extends Component {
 			.then(data => {
 				this.setState({roleName: data[0].name})
 			});
-			fetch(`http://localhost:3000/roles/${this.props.user.userid}/permissions`)
+			fetch(`http://localhost:3000/roles/${this.props.user.roleid}/permissions`)
 			.then(response => response.json())
 			.then(data => {
 				this.setState({permissions: data})
@@ -93,7 +93,7 @@ class RoleListItem extends Component {
 			this.setState({user: copy});
 		}
     render(){
-				console.log("aqui va el render XD",this.state.permissions);
+				console.log("aqui va el render XD",this.state.user.roleid,this.state);
         return (
 					<Fragment>
             <tr class="tc">
@@ -225,16 +225,14 @@ class RoleListItem extends Component {
                 </td>
 								<td className="pv3 pr3 bb b--black-20 flex justify-center items-center">
 									<CustomLink
-									to={`/${this.props.currentUser.username}/manageusers`}
+									to={`/${this.props.currentUser.rolename}/manageusers`}
 									className="b ph3 pv2 input-reset ba b--red red bg-transparent grow pointer f6 dib"
 									onClick={this.handleDelete}>Delete</CustomLink>
 									<button
 									className="b ph3 pv2 input-reset ba b--blue blue bg-transparent grow pointer f6 dib ma2"
 									onClick={this.handleUpdate}>Update</button>
-
                 </td>
 						</tr>
-						
 						</Fragment>
         );
 		}

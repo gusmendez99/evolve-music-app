@@ -32,20 +32,7 @@ class UserListItem extends Component {
 			fetch(`http://localhost:3000/users/${this.state.user.userid}`, {
 				method : 'put',
 				headers : {'Content-type': 'application/json'},
-				body : JSON.stringify({
-					username: this.state.user.username,
-					password: this.state.user.password,
-					firstname: this.state.user.firstname,
-					lastname: this.state.user.lastname,
-					city: this.state.user.city,
-					state: this.state.user.state,
-					country: this.state.user.country,
-					postalcode: this.state.user.postalcode,
-					phone: this.state.user.phone,
-					email: this.state.user.email,
-					roleid: this.state.user.roleid,
-					id: this.state.user.userid
-				})
+				body : JSON.stringify(this.state.user)
 			})
 			.then(response => console.log(response.status))   
 		}

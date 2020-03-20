@@ -33,12 +33,12 @@ class ManageUsers extends Component {
 
     return (
       <div>
-        <div className="tc pa2">
+        <div className="pa1 ph5-l tc">
           <h1 className="f3 fw6">Manage Users</h1>
         </div>
-        <div className="pa2">
+        <div className="pa3 ph5-l">
           <div className="overflow-y-scroll vh-50">
-            <table className="f6 w-90 mw9 center" cellSpacing="0">
+            <table className="f6 w-100" cellSpacing="0">
               <thead>
                 <tr>
                   <th className="fw6 bb b--black-20 tc pb3 pr3 bg-white">Username</th>

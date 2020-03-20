@@ -49,7 +49,7 @@ const Nav = ({ authUser, onSignOut }) => {
         )}
         {authUser && (
           <Link
-            className="link dim red f6 f5-l dib mr3 mr4-l "
+            className="link dim red f6 f5-l dib"
             onClick={() => onSignOut()}
           >
             Sign Out

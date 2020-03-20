@@ -12,6 +12,7 @@ import Nav from "../components/Nav";
 import ManageUsers from "../components/ManageUsers";
 import AddUser from "../components/AddUser";
 import ManageRoles from "../components/ManageRoles";
+import Statistics from "../components/Statistics";
 
 const RestrictedRoute = ({ component: Component, authUser, ...props }) => (
   <Route
@@ -35,6 +36,12 @@ class RouterApp extends React.Component {
         <Route exact path="/login"  component={SignInSignUpPage} />
         {authUser && (
           <Fragment>
+            <RestrictedRoute
+              exact
+              path={`/${authUser.rolename}/stats`}
+              component={Statistics}
+              authUser={authUser}
+            />
             <RestrictedRoute
               exact
               path={`/${authUser.rolename}/manageusers`}

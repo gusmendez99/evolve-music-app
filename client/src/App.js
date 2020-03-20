@@ -56,7 +56,7 @@ class App extends Component {
           <Route
             exact
             path={`/${this.state.currentUser.username}/manageusers/new`}
-            render={props => <AddUser {...props} />}
+            render={props => <AddUser {...props} currentUser={this.state.currentUser}/>}
           />
         </Router>
         </Provider>

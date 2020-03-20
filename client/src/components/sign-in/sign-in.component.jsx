@@ -1,39 +1,94 @@
-import React, { Fragment, useState } from "react";
+import React, { Fragment } from "react";
+import { connect } from "react-redux";
+import {
+  withRouter
+} from 'react-router-dom'
+import axios from "axios";
 
-const SignIn = () => {
-  const [username, changeUsername] = useState("");
-  const [password, changePassword] = useState("");
+import * as actions from "../../redux/user/user.actions";
 
-  return (
-    <Fragment>
-      <h2>Sign In</h2>
-      <div className="mt3">
-        <label className="db fw6 lh-copy f6">Email</label>
-        <input
-          className="pa2 input-reset ba bg-transparent w-100"
-          name="email-address"
-          id="email-address"
-          onChange={e => changeUsername(e.target.value)}
-        />
-      </div>
-      <div className="mv3">
-        <label className="db fw6 lh-copy f6">Password</label>
-        <input
-          className="b pa2 input-reset ba bg-transparent w-100"
-          type="password"
-          name="password"
-          id="password"
-          onChange={e => changePassword(e.target.value)}
-        />
-      </div>
-      <div>
-        <button className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib">
-          Sign In
-        </button>
-      </div>
-    </Fragment>
-  );
-};
+class SignIn extends React.Component {
+  constructor(props) {
+    super(props);
 
-//export default connect(undefined, mapDispatchToProps)(SignIn);
-export default SignIn;
+    this.state = {
+      username: "",
+      password: "",
+      errorMessage: ""
+    };
+  }
+
+  handleSubmit = async event => {
+    event.preventDefault();
+    const { onLoginSuccess } = this.props;
+    const { username, password } = this.state;
+    console.log(this.state)
+
+    axios
+      .post("http://localhost:3000/login", {
+        username,password
+      })
+      .then(res => {
+        console.log(res);
+        if(res.data[0]) onLoginSuccess(res.data[0]);
+        this.props.history.push('/')
+      })
+      .catch(error => {
+        console.log(error);
+        this.setState({ errorMessage: error });
+      });
+  };
+
+  handleChange = event => {
+    const { value, name } = event.target;
+
+    this.setState({ [name]: value });
+  };
+
+  render() {
+    return (
+      <Fragment>
+        <h2>Sign In</h2>
+        <form onSubmit={this.handleSubmit}>
+          <div className="mt3">
+            <label className="db fw6 lh-copy f6">Username</label>
+            <input
+              className="pa2 input-reset ba bg-transparent w-100"
+              onChange={this.handleChange}
+              name="username"
+              value={this.state.username}
+            />
+          </div>
+          <div className="mv3">
+            <label className="db fw6 lh-copy f6">Password</label>
+            <input
+              className="b pa2 input-reset ba bg-transparent w-100"
+              type="password"
+              name="password"
+              onChange={this.handleChange}
+              value={this.state.password}
+            />
+          </div>
+          <div>
+            <button
+              className="b ph3 pv2 input-reset ba b--black bg-transparent grow pointer f6 dib"
+              type="submit"
+            >
+              Sign In
+            </button>
+          </div>
+        </form>
+
+        {this.state.errorMessage}
+      </Fragment>
+    );
+  }
+}
+
+const mapDispatchToProps = dispatch => ({
+  onLoginSuccess(authUser) {
+    dispatch(actions.userSignInSuccess(authUser));
+  }
+});
+
+export default withRouter(connect(undefined, mapDispatchToProps)(SignIn));

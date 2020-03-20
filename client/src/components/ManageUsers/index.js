@@ -1,32 +1,8 @@
 import React, {Component} from 'react';
-import { 
-		Link} from 'react-router-dom';
+import { Link} from 'react-router-dom';
+import { connect } from 'react-redux';
 
-import AddUser from '../AddUser';
 import UserListItem from '../UserListItem';
-// const ManageUsers = ({currentUser}) =>{
-//     const {url, path} = useRouteMatch();
-//     console.log('User in management',currentUser)
-//     return (
-//         <div>
-// 					<Link to={`${url}/newuser`}>Add</Link>
-// 					<Link to={`${url}/otheruser`}>edit</Link>
-
-// 					<Switch>
-// 							<Route exact path={path}>
-// 								<h1>Users nigga</h1>
-// 							</Route>
-// 							<Route path={`${path}/newuser`}>
-// 									<h1>newuser</h1>
-// 							</Route>
-// 							<Route path={`${path}/edituser`}>
-// 									<h1>newuser</h1>
-// 							</Route>
-// 					</Switch>
-//         </div>        
-//     )
-// }
-// export default ManageUsers;
 
 class ManageUsers extends Component {
   constructor(){
@@ -35,6 +11,7 @@ class ManageUsers extends Component {
       users: [],
     };
   };
+
   componentDidMount(){
     fetch('http://localhost:3000/users')
     .then(response => response.json())
@@ -42,6 +19,7 @@ class ManageUsers extends Component {
       this.setState({users: data})
     });
   }
+
   updateState = (index) => {
     fetch('http://localhost:3000/users')
     .then(response => response.json())
@@ -49,13 +27,18 @@ class ManageUsers extends Component {
       this.setState({users: data})
     });
   }
+
   render(){
-    console.log('data',this.state.users);
+    const { authUser } = this.props;
+
     return (
       <div>
-        <div className="pa4">
-          <div className="overflow-auto">
-            <table className="f6 w-100 mw9 center" cellSpacing="0">
+        <div className="tc pa2">
+          <h1 className="f3 fw6">Manage Users</h1>
+        </div>
+        <div className="pa2">
+          <div className="overflow-y-scroll vh-50">
+            <table className="f6 w-90 mw9 center" cellSpacing="0">
               <thead>
                 <tr>
                   <th className="fw6 bb b--black-20 tc pb3 pr3 bg-white">Username</th>
@@ -75,7 +58,7 @@ class ManageUsers extends Component {
                       <UserListItem
                       key={i}
                       user={singleUser}
-                      currentUser={this.props.currentUser}
+                      currentUser={authUser}
                       updateState={this.updateState}
                       index={i}
                       />
@@ -86,12 +69,20 @@ class ManageUsers extends Component {
             </table>
           </div>
         </div>
-        <Link to={`/${this.props.currentUser.username}/manageusers/new`}>Ir</Link>
+        <div className="tc pa2">
+        <Link className="f5 link dim ph4 pv3 m2 dib white bg-green" to={`/${authUser.rolename}/manageusers/new`}>Add User</Link>
+        </div>
+        
       </div>    
     );
   }
 }
 
-export default ManageUsers;
+const mapStateToProps = ({ user }) => {
+  const { authUser } = user;
+  return { authUser };
+};
+
+export default connect(mapStateToProps)(ManageUsers);
 
 

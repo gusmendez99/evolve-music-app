@@ -2,8 +2,6 @@
 import React, {Component} from 'react';
 import './App.css';
 import {BrowserRouter as Router, Route} from 'react-router-dom';
-import { createBrowserHistory } from "history";
-import { Provider } from 'react-redux'
 
 import { store } from './redux/store' 
 
@@ -16,30 +14,13 @@ import Nav from "./components/Nav";
 import ManageUsers from "./components/ManageUsers";
 import AddUser from "./components/AddUser";
 import ManageRoles from "./components/ManageRole";
+import RouterApp from './router/router.component.jsx';
 
 import "tachyons";
 
 class App extends Component {
-  constructor() {
-    super();
-    this.state = {
-      currentUser: {}
-    };
-
-  };
-  componentDidMount(){
-    fetch('http://localhost:3000/users/1')
-    .then(response => response.json())
-    .then(data => {
-      this.setState({currentUser: data[0]})
-    });
-
-    
-  }
-  
   render(){
     return (
-      <Provider store={store} >
         <Router>
           <Nav currentUser={this.state.currentUser} />
           <Route exact path="/" component={HomePage} />
@@ -69,8 +50,8 @@ class App extends Component {
           />
   
 
+          <Route path="" component={RouterApp} />
         </Router>
-        </Provider>
     );
   }
 }

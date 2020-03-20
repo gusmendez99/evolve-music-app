@@ -53,7 +53,6 @@ class AddUser extends Component {
 	}
 	
 	render(){
-		console.log(this.state)
 		return (
 			<main className="pa4 black-80">
 					<div className="measure center">

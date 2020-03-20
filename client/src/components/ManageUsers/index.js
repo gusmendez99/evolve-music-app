@@ -50,12 +50,14 @@ class ManageUsers extends Component {
     });
   }
   render(){
-    console.log('data',this.state.users);
     return (
       <div>
-        <div className="pa4">
-          <div className="overflow-auto">
-            <table className="f6 w-100 mw9 center" cellSpacing="0">
+        <div className="tc pa2">
+          <h1 className="f3 fw6">Manage Users</h1>
+        </div>
+        <div className="pa2">
+          <div className="overflow-y-scroll vh-50">
+            <table className="f6 w-90 mw9 center" cellSpacing="0">
               <thead>
                 <tr>
                   <th className="fw6 bb b--black-20 tc pb3 pr3 bg-white">Username</th>
@@ -86,7 +88,10 @@ class ManageUsers extends Component {
             </table>
           </div>
         </div>
-        <Link to={`/${this.props.currentUser.username}/manageusers/new`}>Ir</Link>
+        <div className="tc pa2">
+        <Link className="f5 link dim ph4 pv3 m2 dib white bg-green" to={`/${this.props.currentUser.username}/manageusers/new`}>Add User</Link>
+        </div>
+        
       </div>    
     );
   }

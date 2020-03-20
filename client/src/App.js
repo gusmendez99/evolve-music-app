@@ -15,6 +15,7 @@ import SignInSignUpPage from './pages/sign-in-and-sign-up/sign-in-and-sign-up.co
 import Nav from "./components/Nav";
 import ManageUsers from "./components/ManageUsers";
 import AddUser from "./components/AddUser";
+import ManageRoles from "./components/ManageRole";
 
 import "tachyons";
 
@@ -58,6 +59,16 @@ class App extends Component {
             path={`/${this.state.currentUser.username}/manageusers/new`}
             render={props => <AddUser {...props} />}
           />
+
+          <Route
+            exact
+            path={`/${this.state.currentUser.username}/manageroles`}
+            render={props => (
+              <ManageRoles {...props} currentUser={this.state.currentUser} />
+            )}
+          />
+  
+
         </Router>
         </Provider>
     );

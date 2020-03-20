@@ -89,7 +89,8 @@ const getUsersByRole = (request, response) => {
 }
 
 const getPermissionsByRole = (request, response) => {
-  db.query(GET_PERMISSIONS_BY_ROLE, (error, results) => {
+  const id = parseInt(request.params.id)
+  db.query(GET_PERMISSIONS_BY_ROLE, [id] ,(error, results) => {
     if (error) {
       throw error;
     }

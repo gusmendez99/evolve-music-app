@@ -3,6 +3,9 @@ import React, {Component} from 'react';
 import './App.css';
 import {BrowserRouter as Router, Route} from 'react-router-dom';
 import { createBrowserHistory } from "history";
+import { Provider } from 'react-redux'
+
+import { store } from './redux/store' 
 
 //Pages
 import HomePage from "./pages/home/home.component";
@@ -29,11 +32,13 @@ class App extends Component {
     .then(data => {
       this.setState({currentUser: data[0]})
     });
+
+    
   }
   
   render(){
     return (
-      <div className="wrapper">
+      <Provider store={store} >
         <Router>
           <Nav currentUser={this.state.currentUser} />
           <Route exact path="/" component={HomePage} />
@@ -54,7 +59,7 @@ class App extends Component {
             render={props => <AddUser {...props} />}
           />
         </Router>
-      </div>
+        </Provider>
     );
   }
 }

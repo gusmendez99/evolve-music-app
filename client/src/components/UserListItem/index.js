@@ -72,7 +72,6 @@ class UserListItem extends Component {
 			this.setState({user: copy});
 		}
     render(){
-			console.log(this.props.index, this.props.user.username);
         return (
 					<Fragment>
             <tr>

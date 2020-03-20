@@ -53,10 +53,10 @@ class ManageUsers extends Component {
     return (
       <div>
         <div className="tc pa2">
-          <h1 className="f2 fw6">Manage Users</h1>
+          <h1 className="f3 fw6">Manage Users</h1>
         </div>
         <div className="pa2">
-          <div className="overflow-auto">
+          <div className="overflow-y-scroll vh-50">
             <table className="f6 w-90 mw9 center" cellSpacing="0">
               <thead>
                 <tr>
@@ -88,7 +88,10 @@ class ManageUsers extends Component {
             </table>
           </div>
         </div>
-        <Link to={`/${this.props.currentUser.username}/manageusers/new`}>Ir</Link>
+        <div className="tc pa2">
+        <Link className="f5 link dim ph4 pv3 m2 dib white bg-green" to={`/${this.props.currentUser.username}/manageusers/new`}>Add User</Link>
+        </div>
+        
       </div>    
     );
   }

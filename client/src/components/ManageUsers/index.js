@@ -1,32 +1,8 @@
 import React, {Component} from 'react';
-import { 
-		Link} from 'react-router-dom';
+import { Link} from 'react-router-dom';
+import { connect } from 'react-redux';
 
-import AddUser from '../AddUser';
 import UserListItem from '../UserListItem';
-// const ManageUsers = ({currentUser}) =>{
-//     const {url, path} = useRouteMatch();
-//     console.log('User in management',currentUser)
-//     return (
-//         <div>
-// 					<Link to={`${url}/newuser`}>Add</Link>
-// 					<Link to={`${url}/otheruser`}>edit</Link>
-
-// 					<Switch>
-// 							<Route exact path={path}>
-// 								<h1>Users nigga</h1>
-// 							</Route>
-// 							<Route path={`${path}/newuser`}>
-// 									<h1>newuser</h1>
-// 							</Route>
-// 							<Route path={`${path}/edituser`}>
-// 									<h1>newuser</h1>
-// 							</Route>
-// 					</Switch>
-//         </div>        
-//     )
-// }
-// export default ManageUsers;
 
 class ManageUsers extends Component {
   constructor(){
@@ -35,6 +11,7 @@ class ManageUsers extends Component {
       users: [],
     };
   };
+
   componentDidMount(){
     fetch('http://localhost:3000/users')
     .then(response => response.json())
@@ -42,6 +19,7 @@ class ManageUsers extends Component {
       this.setState({users: data})
     });
   }
+
   updateState = (index) => {
     fetch('http://localhost:3000/users')
     .then(response => response.json())
@@ -49,7 +27,10 @@ class ManageUsers extends Component {
       this.setState({users: data})
     });
   }
+
   render(){
+    const { authUser } = this.props;
+
     return (
       <div>
         <div className="tc pa2">
@@ -77,7 +58,7 @@ class ManageUsers extends Component {
                       <UserListItem
                       key={i}
                       user={singleUser}
-                      currentUser={this.props.currentUser}
+                      currentUser={authUser}
                       updateState={this.updateState}
                       index={i}
                       />
@@ -89,7 +70,7 @@ class ManageUsers extends Component {
           </div>
         </div>
         <div className="tc pa2">
-        <Link className="f5 link dim ph4 pv3 m2 dib white bg-green" to={`/${this.props.currentUser.username}/manageusers/new`}>Add User</Link>
+        <Link className="f5 link dim ph4 pv3 m2 dib white bg-green" to={`/${authUser.rolename}/manageusers/new`}>Add User</Link>
         </div>
         
       </div>    
@@ -97,6 +78,11 @@ class ManageUsers extends Component {
   }
 }
 
-export default ManageUsers;
+const mapStateToProps = ({ user }) => {
+  const { authUser } = user;
+  return { authUser };
+};
+
+export default connect(mapStateToProps)(ManageUsers);
 
 

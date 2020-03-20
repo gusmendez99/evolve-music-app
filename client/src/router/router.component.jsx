@@ -36,18 +36,19 @@ class RouterApp extends React.Component {
           <Fragment>
             <RestrictedRoute
               exact
-              path={`/${authUser.rolename.toLowerCase()}/manageusers`}
+              path={`/${authUser.rolename}/manageusers`}
               component={ManageUsers}
               authUser={authUser}
             />
             <RestrictedRoute
               exact
-              path={`/${authUser.rolename.toLowerCase()}/manageusers/new`}
+              path={`/${authUser.rolename}/manageusers/new`}
               component={AddUser}
               authUser={authUser}
             />
           </Fragment>
         )}
+        <Redirect to="/" />
       </Switch>
       </Fragment>
       

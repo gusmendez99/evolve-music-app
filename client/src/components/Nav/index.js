@@ -23,7 +23,7 @@ const Nav = ({ authUser, onSignOut }) => {
         {authUser && (
           <Link
             className="link dim dark-gray f6 f5-l dib mr3 mr4-l"
-            to={`/${authUser.rolename.toLowerCase()}/stats`}
+            to={`/${authUser.rolename}/stats`}
             title="Stats"
           >
             Statistics
@@ -32,7 +32,7 @@ const Nav = ({ authUser, onSignOut }) => {
         {authUser && (
           <Link
             className="link dim dark-gray f6 f5-l dib mr3 mr4-l"
-            to={`/${authUser.rolename.toLowerCase()}/manageusers`}
+            to={`/${authUser.rolename}/manageusers`}
             title="Users"
           >
             Users
@@ -41,7 +41,7 @@ const Nav = ({ authUser, onSignOut }) => {
         {authUser && (
           <Link
             className="link dim dark-gray f6 f5-l dib mr3 mr4-l"
-            to={`/${authUser.rolename.toLowerCase()}/manageroles`}
+            to={`/${authUser.rolename}/manageroles`}
             title="Roles"
           >
             Roles

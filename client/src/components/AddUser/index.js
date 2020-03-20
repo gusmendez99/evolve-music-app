@@ -1,5 +1,6 @@
 import React,{Component} from 'react';
 import CustomLink from '../CustomLink';
+import { connect } from 'react-redux'
 
 class AddUser extends Component {
 	constructor(){
@@ -35,24 +36,13 @@ class AddUser extends Component {
 		fetch(`http://localhost:3000/users`, {
 				method : 'post',
 				headers : {'Content-type': 'application/json'},
-				body : JSON.stringify({
-					username: this.state.user.username,
-					firstname: this.state.user.firstname,
-					password: this.state.user.password,
-					lastname: this.state.user.lastname,
-					city: this.state.user.city,
-					state: this.state.user.state,
-					country: this.state.user.country,
-					postalcode: this.state.user.postalcode,
-					phone: this.state.user.phone,
-					email: this.state.user.email,
-					roleid: this.state.user.roleid
-				})
+				body : JSON.stringify(this.state.user)
 			})
 		.then(response => console.log(response.status))   
 	}
 	
 	render(){
+		const { authUser } = this.props;
 		return (
 			<main className="pa4 black-80">
 					<div className="measure center">
@@ -61,7 +51,7 @@ class AddUser extends Component {
 								<legend className="f4 fw6 ph0 mh0">Agregar Usuario</legend>
 							</div>
 							<div className="mt3">
-									<label className="db fw6 lh-copy f6" for="username">Username</label>
+									<label className="db fw6 lh-copy f6" >Username</label>
 									<input 
 									className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100" 
 									type="text" 
@@ -69,7 +59,7 @@ class AddUser extends Component {
 									onChange={this.handleFieldChange}></input>
 							</div>
 							<div className="mv3">
-									<label className="db fw6 lh-copy f6" for="password">Password</label>
+									<label className="db fw6 lh-copy f6" >Password</label>
 									<input 
 									className="b pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100" 
 									type="password" 
@@ -77,7 +67,7 @@ class AddUser extends Component {
 									onChange={this.handleFieldChange}></input>
 							</div>
 							<div className="mv3">
-									<label className="db fw6 lh-copy f6" for="firstname">First Name</label>
+									<label className="db fw6 lh-copy f6" >First Name</label>
 									<input 
 									className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100" 
 									type="text" 
@@ -85,7 +75,7 @@ class AddUser extends Component {
 									onChange={this.handleFieldChange}></input>
 							</div>
 							<div className="mt3">
-									<label className="db fw6 lh-copy f6" for="lastname">Last Name</label>
+									<label className="db fw6 lh-copy f6" >Last Name</label>
 									<input 
 									className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100" 
 									type="text" 
@@ -93,7 +83,7 @@ class AddUser extends Component {
 									onChange={this.handleFieldChange}></input>
 							</div>
 							<div className="mt3">
-									<label className="db fw6 lh-copy f6" for="city">City</label>
+									<label className="db fw6 lh-copy f6" >City</label>
 									<input 
 									className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100" 
 									type="text" 
@@ -101,7 +91,7 @@ class AddUser extends Component {
 									onChange={this.handleFieldChange}></input>
 							</div>
 							<div className="mt3">
-									<label className="db fw6 lh-copy f6" for="state">State</label>
+									<label className="db fw6 lh-copy f6" >State</label>
 									<input 
 									className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100" 
 									type="text" 
@@ -109,7 +99,7 @@ class AddUser extends Component {
 									onChange={this.handleFieldChange}></input>
 							</div>
 							<div className="mt3">
-									<label className="db fw6 lh-copy f6" for="country">Country</label>
+									<label className="db fw6 lh-copy f6" >Country</label>
 									<input 
 									className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100" 
 									type="text" 
@@ -117,7 +107,7 @@ class AddUser extends Component {
 									onChange={this.handleFieldChange}></input>
 							</div>
 							<div className="mt3">
-									<label className="db fw6 lh-copy f6" for="postalcode">Postal Code</label>
+									<label className="db fw6 lh-copy f6" >Postal Code</label>
 									<input 
 									className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100" 
 									type="text" 
@@ -125,7 +115,7 @@ class AddUser extends Component {
 									onChange={this.handleFieldChange}></input>
 							</div>
 							<div className="mt3">
-									<label className="db fw6 lh-copy f6" for="tel">Phone Number</label>
+									<label className="db fw6 lh-copy f6" >Phone Number</label>
 									<input 
 									className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100" 
 									type="text" 
@@ -133,7 +123,7 @@ class AddUser extends Component {
 									onChange={this.handleFieldChange}></input>
 							</div>
 							<div className="mt3">
-									<label className="db fw6 lh-copy f6" for="email">Email</label>
+									<label className="db fw6 lh-copy f6" >Email</label>
 									<input 
 									className="pa2 input-reset ba bg-transparent hover-bg-black hover-white w-100" 
 									type="text" 
@@ -155,7 +145,7 @@ class AddUser extends Component {
 							</fieldset>
 							<div className="tc">
 							<CustomLink
-							to={`/${this.props.currentUser.username}/manageusers`}
+							to={`/${authUser.rolename}/manageusers`}
 							className="b ph3 pv2 input-reset ba b--green green bg-transparent grow pointer f6 dib"
 							onClick={this.handleSubmit}>Add User</CustomLink>
 							</div>
@@ -165,4 +155,10 @@ class AddUser extends Component {
 	}
 }
 
-export default AddUser;
+const mapStateToProps = ({ user }) => {
+  const { authUser } = user;
+  return { authUser };
+};
+
+export default connect(mapStateToProps)(AddUser);
+

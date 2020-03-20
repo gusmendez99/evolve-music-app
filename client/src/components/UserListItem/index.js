@@ -129,7 +129,7 @@ class UserListItem extends Component {
 												</td>
 												<td className="pv3 pr3 bb b--black-20 flex justify-center items-center">
 									<CustomLink
-									to={`/${this.props.currentUser.username}/manageusers`}
+									to={`/${this.props.currentUser.rolename}/manageusers`}
 									className="b ph3 pv2 input-reset ba b--red red bg-transparent grow pointer f6 dib"
 									onClick={this.handleDelete}>Delete</CustomLink>
 									<button

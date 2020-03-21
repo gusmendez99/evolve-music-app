@@ -13,10 +13,10 @@ export const userSignUpSuccess = (authUser) => {
   };
 };
 
-export const userSignInSuccess = (authUser) => {
+export const userSignInSuccess = (authUser, permissions) => {
   return {
       type: SIGNIN_USER_SUCCESS,
-      payload: authUser
+      payload: { authUser, permissions }
   }
 };
 

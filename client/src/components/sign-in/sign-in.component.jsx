@@ -1,8 +1,6 @@
 import React, { Fragment } from "react";
 import { connect } from "react-redux";
-import {
-  withRouter
-} from 'react-router-dom'
+import { withRouter } from "react-router-dom";
 import axios from "axios";
 
 import * as actions from "../../redux/user/user.actions";
@@ -22,16 +20,32 @@ class SignIn extends React.Component {
     event.preventDefault();
     const { onLoginSuccess } = this.props;
     const { username, password } = this.state;
-    console.log(this.state)
+    console.log(this.state);
 
     axios
       .post("http://localhost:3000/login", {
-        username,password
+        username,
+        password
       })
       .then(res => {
         console.log(res);
-        if(res.data[0]) onLoginSuccess(res.data[0]);
-        this.props.history.push('/')
+        if (res.data[0]) {
+
+          const userAuth = res.data[0];
+
+          axios
+            .get(`http://localhost:3000/roles/${userAuth.roleid}/permissions`)
+            .then(res => {
+              if (res.data.length !== 0) {
+                onLoginSuccess(userAuth, res.data);
+                this.props.history.push("/");
+              }
+            })
+            .catch(error => {
+              console.log(error);
+              this.setState({ errorMessage: error });
+            });
+        }
       })
       .catch(error => {
         console.log(error);
@@ -86,8 +100,8 @@ class SignIn extends React.Component {
 }
 
 const mapDispatchToProps = dispatch => ({
-  onLoginSuccess(authUser) {
-    dispatch(actions.userSignInSuccess(authUser));
+  onLoginSuccess(authUser, permissions) {
+    dispatch(actions.userSignInSuccess(authUser, permissions));
   }
 });
 

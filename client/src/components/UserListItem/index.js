@@ -138,7 +138,6 @@ class UserListItem extends Component {
 
                 </td>
 						</tr>
-						
 						</Fragment>
         );
 		}

@@ -59,12 +59,12 @@ const Nav = ({ authUser, onSignOut }) => {
           </Link>
         )}
         {authUser && (
-          <Link
+          <span
             className="link dim red f6 f5-l dib"
             onClick={() => onSignOut()}
           >
             Sign Out
-          </Link>
+          </span>
         )}
         {
           !authUser &&

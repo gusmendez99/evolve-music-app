@@ -32,10 +32,8 @@ class ManageArtists extends Component {
   };
 
 
-  handleChange = event => {
+  handleSearchFieldChange = event => {
     const { value } = event.target;
-    console.log(value)
-
     this.setState({ searchField: value });
   };
 
@@ -43,18 +41,25 @@ class ManageArtists extends Component {
 
   render() {
     const { authUser } = this.props;
+    const { searchField } = this.state;
 
     return (
       <div>
         <div className="pa1 ph5-l tc">
           <h1 className="f3 fw6">Manage Artists</h1>
         </div>
-        <div class="pa3 ph5-l ">
+        <div className="pa3 ph5-l ">
           <label className="f6 b db mb2 blue">Búsqueda</label>
-          <input id="name" name="artist-name" onChange={this.handleChange} className="input-reset ba b--black-20 pa2 mb2 db w-100" type="text" aria-describedby="name-desc"/>
+          <input id="name" name="artist-name" onChange={this.handleSearchFieldChange} className="input-reset ba b--black-20 pa2 mb2 db w-100" type="text" aria-describedby="name-desc"/>
         </div>
         <div className="pa3 ph5-l">
           <div className="overflow-y-scroll vh-50">
+          {
+            this.state.artists.filter(
+              artist => artist.name.toLowerCase().includes(searchField.toLowerCase())
+            ).length === 0 &&
+            <h4 className="f3 fw6">No artist found</h4>
+          }
             <table className="f6 w-100" cellSpacing="0">
               <thead>
                 <tr>
@@ -66,28 +71,20 @@ class ManageArtists extends Component {
                   </th>
                 </tr>
               </thead>
+              
+
               <tbody className="lh-copy">
-                {
-                  this.state.artists.filter(
-                    artist => {
-                      return artist.name.toLowerCase().includes(this.state.searchField.toLowerCase());
-                    }
-                  ).length === 0 &&
-                  <h4 className="f3 fw6">No artist found</h4>
-                }
+                
 
                 {this.state.artists.filter(
-                  artist => {
-                    return artist.name.toLowerCase().includes(this.state.searchField.toLowerCase());
-                  }
+                  artist => artist.name.toLowerCase().includes(this.state.searchField.toLowerCase())
                 ).map((singleArtist, i) => {
                   return (
                     <ArtistListItem
-                      key={i}
+                      key={singleArtist.artistid}
                       artist={singleArtist}
                       currentUser={authUser}
                       updateState={this.updateState}
-                      index={i}
                     />
                   );
                 })}

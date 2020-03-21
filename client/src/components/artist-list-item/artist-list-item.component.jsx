@@ -17,6 +17,7 @@ class ArtistListItem extends Component {
   }
 
   handleUpdate = () => {
+    console.log(this.state.artist)
     fetch(`http://localhost:3000/artists/${this.state.artist.artistid}`, {
       method: "put",
       headers: { "Content-type": "application/json" },
@@ -35,8 +36,8 @@ class ArtistListItem extends Component {
   };
   handleFieldChange = event => {
     const { name, value } = event.target;
-    const copy = { ...this.state.user, [name]: value };
-    this.setState({ user: copy });
+    const copy = { ...this.state.artist, [name]: value };
+    this.setState({ artist: copy });
   };
 
   render() {

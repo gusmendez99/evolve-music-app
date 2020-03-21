@@ -43,6 +43,16 @@ const Nav = ({ authUser, onSignOut }) => {
         {authUser && (
           <Link
             className="link dim dark-gray f6 f5-l dib mr3 mr4-l"
+            to={`/${authUser.rolename}/managealbums`}
+            title="Albums"
+          >
+            Albums
+          </Link>
+        )}
+
+        {authUser && (
+          <Link
+            className="link dim dark-gray f6 f5-l dib mr3 mr4-l"
             to={`/${authUser.rolename}/manageusers`}
             title="Users"
           >

@@ -1,7 +1,7 @@
 const db = require("../database");
 
-const GET_ALBUMS = "SELECT * FROM Album ORDER BY Title ASC";
-const GET_ALBUM_BY_ID = "SELECT * FROM Album WHERE AlbumId = $1";
+const GET_ALBUMS = "SELECT * FROM Album  ORDER BY Title ASC";
+const GET_ALBUM_BY_ID = "SELECT al.*, art.Name AS ArtistName FROM Album al NATURAL JOIN Artist art WHERE al.AlbumId = $1";
 const ADD_ALBUM = "INSERT INTO Album (AlbumId, Title, ArtistId) VALUES ($1, $2, $3)";
 const UPDATE_ALBUM = "UPDATE Album SET Title=$1, ArtistId=$2 WHERE AlbumID=$3";
 const DELETE_ALBUM = "DELETE FROM Album WHERE AlbumId = $1";
@@ -43,11 +43,11 @@ const createAlbum = (request, response) => {
 
 const updateAlbum = (request, response) => {
   const id = parseInt(request.params.id);
-  const { title, idArtist } = request.body;
+  const { title, artistid } = request.body;
 
   db.query(
     UPDATE_ALBUM,
-    [title, idArtist, id],
+    [title, artistid, id],
     (error, results) => {
       if (error) {
         throw error;

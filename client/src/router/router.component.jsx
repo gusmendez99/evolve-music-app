@@ -14,6 +14,7 @@ import AddUser from "../components/AddUser";
 import ManageRoles from "../components/ManageRoles";
 import ManageArtists from '../components/manage-artists/manage-artists.component'
 import AddArtist from '../components/add-artist/add-artist.component'
+import ManageAlbums from '../components/manage-albums/manage-albums.component'
 import Statistics from "../components/Statistics";
 
 const RestrictedRoute = ({ component: Component, authUser, ...props }) => (
@@ -44,6 +45,7 @@ class RouterApp extends React.Component {
               component={Statistics}
               authUser={authUser}
             />
+
             <RestrictedRoute
               exact
               path={`/${authUser.rolename}/manageartists`}
@@ -56,6 +58,14 @@ class RouterApp extends React.Component {
               component={AddArtist}
               authUser={authUser}
             />
+
+            <RestrictedRoute
+              exact
+              path={`/${authUser.rolename}/managealbums`}
+              component={ManageAlbums}
+              authUser={authUser}
+            />
+
             <RestrictedRoute
               exact
               path={`/${authUser.rolename}/manageusers`}
@@ -68,6 +78,7 @@ class RouterApp extends React.Component {
               component={AddUser}
               authUser={authUser}
             />
+
             <RestrictedRoute
               exact
               path={`/${authUser.rolename}/manageroles`}

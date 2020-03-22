@@ -54,7 +54,7 @@ class RoleListItem extends Component {
 					item['permissionid'] == value)		
 				const copy = pullAllWith(this.state.permissions, itemToPull, isEqual)
 				this.setState({permissions:copy});
-				console.log(this.state.permissions);
+				console.log("Esto le mando ->". itemToPull);
 
 				fetch(`http://localhost:3000/roles/${this.state.user.userid}/permissions/${value}`, {
 					method : 'delete'

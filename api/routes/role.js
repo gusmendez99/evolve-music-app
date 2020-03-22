@@ -99,17 +99,17 @@ const getPermissionsByRole = (request, response) => {
 };
 
 const createRolePermission = (request, response) => {
-  const { idPermission } = request.body;
+  const { permissionid } = request.body;
   const id = parseInt(request.params.id);
 
   db.query(
     ADD_ROLE_PERMISSION,
-    [ idPermission, id ],
+    [ permissionid, id ],
     (error, results) => {
       if (error) {
         throw error;
       }
-      response.status(201).send(`PermissionId ${idPermission} added to RoleId: ${id}`);
+      response.status(201).send(`PermissionId ${permissionid} added to RoleId: ${id}`);
     }
   );
 };

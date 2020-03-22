@@ -12,6 +12,10 @@ import Nav from "../components/Nav";
 import ManageUsers from "../components/ManageUsers";
 import AddUser from "../components/AddUser";
 import ManageRoles from "../components/ManageRoles";
+import ManageArtists from '../components/manage-artists/manage-artists.component'
+import AddArtist from '../components/add-artist/add-artist.component'
+import ManageAlbums from '../components/manage-albums/manage-albums.component'
+import Statistics from "../components/Statistics";
 
 const RestrictedRoute = ({ component: Component, authUser, ...props }) => (
   <Route
@@ -25,7 +29,7 @@ const RestrictedRoute = ({ component: Component, authUser, ...props }) => (
 class RouterApp extends React.Component {
 
   render() {
-    const { authUser } = this.props;
+    const { authUser, permissions } = this.props;
     return (
       <Fragment>
       <Nav authUser={authUser}/>
@@ -35,6 +39,33 @@ class RouterApp extends React.Component {
         <Route exact path="/login"  component={SignInSignUpPage} />
         {authUser && (
           <Fragment>
+            <RestrictedRoute
+              exact
+              path={`/${authUser.rolename}/stats`}
+              component={Statistics}
+              authUser={authUser}
+            />
+
+            <RestrictedRoute
+              exact
+              path={`/${authUser.rolename}/manageartists`}
+              component={ManageArtists}
+              authUser={authUser}
+            />
+            <RestrictedRoute
+              exact
+              path={`/${authUser.rolename}/manageartists/new`}
+              component={AddArtist}
+              authUser={authUser}
+            />
+
+            <RestrictedRoute
+              exact
+              path={`/${authUser.rolename}/managealbums`}
+              component={ManageAlbums}
+              authUser={authUser}
+            />
+
             <RestrictedRoute
               exact
               path={`/${authUser.rolename}/manageusers`}
@@ -47,6 +78,7 @@ class RouterApp extends React.Component {
               component={AddUser}
               authUser={authUser}
             />
+
             <RestrictedRoute
               exact
               path={`/${authUser.rolename}/manageroles`}
@@ -65,8 +97,8 @@ class RouterApp extends React.Component {
 }
 
 const mapStateToProps = ({ user }) => {
-  const { authUser } = user;
-  return { authUser };
+  const { authUser, permissions } = user;
+  return { authUser, permissions };
 };
 
 export default withRouter(connect(mapStateToProps)(RouterApp));

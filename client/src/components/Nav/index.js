@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 
 
 import * as actions from "../../redux/user/user.actions";
@@ -29,6 +29,27 @@ const Nav = ({ authUser, onSignOut }) => {
             Statistics
           </Link>
         )}
+
+        {authUser && (
+          <Link
+            className="link dim dark-gray f6 f5-l dib mr3 mr4-l"
+            to={`/${authUser.rolename}/manageartists`}
+            title="Artists"
+          >
+            Artists
+          </Link>
+        )}
+
+        {authUser && (
+          <Link
+            className="link dim dark-gray f6 f5-l dib mr3 mr4-l"
+            to={`/${authUser.rolename}/managealbums`}
+            title="Albums"
+          >
+            Albums
+          </Link>
+        )}
+
         {authUser && (
           <Link
             className="link dim dark-gray f6 f5-l dib mr3 mr4-l"
@@ -48,12 +69,12 @@ const Nav = ({ authUser, onSignOut }) => {
           </Link>
         )}
         {authUser && (
-          <Link
-            className="link dim red f6 f5-l dib mr3 mr4-l "
+          <span
+            className="link dim red f6 f5-l dib"
             onClick={() => onSignOut()}
           >
             Sign Out
-          </Link>
+          </span>
         )}
         {
           !authUser &&

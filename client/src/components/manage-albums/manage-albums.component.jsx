@@ -2,29 +2,29 @@ import React, {Component} from 'react';
 import { Link} from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import UserListItem from '../UserListItem';
+import AlbumListItem from '../album-list-item/album-list-item.component';
 
-class ManageUsers extends Component {
+class ManageAlbums extends Component {
   constructor(){
     super()
     this.state = {
-      users: [],
+      albums: [],
     };
   };
 
   componentDidMount(){
-    fetch('http://localhost:3000/users')
+    fetch('http://localhost:3000/albums')
     .then(response => response.json())
     .then(data => {
-      this.setState({users: data})
+      this.setState({albums: data})
     });
   }
 
-  updateState = (index) => {
-    fetch('http://localhost:3000/users')
+  updateState = () => {
+    fetch('http://localhost:3000/albums')
     .then(response => response.json())
     .then(data => {
-      this.setState({users: data})
+      this.setState({albums: data})
     });
   }
 
@@ -41,26 +41,20 @@ class ManageUsers extends Component {
             <table className="f6 w-100" cellSpacing="0">
               <thead>
                 <tr>
-                  <th className="fw6 bb b--black-20 tc pb3 pr3 bg-white">Username</th>
                   <th className="fw6 bb b--black-20 tc pb3 pr3 bg-white">Name</th>
-                  <th className="fw6 bb b--black-20 tc pb3 pr3 bg-white">Last Name</th>
-                  <th className="fw6 bb b--black-20 tc pb3 pr3 bg-white">E-Mail</th>
-                  <th className="fw6 bb b--black-20 tc pb3 pr3 bg-white">Phone</th>
-                  <th className="fw6 bb b--black-20 tc pb3 pr3 bg-white">Country</th>
-                  <th className="fw6 bb b--black-20 tc pb3 pr3 bg-white">Role</th>
+                  <th className="fw6 bb b--black-20 tc pb3 pr3 bg-white">Artist</th>
                   <th className="fw6 bb b--black-20 tc pb3 pr3 bg-white">Acciones</th>
                 </tr>
               </thead>
               <tbody className="lh-copy">
                 {
-                  this.state.users.map((singleUser, i)=>{
+                  this.state.albums.map((singleAlbum)=>{
                     return (
-                      <UserListItem
-                      key={i}
-                      user={singleUser}
+                      <AlbumListItem
+                      key={singleAlbum.albumid}
+                      album={singleAlbum}
                       currentUser={authUser}
                       updateState={this.updateState}
-                      index={i}
                       />
                     );
                 })
@@ -70,7 +64,7 @@ class ManageUsers extends Component {
           </div>
         </div>
         <div className="tc pa2">
-        <Link className="f5 link dim ph4 pv3 m2 dib white bg-green" to={`/${authUser.rolename}/manageusers/new`}>Add User</Link>
+        <Link className="f5 link dim ph4 pv3 m2 dib white bg-green" to={`/${authUser.rolename}/managealbums/new`}>Add Album</Link>
         </div>
       </div>    
     );
@@ -81,6 +75,6 @@ const mapStateToProps = ({ user }) => {
   return { authUser };
 };
 
-export default connect(mapStateToProps)(ManageUsers);
+export default connect(mapStateToProps)(ManageAlbums);
 
 

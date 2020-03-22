@@ -104,6 +104,16 @@ app.get('/reports/songs', reportRouter.getLongestSongs)
 app.get('/reports/genres-duration', reportRouter.getGenresDurationAvg)
 app.get('/reports/collabs', reportRouter.getMostCollaborativeArtist)
 
+app.use(function(req, res, next) {
+	res.setHeader('Access-Control-Allow-Origin', '*');
+	res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+	res.setHeader('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+  if(req.methods == "OPTIONS") {
+    res.sendStatus(200);
+  } else {
+    next();
+  }
+});
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

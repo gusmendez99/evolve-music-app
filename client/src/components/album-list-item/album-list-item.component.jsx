@@ -64,6 +64,7 @@ class AlbumListItem extends Component {
 		this.setState({ selectedArtist: selectedOption }, () => console.log(`Option selected:`, selectedOption));
 		    
   };
+  
   render() {
 		const { selectedArtist, artists } = this.state;
 
@@ -87,27 +88,7 @@ class AlbumListItem extends Component {
 							value={selectedArtist}
 							isClearable
               onChange={this.handleSelectChange}
-            >
-              {/*
-										this.state.artists.map((artist) => {
-											if (this.state.artistName === artist.name ){
-												return (
-													<option 
-													key={artist.artistid}
-													value={artist.name}
-													selected>{artist.name}</option>
-												);
-											}	else {
-												return (
-													<option 
-													key={artist.artistid}
-													value={artist.name}
-													>{artist.name}</option>
-												);
-											}
-										}) 
-									*/}
-            </Select>
+            />
           </td>
           <td className="pv3 pr3 bb b--black-20 flex justify-center items-center">
             <CustomLink

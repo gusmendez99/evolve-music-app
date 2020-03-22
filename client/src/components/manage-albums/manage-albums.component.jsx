@@ -34,7 +34,7 @@ class ManageAlbums extends Component {
     return (
       <div>
         <div className="pa1 ph5-l tc">
-          <h1 className="f3 fw6">Manage Users</h1>
+          <h1 className="f3 fw6">Manage Albums</h1>
         </div>
         <div className="pa3 ph5-l">
           <div className="overflow-y-scroll vh-50">

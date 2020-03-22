@@ -2,6 +2,7 @@ import React, {Component, Fragment} from 'react';
 import CustomLink from '../CustomLink';
 import pullAllWith from 'lodash/pullAllWith';
 import isEqual from 'lodash/isEqual';
+import range from 'lodash/range';
 
 class RoleListItem extends Component {
     constructor(){
@@ -37,36 +38,14 @@ class RoleListItem extends Component {
 		}
 
 		handleUpdate = () => {
-			fetch(`http://localhost:3000/users/${this.state.user.userid}`, {
+			fetch(`http://localhost:3000/roles/${this.state.user.userid}`, {
 				method : 'put',
 				headers : {'Content-type': 'application/json'},
-				body : JSON.stringify({
-					username: this.state.user.username,
-					password: this.state.user.password,
-					firstname: this.state.user.firstname,
-					lastname: this.state.user.lastname,
-					city: this.state.user.city,
-					state: this.state.user.state,
-					country: this.state.user.country,
-					postalcode: this.state.user.postalcode,
-					phone: this.state.user.phone,
-					email: this.state.user.email,
-					roleid: this.state.user.roleid,
-					id: this.state.user.userid
-				})
+				body : JSON.stringify(this.state.permissions)
 			})
 			.then(response => console.log(response.status))   
 		}
 
-		handleDelete =() =>{
-			fetch(`http://localhost:3000/users/${this.state.user.userid}`, {
-				method : 'delete'
-			})
-			.then(response => {if(response.status===200){
-				this.props.updateState(this.state.user.username)
-			}})
-			
-		}
 		handleFieldChange =(event) => {
 			const {checked, value} = event.target;		
 			if(!checked){
@@ -76,38 +55,66 @@ class RoleListItem extends Component {
 				const copy = pullAllWith(this.state.permissions, itemToPull, isEqual)
 				this.setState({permissions:copy});
 				console.log(this.state.permissions);
+
+				fetch(`http://localhost:3000/roles/${this.state.user.userid}/permissions/${value}`, {
+					method : 'delete'
+				})
+				.then(response => console.log(response.status))   
+	
+
 			}
 			else {
 				const itemToPush = this.state.permissionsId.filter(item =>
 					item['permissionid'] == value);
 				const copy = [...this.state.permissions, itemToPush[0]];
 				this.setState({permissions:copy});
+
+				fetch(`http://localhost:3000/roles/${this.state.user.userid}/permissions`, {
+					method : 'post',
+					headers : {'Content-type': 'application/json'},
+					body : JSON.stringify(itemToPush)
+				})
+				.then(response => console.log(response.status))   
+	
+
 			}
 
+
 		}
 
-		handleSelectChange = (event) => {
-			const {name, value} = event.target;
-			const roleid = this.state.roles.filter(x => x.name === value)[0].roleid
-			const copy = {...this.state.user, [name]: roleid}
-			this.setState({user: copy});
-		}
+
     render(){
-				console.log("aqui va el render XD",this.state.user.roleid,this.state);
+			console.log("aquí va el state", this.state.permissions)
         return (
 					<Fragment>
-            <tr class="tc">
+            <tr className="tc">
                 <td className="pv3 pr3 bb b--black-20">
-
 										<input name="username" className="input-reset ba b--black-20 pa2 db w-100" 
 												type="text" 
 												value={this.state.roleName}
-												disabled="true"
+												disabled={true}
 												aria-describedby="username"
 												onChange = {this.handleFieldChange}/>
-									
                 </td>
-								<td className="pv3 pr3 bb b--black-20">
+
+								{
+									
+									range(14).map(
+									(val, index) => (
+										<td className="pv3 pr3 bb b--black-20" key={index}>
+										<input className='mr2'
+												key={index}
+												value={val+1} 
+												type="checkbox"
+												checked={this.state.permissions.filter(item => 
+													item['permissionid'] == (val+1)).length > 0}
+												onChange={this.handleFieldChange}
+												/>
+									</td>
+									)
+									)
+								}
+								{/* <td className="pv3 pr3 bb b--black-20">
 									<input class='mr2'
 											value={1} 
 											name="username"  
@@ -222,16 +229,12 @@ class RoleListItem extends Component {
 											type="checkbox"
 											checked={this.state.permissions.map(item => 
 												item.permissionid === this.value).length > 0 ? 'true' : 'false'}/>
-                </td>
+                </td>*/}
 								<td className="pv3 pr3 bb b--black-20 flex justify-center items-center">
-									<CustomLink
-									to={`/${this.props.currentUser.rolename}/manageusers`}
-									className="b ph3 pv2 input-reset ba b--red red bg-transparent grow pointer f6 dib"
-									onClick={this.handleDelete}>Delete</CustomLink>
 									<button
 									className="b ph3 pv2 input-reset ba b--blue blue bg-transparent grow pointer f6 dib ma2"
 									onClick={this.handleUpdate}>Update</button>
-                </td>
+                </td> 
 						</tr>
 						</Fragment>
         );

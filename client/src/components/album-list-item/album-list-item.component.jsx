@@ -1,6 +1,9 @@
 import React, { Component, Fragment } from "react";
-import Select from 'react-select';
+import  Select  from "react-select";
+
 import CustomLink from "../CustomLink";
+import './album-list-item.styles.css'
+
 
 class AlbumListItem extends Component {
   constructor() {
@@ -83,10 +86,10 @@ class AlbumListItem extends Component {
           </td>
           <td className="pv3 pr3 bb b--black-20">
             <Select
-							className="db f6 bg-white black pr4 pv1 w-100"
-							options={artists}
+							className="db f9 bg-white black pa2 pv1 w-100"
+              options={artists}
 							value={selectedArtist}
-							isClearable
+              isClearable
               onChange={this.handleSelectChange}
             />
           </td>

@@ -70,6 +70,7 @@ const Nav = ({ authUser, onSignOut }) => {
         )}
         {authUser && (
           <span
+            style={{ cursor: "pointer" }}
             className="link dim red f6 f5-l dib"
             onClick={() => onSignOut()}
           >

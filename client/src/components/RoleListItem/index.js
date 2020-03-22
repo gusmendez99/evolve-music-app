@@ -89,7 +89,6 @@ class RoleListItem extends Component {
               className="input-reset ba b--black-20 pa2 db w-100"
               type="text"
               placeholder={this.state.role.name}
-              disabled={true}
               aria-describedby="name"
               onChange={this.handleFieldChange}
             />

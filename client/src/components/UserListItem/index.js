@@ -1,12 +1,13 @@
 import React, {Component, Fragment} from 'react';
 import CustomLink from '../CustomLink';
+import Select from 'react-select';
 
 class UserListItem extends Component {
     constructor(){
       super()
       this.state = {
 				user: {},
-				roleName: '',
+				roleName: {},
 				roles: []
       };
 		};
@@ -19,7 +20,7 @@ class UserListItem extends Component {
 			fetch(`http://localhost:3000/users/${this.props.user.userid}/role`)
 			.then(response => response.json())
 			.then(data => {
-				this.setState({roleName: data[0].name})
+				this.setState({roleName: {value: data[0].roleid, label:data[0].name}})
 			});
 			fetch('http://localhost:3000/roles')
 			.then(response => response.json())
@@ -52,13 +53,18 @@ class UserListItem extends Component {
 			this.setState({user: copy});
 		}
 
-		handleSelectChange = (event) => {
-			const {name, value} = event.target;
-			const roleid = this.state.roles.filter(x => x.name === value)[0].roleid
-			const copy = {...this.state.user, [name]: roleid}
-			this.setState({user: copy});
+		handleSelectChange = (selectedOption) => {
+			if(selectedOption) {
+				console.log(selectedOption);
+				const copy = {...this.state.user, 'roleid': selectedOption.value}
+				this.setState({user: copy});
+				this.setState({roleName: selectedOption})
+			} 			
 		}
     render(){
+			const {roleName} =this.state;
+			const myOptions = this.state.roles.map(role => ({value: role.roleid, label: role.name}))
+			console.log(this.state);
         return (
 					<Fragment>
             <tr>
@@ -104,30 +110,13 @@ class UserListItem extends Component {
                     placeholder={this.state.user.country}
                     onChange = {this.handleFieldChange}/>
                 </td>
-								<td className="pv3 pr3 bb b--black-20">
-									<select className="db f6 bg-white black pr4 pv1 w-100" name="roleid" onChange={this.handleSelectChange}>
-										{
-										this.state.roles.map((role, i) => {
-											if (this.state.roleName === role.name ){
-												return (
-													<option 
-													key={i}
-													value={role.name}
-													selected>{role.name}</option>
-												);
-											}	else {
-												return (
-													<option 
-													key={i}
-													value={role.name}
-													>{role.name}</option>
-												);
-											}
-										}) 
-										}
-									</select>
-												</td>
-												<td className="pv3 pr3 bb b--black-20 flex justify-center items-center">
+								<td className="pv3 pr3 bb b--black-20 w-20">
+									<Select className="db f6 bg-white black pv1 w-100" 
+									onChange={this.handleSelectChange}
+									value={roleName}
+									options={myOptions}/>
+								</td>
+								<td className="pv3 pr3 bb b--black-20 flex justify-center items-center">
 									<CustomLink
 									to={`/${this.props.currentUser.rolename}/manageusers`}
 									className="b ph3 pv2 input-reset ba b--red red bg-transparent grow pointer f6 dib"
@@ -135,7 +124,6 @@ class UserListItem extends Component {
 									<button
 									className="b ph3 pv2 input-reset ba b--blue blue bg-transparent grow pointer f6 dib ma2"
 									onClick={this.handleUpdate}>Update</button>
-
                 </td>
 						</tr>
 						</Fragment>

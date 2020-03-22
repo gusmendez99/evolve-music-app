@@ -6,7 +6,7 @@ const GET_USER_BY_ID = "SELECT * FROM AppUser WHERE UserId = $1";
 const ADD_USER = "INSERT INTO AppUser (UserName, Password, FirstName, LastName, City, State, Country, PostalCode, Phone, Email, RoleId) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)";
 const UPDATE_USER = "UPDATE AppUser SET UserName=$1, Password=$2, FirstName=$3, LastName=$4, City=$5, State=$6, Country=$7, PostalCode=$8, Phone=$9, Email=$10, RoleId=$11 WHERE UserId = $12";
 const DELETE_USER = "DELETE FROM AppUser WHERE UserId = $1";
-const GET_ROLE_BY_USER_ID = 'select r.name from approle r inner join appuser u on R.roleid = (SELECT roleid FROM appuser a WHERE UserId = $1) '
+const GET_ROLE_BY_USER_ID = 'select r.RoleId, r.name from approle r inner join appuser u on R.roleid = u.roleid  WHERE u.UserId = $1'
 const GET_PERMISSIONS_BY_USER_ID = 'SELECT p.* FROM AppUser u INNER JOIN RolePermission rp ON rp.RoleId = u.RoleId INNER JOIN AppPermission p on p.PermissionId = rp.PermissionId WHERE u.UserId = $1 '
 
 const login = (request, response) => {

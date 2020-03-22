@@ -53,6 +53,16 @@ const Nav = ({ authUser, onSignOut }) => {
         {authUser && (
           <Link
             className="link dim dark-gray f6 f5-l dib mr3 mr4-l"
+            to={`/${authUser.rolename}/managetracks`}
+            title="Tracks"
+          >
+            Tracks
+          </Link>
+        )}
+
+        {authUser && (
+          <Link
+            className="link dim dark-gray f6 f5-l dib mr3 mr4-l"
             to={`/${authUser.rolename}/manageusers`}
             title="Users"
           >
@@ -70,6 +80,7 @@ const Nav = ({ authUser, onSignOut }) => {
         )}
         {authUser && (
           <span
+            style={{ cursor: "pointer" }}
             className="link dim red f6 f5-l dib"
             onClick={() => onSignOut()}
           >

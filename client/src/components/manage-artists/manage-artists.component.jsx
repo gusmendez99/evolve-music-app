@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 
 import ArtistListItem from "../artist-list-item/artist-list-item.component";
+import Pagination from '../pagination/pagination.component';
 
 import './manage-artists.styles.css'
 
@@ -11,7 +12,10 @@ class ManageArtists extends Component {
     super();
     this.state = {
       artists: [],
-      searchField: ''
+      searchField: '',
+      currentArtists: [], 
+      currentPage: null, 
+      totalPages: null
     };
   }
 
@@ -23,6 +27,17 @@ class ManageArtists extends Component {
       });
   }
 
+  onPageChanged = data => {
+    const { artists } = this.state;
+    const { currentPage, totalPages, pageLimit } = data;
+
+    const offset = (currentPage - 1) * pageLimit;
+    const currentArtists = artists.slice(offset, offset + pageLimit);
+
+    this.setState({ currentPage, currentArtists, totalPages });
+  }
+
+
   updateState = index => {
     fetch("http://localhost:3000/artists")
       .then(response => response.json())
@@ -32,26 +47,35 @@ class ManageArtists extends Component {
   };
 
 
-  handleSearchFieldChange = event => {
+  /*  onChange... 
+  
+    handleSearchFieldChange = event => {
     const { value } = event.target;
     this.setState({ searchField: value });
-  };
-
-  
+  }; */
 
   render() {
     const { authUser } = this.props;
-    const { searchField } = this.state;
+    const { searchField, artists, currentArtists, currentPage, totalPages } = this.state;
+
+    const totalArtists = artists.length;
+    if (totalArtists === 0) return (<h1 className="tc">No artists yet...</h1>);
 
     return (
       <div>
         <div className="pa1 ph5-l tc">
           <h1 className="f3 fw6">Manage Artists</h1>
+          { currentPage && (
+            <h6>
+              Page { currentPage } / { totalPages }
+            </h6>
+          ) }
         </div>
-        <div className="pa3 ph5-l ">
+        {/* Search function needs Axios to make a query... */
+          <div className="pa3 ph5-l ">
           <label className="f6 b db mb2 blue">Búsqueda</label>
-          <input id="name" name="artist-name" onChange={this.handleSearchFieldChange} className="input-reset ba b--black-20 pa2 mb2 db w-100" type="text" aria-describedby="name-desc"/>
-        </div>
+          <input id="name" name="artist-name"  className="input-reset ba b--black-20 pa2 mb2 db w-100" type="text" aria-describedby="name-desc"/>
+        </div>}
         <div className="pa3 ph5-l">
           <div className="overflow-y-scroll vh-50">
           {
@@ -75,22 +99,21 @@ class ManageArtists extends Component {
 
               <tbody className="lh-copy">
                 
-
-                {this.state.artists.filter(
-                  artist => artist.name.toLowerCase().includes(this.state.searchField.toLowerCase())
-                ).map((singleArtist, i) => {
-                  return (
-                    <ArtistListItem
+              { currentArtists.map(singleArtist => (
+                <ArtistListItem
                       key={singleArtist.artistid}
                       artist={singleArtist}
                       currentUser={authUser}
                       updateState={this.updateState}
                     />
-                  );
-                })}
+              ) ) }
               </tbody>
             </table>
           </div>
+        </div>
+
+        <div className="f3 fw6 pa4 tc">
+          <Pagination totalRecords={totalArtists} pageLimit={15} pageNeighbours={1} onPageChanged={this.onPageChanged} />
         </div>
         
         <div className="tc pa2">

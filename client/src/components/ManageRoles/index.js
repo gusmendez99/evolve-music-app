@@ -8,21 +8,21 @@ class ManageRoles extends Component {
   constructor(){
     super()
     this.state = {
-      users: [],
+      roles: [],
     };
   };
   componentDidMount(){
-    fetch('http://localhost:3000/users')
+    fetch('http://localhost:3000/roles')
     .then(response => response.json())
     .then(data => {
-      this.setState({users: data})
+      this.setState({roles: data})
     });
   }
   updateState = (index) => {
-    fetch('http://localhost:3000/users')
+    fetch('http://localhost:3000/roles')
     .then(response => response.json())
     .then(data => {
-      this.setState({users: data})
+      this.setState({roles: data})
     });
   }
   render(){
@@ -54,11 +54,11 @@ class ManageRoles extends Component {
               </thead>
               <tbody className="lh-copy">
                 {
-                  this.state.users.map((singleUser, i)=>{
+                  this.state.roles.filter(role => role.name.toLowerCase() !== "administrator").map((singleRole, i)=>{
                     return (
                       <RoleListItem
-                      key={i}
-                      user={singleUser}
+                      key={singleRole.roleid}
+                      role={singleRole}
                       currentUser={authUser}
                       updateState={this.updateState}
                       index={i}

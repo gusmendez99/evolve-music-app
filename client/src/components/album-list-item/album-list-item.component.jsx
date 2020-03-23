@@ -69,7 +69,7 @@ class AlbumListItem extends Component {
   };
   
   render() {
-		const { selectedArtist, artists } = this.state;
+		const { album, selectedArtist, artists } = this.state;
 
     return (
       <Fragment>
@@ -79,7 +79,7 @@ class AlbumListItem extends Component {
               name="title"
               className="input-reset ba b--black-20 pa2 db w-100"
               type="text"
-              placeholder={this.state.album.title}
+              placeholder={album.title}
               aria-describedby="title"
               onChange={this.handleFieldChange}
             />

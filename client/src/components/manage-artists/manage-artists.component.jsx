@@ -78,12 +78,12 @@ class ManageArtists extends Component {
         </div>}
         <div className="pa3 ph5-l">
           <div className="overflow-y-scroll vh-50">
-          {
+          {/*
             this.state.artists.filter(
               artist => artist.name.toLowerCase().includes(searchField.toLowerCase())
             ).length === 0 &&
             <h4 className="f3 fw6">No artist found</h4>
-          }
+            */}
             <table className="f6 w-100" cellSpacing="0">
               <thead>
                 <tr>

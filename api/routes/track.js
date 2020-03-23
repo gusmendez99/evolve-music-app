@@ -1,7 +1,7 @@
 const db = require("../database");
 
 const GET_TRACKS = "SELECT * FROM Track ORDER BY Name ASC";
-const GET_TRACK_BY_ID = "SELECT * FROM Track WHERE TrackId = $1";
+const GET_TRACK_BY_ID = "SELECT t.*, g.Name as GenreName, m.Name as MediaTypeName, a.Title as AlbumTitle FROM Track t INNER JOIN Genre g on t.genreid = g.genreid INNER JOIN MediaType m on t.mediatypeid = m.mediatypeid INNER JOIN Album a on t.albumid = a.albumid WHERE t.TrackId = $1";
 //const ADD_TRACK = "INSERT INTO Track (TrackId, Name) VALUES ($1, $2)";
 const UPDATE_TRACK = "UPDATE Track SET Name=$1, AlbumId=$2, MediaTypeId=$3, GenreId=$4, Composer=$5, Millisecons=$6, Bytes=$7, UnitPrice=$8 WHERE TrackId=$9";
 const DELETE_TRACK = "DELETE FROM Track WHERE TrackId = $1";

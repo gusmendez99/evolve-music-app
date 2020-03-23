@@ -2,7 +2,7 @@ const db = require("../database");
 
 const GET_ROLES = "SELECT * FROM AppRole ORDER BY Name ASC";
 const GET_ROLE_BY_ID = "SELECT * FROM AppRole WHERE RoleId = $1";
-const ADD_ROLE = "INSERT INTO AppRole (Name) VALUES ($1)";
+const ADD_ROLE = "INSERT INTO AppRole (Name) VALUES ($1) RETURNING *";
 const UPDATE_ROLE = "UPDATE AppRole SET Name=$1 WHERE RoleId = $2";
 const DELETE_ROLE = "DELETE FROM AppRole WHERE RoleId = $1";
 const GET_PERMISSIONS_BY_ROLE = "SELECT p.* FROM RolePermission rp INNER JOIN AppPermission p ON p.PermissionId = rp.PermissionId WHERE rp.RoleId = $1"
@@ -43,7 +43,7 @@ const createRole = (request, response) => {
       if (error) {
         throw error;
       }
-      response.status(201).send(`Role added with ID: ${results.insertId}`);
+      response.status(201).json(results.rows[0]);
     }
   );
 };

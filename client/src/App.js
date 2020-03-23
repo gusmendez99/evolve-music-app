@@ -3,7 +3,7 @@ import React, {Component} from 'react';
 import './App.css';
 import {BrowserRouter as Router, Route} from 'react-router-dom';
 
-import RouterApp from './router/router.component.jsx';
+import RouterApp from './router';
 
 import "tachyons";
 

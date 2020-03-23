@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import { Link} from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import AlbumListItem from '../album-list-item/album-list-item.component';
+import AlbumListItem from '../AlbumListItem';
 
 class ManageAlbums extends Component {
   constructor(){

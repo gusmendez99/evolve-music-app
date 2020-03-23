@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import './pagination.styles.css'
+import './styles.css'
 
 const LEFT_PAGE = 'LEFT';
 const RIGHT_PAGE = 'RIGHT';

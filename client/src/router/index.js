@@ -4,19 +4,20 @@ import { Redirect, Route, Switch } from "react-router-dom";
 import { connect } from "react-redux";
 
 //Pages
-import HomePage from "../pages/home/home.component";
-import SignInSignUpPage from "../pages/sign-in-and-sign-up/sign-in-and-sign-up.component";
+import HomePage from "../pages/Home";
+import SignInSignUpPage from "../pages/SignInAndSignUp";
 
 //Components
 import Nav from "../components/Nav";
 import ManageUsers from "../components/ManageUsers";
 import AddUser from "../components/AddUser";
 import ManageRoles from "../components/ManageRoles";
-import ManageArtists from '../components/manage-artists/manage-artists.component'
-import AddArtist from '../components/add-artist/add-artist.component'
-import ManageAlbums from '../components/manage-albums/manage-albums.component'
-import AddAlbum from '../components/add-album/add-album.component'
-import ManageTracks from '../components/manage-tracks/manage-tracks.component'
+import ManageArtists from '../components/ManageArtists'
+import AddArtist from '../components/AddArtist'
+import ManageAlbums from '../components/ManageAlbums'
+import AddAlbum from '../components/AddAlbum'
+import ManageTracks from '../components/ManageTracks'
+import AddTrack from '../components/AddTrack'
 import Statistics from "../components/Statistics";
 import AddRole from "../components/AddRole";
 
@@ -79,6 +80,12 @@ class RouterApp extends React.Component {
               exact
               path={`/${authUser.rolename}/managetracks`}
               component={ManageTracks}
+              authUser={authUser}
+            />
+            <RestrictedRoute
+              exact
+              path={`/${authUser.rolename}/managetracks/new`}
+              component={AddTrack}
               authUser={authUser}
             />
 

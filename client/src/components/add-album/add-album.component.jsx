@@ -70,6 +70,7 @@ class AddAlbum extends Component {
             </div>
 
             <div className="mv3">
+            <label className="db fw6 lh-copy f6">Artist</label>
               <Select
                 className="db f6 bg-white black pr4 pv1 w-100"
                 options={artists}

@@ -104,7 +104,7 @@ app.get('/mediatypes', mediaTypeRouter.getMediaTypes)
 // Track
 app.get('/tracks', trackRouter.getTracks)
 app.get('/tracks/:id', trackRouter.getTrackById)
-//app.post('/tracks', trackRouter.createTrack)
+app.post('/tracks', trackRouter.createTrack)
 app.put('/tracks/:id', trackRouter.updateTrack)
 app.delete('/tracks/:id', trackRouter.deleteTrack)
 

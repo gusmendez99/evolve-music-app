@@ -2,10 +2,10 @@ import React, {Component} from 'react';
 import { Link} from 'react-router-dom';
 import { connect } from 'react-redux';
 
-import TrackListItem from '../track-list-item/track-list-item.component';
-import Pagination from '../pagination/pagination.component';
+import TrackListItem from '../TrackListItem';
+import Pagination from '../Pagination';
 
-import './manage-tracks.styles.css'
+import './styles.css'
 
 class ManageTracks extends Component {
   constructor(){

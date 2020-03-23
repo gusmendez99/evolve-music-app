@@ -1,8 +1,8 @@
 import React, { Fragment } from "react";
 
-import Footer from "../../components/footer/footer.component";
+import Footer from "../../components/Footer";
 
-import "./home.styles.css";
+import "./styles.css";
 
 class HomePage extends React.Component {
   render() {

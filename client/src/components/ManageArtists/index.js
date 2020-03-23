@@ -2,10 +2,9 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 
-import ArtistListItem from "../artist-list-item/artist-list-item.component";
-import Pagination from '../pagination/pagination.component';
+import ArtistListItem from "../ArtistListItem";
+import Pagination from '../Pagination';
 
-import './manage-artists.styles.css'
 
 class ManageArtists extends Component {
   constructor() {

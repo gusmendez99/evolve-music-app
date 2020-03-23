@@ -1,9 +1,9 @@
 import React, { Fragment } from "react";
 
-import SignIn from "../../components/sign-in/sign-in.component";
-import SignUp from "../../components/sign-up/sign-up.component";
+import SignIn from "../../components/SignIn";
+import SignUp from "../../components/SignUp";
 
-import "./sign-in-and-sign-up.styles.css";
+import "./styles.css";
 
 class SignInSignUpPage extends React.Component {
   render() {

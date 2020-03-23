@@ -2,7 +2,6 @@ import React, { Component, Fragment } from "react";
 import  Select  from "react-select";
 
 import CustomLink from "../CustomLink";
-import './album-list-item.styles.css'
 
 
 class AlbumListItem extends Component {

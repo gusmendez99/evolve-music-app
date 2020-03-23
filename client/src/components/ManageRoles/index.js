@@ -75,7 +75,7 @@ class ManageRoles extends Component {
         </div>
         <div className="tc pa2">
           {/*TODO: pasarle la ruta correcta y permitir renderizar el formulario AddRole */}
-          {/* <Link className="f5 link dim ph4 pv3 m2 dib white bg-green" to={`/${authUser.rolename}/manageroles/new`}>Add Role</Link> */}
+          <Link className="f5 link dim ph4 pv3 m2 dib white bg-green" to={`/${authUser.rolename}/manageroles/new`}>Add Role</Link>
         </div>
       </div>    
     );

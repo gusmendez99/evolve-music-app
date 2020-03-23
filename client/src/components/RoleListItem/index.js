@@ -32,51 +32,65 @@ class RoleListItem extends Component {
       });
   }
 
-  handleUpdate = () => {
+	handleUpdate = () => {
+		fetch(`http://localhost:3000/roles/${this.state.role.roleid}`, {
+			method: "put",
+			headers: { "Content-type": "application/json" },
+			body: JSON.stringify({ name: this.state.role.name })
+		}).then(response => console.log(response.status));
+	};
 
-    fetch(`http://localhost:3000/roles/${this.state.role.roleid}`, {
-      method: "put",
-      headers: { "Content-type": "application/json" },
-      body: JSON.stringify(this.state.permissions)
-    }).then(response => console.log(response.status));
-  };
+	handleFieldChange = event => {
+		const { checked, value } = event.target;
+		if (!checked) {
+			console.log(this.state.permissions);
+			const itemToPull = this.state.allPermissions.filter(
+				item => item["permissionid"] == value
+			);
+			const copy = pullAllWith(this.state.permissions, itemToPull, isEqual);
+			this.setState({ permissions: copy });
+			console.log("Esto le mando ->".itemToPull);
 
-  handleFieldChange = event => {
-    const { checked, value } = event.target;
-    if (!checked) {
-      console.log(this.state.permissions);
-      const itemToPull = this.state.allPermissions.filter(
-        item => item["permissionid"] == value
-      );
-      const copy = pullAllWith(this.state.permissions, itemToPull, isEqual);
-      this.setState({ permissions: copy });
-      console.log("Esto le mando ->".itemToPull);
+			fetch(
+				`http://localhost:3000/roles/${this.state.role.roleid}/permissions/${value}`,
+				{
+					method: "delete"
+				}
+			).then(response => console.log(response.status));
+		} else {
+			const itemToPush = this.state.allPermissions.filter(
+				item => item["permissionid"] == value
+			);
+			const copy = [...this.state.permissions, itemToPush[0]];
+			this.setState({ permissions: copy });
 
-      fetch(
-        `http://localhost:3000/roles/${this.state.role.roleid}/permissions/${value}`,
-        {
-          method: "delete"
-        }
-      ).then(response => console.log(response.status));
-    } else {
-      const itemToPush = this.state.allPermissions.filter(
-        item => item["permissionid"] == value
-      );
-      const copy = [...this.state.permissions, itemToPush[0]];
-      this.setState({ permissions: copy });
+			console.log(itemToPush[0]);
 
-      console.log(itemToPush[0]);
+			fetch(
+				`http://localhost:3000/roles/${this.state.role.roleid}/permissions`,
+				{
+					method: "post",
+					headers: { "Content-type": "application/json" },
+					body: JSON.stringify(itemToPush[0])
+				}
+			).then(response => console.log(response.status));
+		}
+	};
+	
+	handleInputChange = event => {
+		const { value, name } = event.target;
+		const copy = { ...this.state.role, [name]: value };
+		this.setState({ role: copy });
+	};
 
-      fetch(
-        `http://localhost:3000/roles/${this.state.role.roleid}/permissions`,
-        {
-          method: "post",
-          headers: { "Content-type": "application/json" },
-          body: JSON.stringify(itemToPush[0])
-        }
-      ).then(response => console.log(response.status));
-    }
-  };
+	handleDelete = event => {
+		fetch(
+			`http://localhost:3000/roles/${this.state.role.roleid}`,
+			{
+				method: "delete"
+			}
+		).then(response => console.log(response.status));
+	};
 
   render() {
     //console.log("aquí va el state", this.state.permissions);
@@ -90,7 +104,7 @@ class RoleListItem extends Component {
               type="text"
               placeholder={this.state.role.name}
               aria-describedby="name"
-              onChange={this.handleFieldChange}
+              onChange={this.handleInputChange}
             />
           </td>
 
@@ -116,6 +130,12 @@ class RoleListItem extends Component {
               onClick={this.handleUpdate}
             >
               Update
+            </button>
+						<button
+              className="b ph3 pv2 input-reset ba b--red red bg-transparent grow pointer f6 dib ma2"
+              onClick={this.handleDelete}
+            >
+              Delete
             </button>
           </td>
         </tr>

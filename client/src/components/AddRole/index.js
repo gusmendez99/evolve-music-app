@@ -1,65 +1,8 @@
-import React, {useState,Fragment} from 'react'
-import Select, { components } from 'react-select';
+import React, {Fragment} from 'react'
+import Select from 'react-select';
 import makeAnimated from 'react-select/animated';
 import { connect } from 'react-redux'
 import axios from 'axios';
-
-
-//esto hay que traerlo con un fetch
-const PERMISSIONS =[
-  {
-    "value": 1,
-    "label": "READ ARTIST"
-  },
-  {
-    "value": 2,
-    "label": "REGISTER ARTIST"
-  },
-  {
-    "value": 3,
-    "label": "UPDATE ARTIST"
-  },
-  {
-    "value": 4,
-    "label": "DELETE ARTIST"
-  },
-  {
-    "value": 5,
-    "label": "READ SONG"
-  },
-  {
-    "value": 6,
-    "label": "REGISTER SONG"
-  },
-  {
-    "value": 7,
-    "label": "UPDATE SONG"
-  },
-  {
-    "value": 8,
-    "label": "DELETE SONG"
-  },
-  {
-    "value": 9,
-    "label": "INACTIVATE SONG"
-  },
-  {
-    "value": 10,
-    "label": "READ ALBUM"
-  },
-  {
-    "value": 11,
-    "label": "REGISTER ALBUM"
-  },
-  {
-    "value": 12,
-    "label": "UPDATE ALBUM"
-  },
-  {
-    "value": 13,
-    "label": "DELETE ALBUM"
-  }
-]
 
 class AddRole extends React.Component {
 
@@ -84,7 +27,11 @@ class AddRole extends React.Component {
     fetch('http://localhost:3000/permissions')
       .then(response => response.json())
       .then(data => {
-        this.setState({ allPermissions: data })
+        const permissionOptions = data.map(permission => {
+          return { value: permission.permissionid, label: permission.name };
+        });
+
+        this.setState({ allPermissions: permissionOptions })
 
       });
 	}
@@ -120,6 +67,7 @@ class AddRole extends React.Component {
 
 
   render() {
+    const { allPermissions } = this.state;
     
     return (
       <Fragment>
@@ -135,7 +83,7 @@ class AddRole extends React.Component {
               className="mt-4 col-md-6 col-offset-4"
               components={makeAnimated()}
               isMulti
-              options={PERMISSIONS}
+              options={allPermissions}
               onChange={this.handleFieldSelect}
             />
             </form>

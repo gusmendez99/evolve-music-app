@@ -4,7 +4,6 @@ import { connect } from 'react-redux';
 
 
 import RoleListItem from '../RoleListItem';
-import RolForm from '../AddRole';
 
 
 class ManageRoles extends Component {

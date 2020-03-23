@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from "react";
 import  Select  from "react-select";
+import { connect } from 'react-redux'
 
 import CustomLink from "../CustomLink";
 
@@ -68,6 +69,7 @@ class AlbumListItem extends Component {
   };
   
   render() {
+    const { permissions } = this.props;
 		const { album, selectedArtist, artists } = this.state;
 
     return (
@@ -92,25 +94,30 @@ class AlbumListItem extends Component {
               onChange={this.handleSelectChange}
             />
           </td>
-          <td className="pv3 pr3 bb b--black-20 flex justify-center items-center">
-            <CustomLink
+          {(permissions.canDeleteAlbum || permissions.canUpdateAlbum) && <td className="pv3 pr3 bb b--black-20 flex justify-center items-center">
+            {permissions.canDeleteAlbum && <CustomLink
               to={`/${this.props.currentUser.rolename}/managealbums`}
               className="b ph3 pv2 input-reset ba b--red red bg-transparent grow pointer f6 dib"
               onClick={this.handleDelete}
             >
               Delete
-            </CustomLink>
-            <button
+            </CustomLink>}
+            {permissions.canUpdateAlbum && <button
               className="b ph3 pv2 input-reset ba b--blue blue bg-transparent grow pointer f6 dib ma2"
               onClick={this.handleUpdate}
             >
               Update
-            </button>
-          </td>
+            </button>}
+          </td>}
         </tr>
       </Fragment>
     );
   }
 }
 
-export default AlbumListItem;
+const mapStateToProps = ({ user }) => {
+  const { permissions } = user;
+  return { permissions };
+};
+
+export default connect(mapStateToProps)(AlbumListItem);

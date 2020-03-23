@@ -29,7 +29,13 @@ class ManageAlbums extends Component {
   }
 
   render(){
-    const { authUser } = this.props;
+    const { authUser, permissions } = this.props;
+
+    if(!permissions.canReadAlbum) return (
+      <div className="pa1 ph5-l tc">
+          <h1 className="f3 fw6">You cant Read Albums...</h1>
+        </div>
+    )
 
     return (
       <div>
@@ -43,7 +49,7 @@ class ManageAlbums extends Component {
                 <tr>
                   <th className="fw6 bb b--black-20 tc pb3 pr3 bg-white">Name</th>
                   <th className="fw6 bb b--black-20 tc pb3 pr3 bg-white">Artist</th>
-                  <th className="fw6 bb b--black-20 tc pb3 pr3 bg-white">Acciones</th>
+                  {(permissions.canDeleteAlbum || permissions.canUpdateAlbum) &&<th className="fw6 bb b--black-20 tc pb3 pr3 bg-white">Acciones</th>}
                 </tr>
               </thead>
               <tbody className="lh-copy">
@@ -64,15 +70,19 @@ class ManageAlbums extends Component {
           </div>
         </div>
         <div className="tc pa2">
-        <Link className="f5 link dim ph4 pv3 m2 dib white bg-green" to={`/${authUser.rolename}/managealbums/new`}>Add Album</Link>
+        {
+          permissions.canCreateAlbum &&
+          <Link className="f5 link dim ph4 pv3 m2 dib white bg-green" to={`/${authUser.rolename}/managealbums/new`}>Add Album</Link>
+        }
+        
         </div>
       </div>    
     );
   }
 }
 const mapStateToProps = ({ user }) => {
-  const { authUser } = user;
-  return { authUser };
+  const { authUser, permissions } = user;
+  return { authUser, permissions };
 };
 
 export default connect(mapStateToProps)(ManageAlbums);

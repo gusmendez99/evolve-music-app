@@ -48,7 +48,7 @@ const createUser = (request, response) => {
   
   db.query(
     ADD_USER,
-    [ username, firstname, password, lastname, city, state, country, postalcode, phone, email, roleid ],
+    [ username, password, firstname, lastname, city, state, country, postalcode, phone, email, roleid ],
     (error, results) => {
       if (error) {
         throw error;

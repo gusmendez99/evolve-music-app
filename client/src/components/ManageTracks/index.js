@@ -60,8 +60,14 @@ class ManageTracks extends Component {
   }
 
   render(){
-    const { authUser } = this.props;
+    const { authUser, permissions } = this.props;
     const { searchField, tracks, mediatypes, genres, currentTracks, currentPage, totalPages } = this.state;
+
+    if(!permissions.canReadTrack) return (
+      <div className="pa1 ph5-l tc">
+          <h1 className="f3 fw6">You cant Read Tracks...</h1>
+        </div>
+    )
 
     const totalTracks = tracks.length;
     if (totalTracks === 0) return (<h1 className="tc">No tracks yet...</h1>);
@@ -95,7 +101,7 @@ class ManageTracks extends Component {
                   <th className="fw6 bb b--black-20 tc pb3 pr3 bg-white w-10 select-field">Genre</th>
                   <th className="fw6 bb b--black-20 tc pb3 pr3 bg-white w-10 select-field">Media Type</th>
                   
-                  <th className="fw6 bb b--black-20 tc pb3 pr3 bg-white w-10 select-field">Acciones</th>
+                  {(permissions.canDeleteTrack || permissions.canUpdateTrack) && <th className="fw6 bb b--black-20 tc pb3 pr3 bg-white w-10 select-field">Acciones</th>}
                 </tr>
               </thead>
               <tbody className="lh-copy">
@@ -115,15 +121,19 @@ class ManageTracks extends Component {
           <Pagination totalRecords={totalTracks} pageLimit={15} pageNeighbours={1} onPageChanged={this.onPageChanged} />
         </div>
         <div className="tc pa2">
-        <Link className="f5 link dim ph4 pv3 m2 dib white bg-green" to={`/${authUser.rolename}/managetracks/new`}>Add Track</Link>
+        {
+          permissions.canCreateTrack &&
+          <Link className="f5 link dim ph4 pv3 m2 dib white bg-green" to={`/${authUser.rolename}/managetracks/new`}>Add Track</Link>
+        }
+        
         </div>
       </div>    
     );
   }
 }
 const mapStateToProps = ({ user }) => {
-  const { authUser } = user;
-  return { authUser };
+  const { authUser, permissions } = user;
+  return { authUser, permissions };
 };
 
 export default connect(mapStateToProps)(ManageTracks);

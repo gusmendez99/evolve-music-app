@@ -1,5 +1,6 @@
 import React, { Component, Fragment } from "react";
 import CustomLink from "../CustomLink";
+import { connect } from 'react-redux'
 
 class ArtistListItem extends Component {
   constructor() {
@@ -41,6 +42,8 @@ class ArtistListItem extends Component {
   };
 
   render() {
+    const { permissions } = this.props;
+
     return (
       <Fragment>
         <tr>
@@ -54,25 +57,30 @@ class ArtistListItem extends Component {
               onChange={this.handleFieldChange}
             />
           </td>
-          <td className="pv3 pr3 bb b--black-20 flex justify-center items-center">
-            <CustomLink
+          {(permissions.canDeleteArtist || permissions.canUpdateArtist) && <td className="pv3 pr3 bb b--black-20 flex justify-center items-center">
+            {permissions.canDeleteArtist && <CustomLink
               to={`/${this.props.currentUser.rolename}/manageartists`}
               className="b ph3 pv2 input-reset ba b--red red bg-transparent grow pointer f6 dib"
               onClick={this.handleDelete}
             >
               Delete
-            </CustomLink>
-            <button
+            </CustomLink>}
+            {permissions.canUpdateArtist && <button
               className="b ph3 pv2 input-reset ba b--blue blue bg-transparent grow pointer f6 dib ma2"
               onClick={this.handleUpdate}
             >
               Update
-            </button>
-          </td>
+            </button>}
+          </td>}
         </tr>
       </Fragment>
     );
   }
 }
 
-export default ArtistListItem;
+const mapStateToProps = ({ user }) => {
+  const { permissions } = user;
+  return { permissions };
+};
+
+export default connect(mapStateToProps)(ArtistListItem);

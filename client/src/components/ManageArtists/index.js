@@ -54,8 +54,14 @@ class ManageArtists extends Component {
   }; */
 
   render() {
-    const { authUser } = this.props;
+    const { authUser, permissions } = this.props;
     const { searchField, artists, currentArtists, currentPage, totalPages } = this.state;
+
+    if(!permissions.canReadArtist) return (
+      <div className="pa1 ph5-l tc">
+          <h1 className="f3 fw6">You cant Read Artists...</h1>
+        </div>
+    )
 
     const totalArtists = artists.length;
     if (totalArtists === 0) return (<h1 className="tc">No artists yet...</h1>);
@@ -89,9 +95,9 @@ class ManageArtists extends Component {
                   <th className="fw6 bb b--black-20 tc pb3 pr3 bg-white">
                     Name
                   </th>
-                  <th className="fw6 bb b--black-20 tc pb3 pr3 bg-white">
+                  {(permissions.canDeleteArtist || permissions.canUpdateArtist) && <th className="fw6 bb b--black-20 tc pb3 pr3 bg-white">
                     Acciones
-                  </th>
+                  </th>}
                 </tr>
               </thead>
               
@@ -116,22 +122,25 @@ class ManageArtists extends Component {
         </div>
         
         <div className="tc pa2">
-          
-
-          <Link
+          {
+            permissions.canCreateArtist &&
+            <Link
             className="f5 link dim ph4 pv3 m2 dib white bg-green"
             to={`/${authUser.rolename}/manageartists/new`}
           >
             Add Artist
           </Link>
+          }
+
+          
         </div>
       </div>
     );
   }
 }
 const mapStateToProps = ({ user }) => {
-  const { authUser } = user;
-  return { authUser };
+  const { authUser, permissions } = user;
+  return { authUser, permissions };
 };
 
 export default connect(mapStateToProps)(ManageArtists);

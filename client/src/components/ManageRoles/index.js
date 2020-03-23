@@ -2,7 +2,10 @@ import React, {Component} from 'react';
 import { Link} from 'react-router-dom';
 import { connect } from 'react-redux';
 
+
 import RoleListItem from '../RoleListItem';
+import RolForm from '../AddRole';
+
 
 class ManageRoles extends Component {
   constructor(){
@@ -70,7 +73,10 @@ class ManageRoles extends Component {
             </table>
           </div>
         </div>
-        <Link to={`/${authUser.rolename}/manageroles/new`}>Ir</Link>
+        <div className="tc pa2">
+          {/*TODO: pasarle la ruta correcta y permitir renderizar el formulario AddRole */}
+          {/* <Link className="f5 link dim ph4 pv3 m2 dib white bg-green" to={`/${authUser.rolename}/manageroles/new`}>Add Role</Link> */}
+        </div>
       </div>    
     );
   }

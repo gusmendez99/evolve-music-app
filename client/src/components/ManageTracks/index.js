@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import { Link} from 'react-router-dom';
 import { connect } from 'react-redux';
+import axios from 'axios';
 
 import TrackListItem from '../TrackListItem';
 import Pagination from '../Pagination';
@@ -22,23 +23,23 @@ class ManageTracks extends Component {
   };
 
   componentDidMount(){
-    fetch('http://localhost:3000/tracks')
-    .then(response => response.json())
-    .then(data => {
-      this.setState({tracks: data})
-    });
+    axios.get('http://localhost:3000/tracks')
+    .then(response => {
+      this.setState({tracks: response.data})
+    })
+    .catch(error => console.log(error));
 
-    fetch('http://localhost:3000/mediatypes')
-    .then(response => response.json())
-    .then(data => {
-      this.setState({mediatypes: data})
-    });
+    axios.get('http://localhost:3000/mediatypes')
+    .then(response => {
+      this.setState({mediatypes: response.data})
+    })
+    .catch(error => console.log(error));
 
-    fetch('http://localhost:3000/genres')
-    .then(response => response.json())
-    .then(data => {
-      this.setState({genres: data})
-    });
+    axios.get('http://localhost:3000/genres')
+    .then(response => {
+      this.setState({genres: response.data})
+    })
+    .catch(error => console.log(error));
   }
 
   onPageChanged = data => {
@@ -52,10 +53,9 @@ class ManageTracks extends Component {
   }
 
   updateState = () => {
-    fetch('http://localhost:3000/tracks')
-    .then(response => response.json())
-    .then(data => {
-      this.setState({tracks: data})
+    axios.get('http://localhost:3000/tracks')
+    .then(response => {
+      this.setState({tracks: response.data})
     });
   }
 

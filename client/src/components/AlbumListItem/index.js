@@ -1,9 +1,9 @@
 import React, { Component, Fragment } from "react";
 import  Select  from "react-select";
-import { connect } from 'react-redux'
+import { connect } from 'react-redux';
+import axios from 'axios';
 
 import CustomLink from "../CustomLink";
-
 
 class AlbumListItem extends Component {
   constructor() {
@@ -16,41 +16,42 @@ class AlbumListItem extends Component {
   }
   componentDidMount() {
 
-    fetch(`http://localhost:3000/albums/${this.props.album.albumid}`)
-      .then(response => response.json())
-      .then(data => {
-        this.setState({ album: data[0], selectedArtist: { value: data[0].artistid , label: data[0].artistname }});
-      });
+    axios.get(`http://localhost:3000/albums/${this.props.album.albumid}`)
+      .then(response => {
+        this.setState({ album: response.data[0], selectedArtist: { value: response.data[0].artistid , label: response.data[0].artistname }});
+      })
+      .catch(error=>console.log(error));
 
-    fetch("http://localhost:3000/artists")
-      .then(response => response.json())
-      .then(data => {
+    axios.get("http://localhost:3000/artists")
+      .then(response => {
 
-				const artistOptions = data.map(artist => {
+				const artistOptions = response.data.map(artist => {
 					return { value: artist.artistid, label: artist.name }
 				})
-
         this.setState({ artists: artistOptions });
-      });
+      })
+      .catch(error=>console.log(error));
   }
 
   handleUpdate = () => {
-		console.log(this.state.album)
-    fetch(`http://localhost:3000/albums/${this.state.album.albumid}`, {
+    axios({
       method: "put",
-      headers: { "Content-type": "application/json" },
-      body: JSON.stringify(this.state.album)
-    }).then(response => console.log(response.status));
+      url: `http://localhost:3000/albums/${this.state.album.albumid}`,
+      data: this.state.album
+    })
+    .then(response => console.log(response.status))
+    .catch(error=>console.log(error));
   };
 
   handleDelete = () => {
-    fetch(`http://localhost:3000/users/${this.state.album.albumid}`, {
-      method: "delete"
-    }).then(response => {
-      if (response.status === 200) {
-        this.props.updateState();
-      }
-    });
+    axios({
+      method: "delete",
+      url: `http://localhost:3000/albums/${this.state.album.albumid}`
+    })
+    .then(response => {
+      if (response.status === 200) {this.props.updateState();}
+    })
+    .catch(error=> console.log(error));
   };
   handleFieldChange = event => {
     const { name, value } = event.target;

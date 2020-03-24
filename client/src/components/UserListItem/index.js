@@ -48,8 +48,8 @@ class UserListItem extends Component {
 		axios.delete(`http://localhost:3000/users/${this.state.user.userid}`)
 		.then(response => {if(response.status===200){
 			this.props.updateState(this.state.user.username)
-		}}).
-		catch(error =>console.log(error));	
+		}})
+		.catch(error =>console.log(error));	
 	}
 	handleFieldChange =(event) => {
 		const {name, value} = event.target;

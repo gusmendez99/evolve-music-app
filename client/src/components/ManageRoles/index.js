@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import { Link} from 'react-router-dom';
 import { connect } from 'react-redux';
+import axios from 'axios';
 
 
 import RoleListItem from '../RoleListItem';
@@ -14,18 +15,14 @@ class ManageRoles extends Component {
     };
   };
   componentDidMount(){
-    fetch('http://localhost:3000/roles')
-    .then(response => response.json())
-    .then(data => {
-      this.setState({roles: data})
-    });
+    axios.get('http://localhost:3000/roles')
+    .then(response => this.setState({roles: response.data}))
+    .catch(error=>console.log(error));
   }
   updateState = (index) => {
-    fetch('http://localhost:3000/roles')
-    .then(response => response.json())
-    .then(data => {
-      this.setState({roles: data})
-    });
+    axios.get('http://localhost:3000/roles')
+    .then(response => this.setState({roles: response.data}))
+    .catch(error=>console.log(error));
   }
   render(){
     const { authUser } = this.props;

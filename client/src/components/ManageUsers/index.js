@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import { Link} from 'react-router-dom';
 import { connect } from 'react-redux';
+import axios from 'axios';
 
 import UserListItem from '../UserListItem';
 
@@ -13,19 +14,17 @@ class ManageUsers extends Component {
   };
 
   componentDidMount(){
-    fetch('http://localhost:3000/users')
-    .then(response => response.json())
-    .then(data => {
-      this.setState({users: data})
-    });
+    axios
+    .get('http://localhost:3000/users')
+    .then(response => this.setState({users: response.data}))
+    .catch(error => console.log(error));
   }
 
+  //Este se puede quitar pues el re-render se tiene que hacer de manera mas eficiente
   updateState = (index) => {
-    fetch('http://localhost:3000/users')
-    .then(response => response.json())
-    .then(data => {
-      this.setState({users: data})
-    });
+    axios.get('http://localhost:3000/users')
+    .then(response => this.setState({users: response.data}))
+    .catch(error => console.log(error));
   }
 
   render(){

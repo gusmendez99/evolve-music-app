@@ -1,8 +1,8 @@
 import React, { Component, Fragment } from "react";
-import CustomLink from "../CustomLink";
 import pullAllWith from "lodash/pullAllWith";
 import isEqual from "lodash/isEqual";
 import range from "lodash/range";
+import axios from 'axios';
 
 class RoleListItem extends Component {
   constructor() {
@@ -14,30 +14,28 @@ class RoleListItem extends Component {
     };
   }
   componentDidMount() {
-    fetch(`http://localhost:3000/roles/${this.props.role.roleid}`)
-      .then(response => response.json())
-      .then(data => {
-        this.setState({ role: data[0] });
+    axios.get(`http://localhost:3000/roles/${this.props.role.roleid}`)
+      .then(response => {
+        this.setState({ role: response.data[0] });
       });
 
-    fetch(`http://localhost:3000/roles/${this.props.role.roleid}/permissions`)
-      .then(response => response.json())
-      .then(data => {
-        this.setState({ permissions: data });
+    axios.get(`http://localhost:3000/roles/${this.props.role.roleid}/permissions`)
+      .then(response => {
+        this.setState({ permissions: response.data });
       });
-    fetch("http://localhost:3000/permissions")
-      .then(response => response.json())
-      .then(data => {
-        this.setState({ allPermissions: data });
+    axios.get("http://localhost:3000/permissions")
+      .then(response => {
+        this.setState({ allPermissions: response.data });
       });
   }
 
 	handleUpdate = () => {
-		fetch(`http://localhost:3000/roles/${this.state.role.roleid}`, {
-			method: "put",
-			headers: { "Content-type": "application/json" },
-			body: JSON.stringify({ name: this.state.role.name })
-		}).then(response => console.log(response.status));
+		axios({
+      method: "put",
+      url:`http://localhost:3000/roles/${this.state.role.roleid}`, 
+			data: { name: this.state.role.name }
+    }).then(response => console.log(response.status))
+    .catch(error => console.log(error));
 	};
 
 	handleFieldChange = event => {
@@ -47,33 +45,35 @@ class RoleListItem extends Component {
 			const itemToPull = this.state.allPermissions.filter(
 				item => item["permissionid"] == value
 			);
-			const copy = pullAllWith(this.state.permissions, itemToPull, isEqual);
-			this.setState({ permissions: copy });
-			console.log("Esto le mando ->".itemToPull);
+			
+      console.log("Esto le mando ->".itemToPull);
 
-			fetch(
-				`http://localhost:3000/roles/${this.state.role.roleid}/permissions/${value}`,
-				{
-					method: "delete"
-				}
-			).then(response => console.log(response.status));
+      axios.delete(`http://localhost:3000/roles/${this.state.role.roleid}/permissions/${value}`)
+      .then(response => {
+        console.log(response.status);
+        if(response.status === 200){
+          const copy = pullAllWith(this.state.permissions, itemToPull, isEqual);
+		    	this.setState({ permissions: copy });
+        }
+      })
+      .catch(error=> console.log(error));
 		} else {
 			const itemToPush = this.state.allPermissions.filter(
 				item => item["permissionid"] == value
 			);
-			const copy = [...this.state.permissions, itemToPush[0]];
-			this.setState({ permissions: copy });
-
 			console.log(itemToPush[0]);
-
-			fetch(
-				`http://localhost:3000/roles/${this.state.role.roleid}/permissions`,
-				{
-					method: "post",
-					headers: { "Content-type": "application/json" },
-					body: JSON.stringify(itemToPush[0])
-				}
-			).then(response => console.log(response.status));
+      axios({
+        method: "post",
+        url: `http://localhost:3000/roles/${this.state.role.roleid}/permissions`,
+        data: itemToPush[0]
+      })
+      .then(response =>{ 
+        console.log(response.status);
+        if (response.status===201){
+        const copy = [...this.state.permissions, itemToPush[0]];
+        this.setState({ permissions: copy });
+      }})
+      .catch(error=> console.log(error));
 		}
 	};
 	
@@ -82,18 +82,18 @@ class RoleListItem extends Component {
 		const copy = { ...this.state.role, [name]: value };
 		this.setState({ role: copy });
 	};
-
+  // TODO: hay que aplicar onDelete cascade porque el server tira error ya que en rolepermission está
+  // esta llave de rol como llave foránea
 	handleDelete = event => {
-		fetch(
-			`http://localhost:3000/roles/${this.state.role.roleid}`,
-			{
-				method: "delete"
-			}
-		).then(response => console.log(response.status));
+		axios({
+      method: "delete",
+      url: `http://localhost:3000/roles/${this.state.role.roleid}`,
+    })
+    .then(response => console.log(response.status))
+    .catch(error => console.log(error));
 	};
 
   render() {
-    //console.log("aquí va el state", this.state.permissions);
     return (
       <Fragment>
         <tr className="tc">

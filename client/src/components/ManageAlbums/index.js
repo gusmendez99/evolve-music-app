@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import { Link} from 'react-router-dom';
 import { connect } from 'react-redux';
+import  axios  from 'axios'
 
 import AlbumListItem from '../AlbumListItem';
 
@@ -13,19 +14,15 @@ class ManageAlbums extends Component {
   };
 
   componentDidMount(){
-    fetch('http://localhost:3000/albums')
-    .then(response => response.json())
-    .then(data => {
-      this.setState({albums: data})
-    });
+    axios.get('http://localhost:3000/albums')
+    .then(response => this.setState({albums: response.data}))
+    .catch(error=> console.log(error));
   }
 
   updateState = () => {
-    fetch('http://localhost:3000/albums')
-    .then(response => response.json())
-    .then(data => {
-      this.setState({albums: data})
-    });
+    axios.get('http://localhost:3000/albums')
+    .then(response => this.setState({albums: response.data}))
+    .catch(error=> console.log(error));
   }
 
   render(){

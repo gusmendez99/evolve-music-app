@@ -1,6 +1,7 @@
 import React,{Component} from 'react';
 import CustomLink from '../CustomLink';
-import { connect } from 'react-redux'
+import { connect } from 'react-redux';
+import axios from 'axios';
 
 class AddUser extends Component {
 	constructor(){
@@ -11,11 +12,9 @@ class AddUser extends Component {
 		};
 	};
 	componentDidMount(){
-		fetch('http://localhost:3000/roles')
-			.then(response => response.json())
-			.then(data => {
-				this.setState({roles: data})
-				//set default roleid
+		axios.get('http://localhost:3000/roles')
+			.then(response => {
+				this.setState({roles: response.data})
 				const copy = {...this.state.user, 'roleid': this.state.roles[0].roleid}
 				this.setState({user: copy})
 			});
@@ -32,12 +31,10 @@ class AddUser extends Component {
 		this.setState({user: copy});
 	}
 	handleSubmit =() =>{
-		// agregar rolid por defecto, va a ser el default value del select
-		fetch(`http://localhost:3000/users`, {
-				method : 'post',
-				headers : {'Content-type': 'application/json'},
-				body : JSON.stringify(this.state.user)
-			})
+		axios({
+			method: 'post',
+			url: `http://localhost:3000/users`,
+			data: this.state.user})
 		.then(response => console.log(response.status))   
 	}
 	

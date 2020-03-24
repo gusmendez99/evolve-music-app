@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import CustomLink from "../CustomLink";
 import { connect } from "react-redux";
-import Select from 'react-select'
+import Select from 'react-select';
+import axios from 'axios';
 
 const SELECT_ALBUM_OPTION = "SELECT_ALBUM_OPTION";
 const SELECT_GENRE_OPTION = "SELECT_GENRE_OPTION";
@@ -22,33 +23,28 @@ class AddTrack extends Component {
   }
 
   componentDidMount() {
-    fetch("http://localhost:3000/albums")
-      .then(response => response.json())
-      .then(data => {
-        const albumOptions = data.map(album => {
+    axios.get("http://localhost:3000/albums")
+      .then(response => {
+        const albumOptions = response.data.map(album => {
           return { value: album.albumid, label: album.title };
         });
-
         this.setState({ albums: albumOptions });
       });
 
-    fetch("http://localhost:3000/genres")
-      .then(response => response.json())
-      .then(data => {
-        const genreOptions = data.map(genre => {
+    axios.get("http://localhost:3000/genres")
+      .then(response => {
+        const genreOptions = response.data.map(genre => {
           return { value: genre.genreid, label: genre.name };
         });
 
         this.setState({ genres: genreOptions });
       });
 
-    fetch("http://localhost:3000/mediatypes")
-      .then(response => response.json())
-      .then(data => {
-        const mediaTypeOptions = data.map(mediatype => {
+    axios.get("http://localhost:3000/mediatypes")
+      .then(response => {
+        const mediaTypeOptions = response.data.map(mediatype => {
           return { value: mediatype.mediatypeid, label: mediatype.name };
         });
-
         this.setState({ mediaTypes: mediaTypeOptions });
       });
   }
@@ -102,13 +98,13 @@ class AddTrack extends Component {
   };
 
   handleSubmit = () => {
-    console.log(this.state.track)
-    // agregar rolid por defecto, va a ser el default value del select
-    fetch(`http://localhost:3000/tracks`, {
+    axios({
       method: "post",
-      headers: { "Content-type": "application/json" },
-      body: JSON.stringify(this.state.track)
-    }).then(response => console.log(response.status)); 
+      url: `http://localhost:3000/tracks`,
+      data: this.state.track
+    })
+    .then(response => console.log(response.status))
+    .catch(error => console.log(error)); 
   };
 
   render() {

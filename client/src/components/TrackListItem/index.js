@@ -2,6 +2,7 @@ import React, { Component, Fragment } from "react";
 import CustomLink from "../CustomLink";
 import Select from "react-select";
 import { connect } from 'react-redux'
+import axios from 'axios';
 
 const SELECT_ALBUM_OPTION = "SELECT_ALBUM_OPTION"
 const SELECT_GENRE_OPTION = "SELECT_GENRE_OPTION"
@@ -22,8 +23,8 @@ class TrackListItem extends Component {
     };
   }
   componentDidMount() {
-    fetch(`http://localhost:3000/tracks/${this.props.track.trackid}`)
-      .then(response => response.json())
+    axios.get(`http://localhost:3000/tracks/${this.props.track.trackid}`)
+      .then(response => response.data)
       .then(data => {
         this.setState({
           track: data[0],
@@ -34,55 +35,56 @@ class TrackListItem extends Component {
             label: data[0].mediatypename
           }
         });
-      });
+      })
+      .catch(error => console.log(error));
 
-    fetch("http://localhost:3000/albums")
-      .then(response => response.json())
-      .then(data => {
-        const albumOptions = data.map(album => {
+    axios.get("http://localhost:3000/albums")
+      .then(response => {
+        const albumOptions = response.data.map(album => {
           return { value: album.albumid, label: album.title };
         });
-
         this.setState({ albums: albumOptions });
-      });
+      })
+      .catch(error => console.log(error));
 
-    fetch("http://localhost:3000/genres")
-      .then(response => response.json())
-      .then(data => {
-        const genreOptions = data.map(genre => {
+    axios.get("http://localhost:3000/genres")
+      .then(response => {
+        const genreOptions = response.data.map(genre => {
           return { value: genre.genreid, label: genre.name };
         });
-
         this.setState({ genres: genreOptions });
-      });
+      })
+      .catch(error => console.log(error));
 
-    fetch("http://localhost:3000/mediatypes")
-      .then(response => response.json())
-      .then(data => {
-        const mediaTypeOptions = data.map(mediatype => {
+    axios.get("http://localhost:3000/mediatypes")
+      .then(response => {
+        const mediaTypeOptions = response.data.map(mediatype => {
           return { value: mediatype.mediatypeid, label: mediatype.name };
         });
-
         this.setState({ mediaTypes: mediaTypeOptions });
-      });
+      })
+      .catch(error => console.log(error));
   }
 
   handleUpdate = () => {
-    fetch(`http://localhost:3000/tracks/${this.state.track.trackid}`, {
+    axios({
       method: "put",
-      headers: { "Content-type": "application/json" },
-      body: JSON.stringify(this.state.track)
-    }).then(response => console.log(response.status));
+      url: `http://localhost:3000/tracks/${this.state.track.trackid}`,
+      data: this.state.track
+    })
+    .then(response => console.log(response.status))
+    .catch(error => console.log(error));
   };
 
+  // TODO on delete cascade porque hay una llave foránea en playlisttrack referenciando al id de la pista
   handleDelete = () => {
-    fetch(`http://localhost:3000/tracks/${this.state.track.trackid}`, {
-      method: "delete"
-    }).then(response => {
+    axios.delete(`http://localhost:3000/tracks/${this.state.track.trackid}`)
+    .then(response => {
       if (response.status === 200) {
         this.props.updateState();
       }
-    });
+    })
+    .catch(error => console.log(error));
   };
 
   handleFieldChange = event => {

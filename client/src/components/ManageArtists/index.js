@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import { connect } from "react-redux";
+import axios from "axios";
 
 import ArtistListItem from "../ArtistListItem";
 import Pagination from '../Pagination';
@@ -19,10 +20,9 @@ class ManageArtists extends Component {
   }
 
   componentDidMount() {
-    fetch("http://localhost:3000/artists")
-      .then(response => response.json())
-      .then(data => {
-        this.setState({ artists: data });
+    axios.get("http://localhost:3000/artists")
+      .then(response => {
+        this.setState({ artists: response.data });
       });
   }
 
@@ -38,10 +38,9 @@ class ManageArtists extends Component {
 
 
   updateState = index => {
-    fetch("http://localhost:3000/artists")
-      .then(response => response.json())
-      .then(data => {
-        this.setState({ artists: data });
+    axios.get("http://localhost:3000/artists")
+      .then(response => {
+        this.setState({ artists: response.data });
       });
   };
 

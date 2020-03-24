@@ -1,6 +1,7 @@
 import React, { Component, Fragment } from "react";
 import CustomLink from "../CustomLink";
-import { connect } from 'react-redux'
+import { connect } from 'react-redux';
+import axios from "axios";
 
 class ArtistListItem extends Component {
   constructor() {
@@ -10,25 +11,26 @@ class ArtistListItem extends Component {
     };
   }
   componentDidMount() {
-    fetch(`http://localhost:3000/artists/${this.props.artist.artistid}`)
-      .then(response => response.json())
-      .then(data => {
-        this.setState({ artist: data[0] });
+    axios.get(`http://localhost:3000/artists/${this.props.artist.artistid}`)
+      .then(response => {
+        this.setState({ artist: response.data[0] });
       });
   }
 
   handleUpdate = () => {
     console.log(this.state.artist)
-    fetch(`http://localhost:3000/artists/${this.state.artist.artistid}`, {
+    axios({
       method: "put",
-      headers: { "Content-type": "application/json" },
-      body: JSON.stringify(this.state.artist)
-    }).then(response => console.log(response.status));
+      url: `http://localhost:3000/artists/${this.state.artist.artistid}`,
+      data: this.state.artist
+    })
+    .then(response => console.log(response.status));
   };
 
   handleDelete = () => {
-    fetch(`http://localhost:3000/artists/${this.state.artist.artistid}`, {
-      method: "delete"
+    axios({
+      method: "delete",
+      url: `http://localhost:3000/artists/${this.state.artist.artistid}`
     }).then(response => {
       if (response.status === 200) {
         this.props.updateState();

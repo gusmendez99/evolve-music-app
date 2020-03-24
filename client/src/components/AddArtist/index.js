@@ -1,49 +1,30 @@
 import React, { Component } from "react";
 import CustomLink from "../CustomLink";
 import { connect } from "react-redux";
+import axios from "axios";
 
 class AddArtist extends Component {
   constructor() {
     super();
     this.state = {
-      artist: {},
-      roles: []
+      artist: {}
     };
-  }
-  componentDidMount() {
-    fetch("http://localhost:3000/roles")
-      .then(response => response.json())
-      .then(data => {
-        this.setState({ roles: data });
-        //set default roleid
-        const copy = {
-          ...this.state.artist,
-          roleid: this.state.roles[0].roleid
-        };
-        this.setState({ artist: copy });
-      });
   }
   handleFieldChange = event => {
     const { name, value } = event.target;
     const copy = { ...this.state.artist, [name]: value };
     this.setState({ artist: copy });
   };
-  handleSelectChange = event => {
-    const { name, value } = event.target;
-    const roleid = this.state.roles.filter(x => x.name === value)[0].roleid;
-    const copy = { ...this.state.artist, [name]: roleid };
-    this.setState({ artist: copy });
-  };
   handleSubmit = () => {
-    // agregar rolid por defecto, va a ser el default value del select
-    fetch(`http://localhost:3000/artists`, {
+    axios({
       method: "post",
-      headers: { "Content-type": "application/json" },
-      body: JSON.stringify(this.state.artist)
+      url: `http://localhost:3000/artists`,
+      data: this.state.artist.name
     }).then(response => console.log(response.status));
   };
 
   render() {
+    console.log(this.state);
     const { authUser } = this.props;
     return (
       <main className="pa4 black-80">

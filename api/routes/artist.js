@@ -1,5 +1,7 @@
 const db = require("../database");
 
+
+
 const GET_ARTISTS = "SELECT * FROM Artist ORDER BY Name ASC";
 const GET_ARTIST_BY_ID = "SELECT * FROM Artist WHERE ArtistId = $1";
 const ADD_ARTIST = "INSERT INTO Artist (ArtistId, Name) SELECT MAX( ArtistId ) + 1, $1 FROM Artist";
@@ -21,8 +23,9 @@ const getArtistById = (request, response) => {
   db.query(GET_ARTIST_BY_ID, [id], (error, results) => {
     if (error) {
       throw error;
-    }
-    response.status(200).json(results.rows);
+    }    
+    response.status(200).json(results.rows)
+
   });
 };
 

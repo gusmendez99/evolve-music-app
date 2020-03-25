@@ -1,5 +1,7 @@
 // UTILS
 const ADMIN_ROLE_NAME = "administrator"
+const CUSTOMER_ROLE_NAME = "customer"
+
 const PERMISSION_NAMES = [
   "REGISTER ARTIST",
   "READ ARTIST",
@@ -14,7 +16,8 @@ const PERMISSION_NAMES = [
   "UPDATE SONG",
   "UPDATE SONG",
   "INACTIVATE SONG",
-  "GENERATE REPORT"
+  "GENERATE REPORT",
+  "READ ACTIVE SONG"
 ];
 
 export const getPermissionsByRole = (permissions, roleName) => {
@@ -35,7 +38,8 @@ export const getPermissionsByRole = (permissions, roleName) => {
     canDeleteTrack: rolePermissionNames.includes(PERMISSION_NAMES[11]),
     canInactivateTrack: rolePermissionNames.includes(PERMISSION_NAMES[12]),
     canGenerateReport: rolePermissionNames.includes(PERMISSION_NAMES[13]),
-    isAdmin: roleName === ADMIN_ROLE_NAME
+    isAdmin: roleName === ADMIN_ROLE_NAME,
+    isCustomer: roleName === CUSTOMER_ROLE_NAME
   };
 
   return myPermissions;

@@ -18,7 +18,8 @@ var genreRouter = require("./routes/genre");
 var trackRouter = require("./routes/track");
 var mediaTypeRouter = require("./routes/media-type");
 var reportRouter = require("./routes/report");
-var searchRouter = require('./routes/search')
+var searchRouter = require('./routes/search');
+var inactiveTrack = require('./routes/inactivate-songs');
 
 var app = express();
 
@@ -61,6 +62,7 @@ app.post("/search/users", searchRouter.searchUser);
 app.post("/search/tracks", searchRouter.searchTrack);
 app.post("/search/albums", searchRouter.searchAlbum);
 app.post("/search/artists", searchRouter.searchArtist);
+app.post("/search/tracks/active", searchRouter.searchActiveTrack)
 
 // Users
 app.get("/users", userRouter.getUsers);
@@ -116,11 +118,18 @@ app.get("/mediatypes", mediaTypeRouter.getMediaTypes);
 
 // Track
 app.get("/tracks", trackRouter.getTracks);
+app.get("/tracks/active", trackRouter.getActiveTracks);
 app.get("/tracks/:id", trackRouter.getTrackById);
 app.get("/metadata/tracks", trackRouter.getTrackMetadata);
 app.post("/tracks", trackRouter.createTrack);
 app.put("/tracks/:id", trackRouter.updateTrack);
 app.delete("/tracks/:id", trackRouter.deleteTrack);
+
+//InactiveTrack
+app.get("/inactivetrack", inactiveTrack.getInactiveSongs);
+app.get("/inactivetrack/:id", inactiveTrack.getInactiveSongById);
+app.post("/inactivetrack/:id", inactiveTrack.addInactiveSong);
+app.delete("/inactivetrack/:id", inactiveTrack.deleteInactiveSong);
 
 // Report
 app.get("/reports/most-common-artists", reportRouter.getMostCommonArtists);

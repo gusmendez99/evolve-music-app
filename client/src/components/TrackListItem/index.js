@@ -3,6 +3,8 @@ import CustomLink from "../CustomLink";
 import Select from "react-select";
 import { connect } from 'react-redux'
 import axios from 'axios';
+import pullAllWith from "lodash/pullAllWith";
+import isEqual from "lodash/isEqual";
 
 const SELECT_ALBUM_OPTION = "SELECT_ALBUM_OPTION"
 const SELECT_GENRE_OPTION = "SELECT_GENRE_OPTION"
@@ -16,7 +18,10 @@ class TrackListItem extends Component {
       track: {},
       selectedAlbum: null,
       selectedGenre: null,
-      selectedMediaType: null
+      genres: [],
+      selectedMediaType: null,
+      mediaTypes: [],
+      isInactive:[]
     };
   }
   componentDidMount() {
@@ -35,7 +40,38 @@ class TrackListItem extends Component {
       })
       .catch(error => console.log(error));
 
-    
+    axios.get("http://localhost:3000/albums")
+      .then(response => {
+        const albumOptions = response.data.map(album => {
+          return { value: album.albumid, label: album.title };
+        });
+        this.setState({ albums: albumOptions });
+      })
+      .catch(error => console.log(error));
+
+    axios.get("http://localhost:3000/genres")
+      .then(response => {
+        const genreOptions = response.data.map(genre => {
+          return { value: genre.genreid, label: genre.name };
+        });
+        this.setState({ genres: genreOptions });
+      })
+      .catch(error => console.log(error));
+
+    axios.get("http://localhost:3000/mediatypes")
+      .then(response => {
+        const mediaTypeOptions = response.data.map(mediatype => {
+          return { value: mediatype.mediatypeid, label: mediatype.name };
+        });
+        this.setState({ mediaTypes: mediaTypeOptions });
+      })
+      .catch(error => console.log(error));
+
+    axios.get("http://localhost:3000/inactivetrack")
+    .then(response => {
+      this.setState({isInactive: response.data})
+    })
+    .catch(error => console.log(error));
   }
 
   handleUpdate = () => {
@@ -100,7 +136,26 @@ class TrackListItem extends Component {
     if (selectedOption) this.handleSelectChange(selectedOption, SELECT_MEDIATYPE_OPTION)
   };
 
+  handleCheck = event => {
+    const { checked, value } = event.target;
+    if(!checked){
+      axios.delete(`http://localhost:3000/inactivetrack/${value}`)
+      .then(response => console.log("se elimino",response));
+      const copy = pullAllWith(this.state.isInactive, [{trackid:parseInt(value)}], isEqual);
+      console.log("Esta es la copia -->" , copy);
+      this.setState({isInactive:copy});
+
+    }
+    else {
+      axios.post(`http://localhost:3000/inactivetrack/${value}`)
+      .then(response => console.log(response));
+      const copy = [...this.state.isInactive, {trackid: parseInt(value)}]
+      this.setState({isInactive:copy});
+    }
+  }
+
   render() {
+
     const { permissions, albums, mediaTypes, genres } = this.props;
 
     const { track, selectedAlbum, selectedGenre, selectedMediaType } = this.state;
@@ -135,7 +190,7 @@ class TrackListItem extends Component {
               type="number"
               placeholder={track.milliseconds}
               aria-describedby="milliseconds"
-              onChange={this.handleFieldChange}
+              onClick={this.handleFieldChange}
             />
           </td>
           <td className="pv3 pr3 bb b--black-20">
@@ -185,7 +240,18 @@ class TrackListItem extends Component {
               onChange={this.handleMediaTypeSelectChange}
             />
           </td>          
-          
+          <td className="pv3 pr3 bb b--black-20 w-10">
+            <div className="tc">
+              <input
+                className="mr2"
+                value={this.state.track.trackid}
+                type="checkbox"
+                checked={this.state.isInactive.filter(
+                  item => item["trackid"] == this.state.track.trackid).length > 0}
+                onChange={this.handleCheck}
+              />
+            </div>
+            </td>
           
           {(permissions.canDeleteTrack || permissions.canUpdateTrack) && <td className="pv3 pr3 bb b--black-20 tc justify-center items-center">
             {permissions.canDeleteTrack && <CustomLink

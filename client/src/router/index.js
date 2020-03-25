@@ -22,6 +22,9 @@ import AddTrack from '../components/AddTrack'
 import Statistics from "../components/Statistics";
 import AddRole from "../components/AddRole";
 
+//Customer Home
+import CustomerTracks from '../components/CustomerTracks'
+
 const RestrictedCreateRoute = ({ component: Component, authUser, canCreate, ...props }) => (
   <Route
     {...props}
@@ -49,6 +52,15 @@ const RestrictedAdminRoute = ({ component: Component, authUser, isAdmin, ...prop
   />
 );
 
+const RestrictedCustomerRoute = ({ component: Component, authUser, isCustomer, ...props }) => (
+  <Route
+    {...props}
+    render={props =>
+      (authUser && isCustomer) ? <Component {...props} /> : <Redirect to="/" />
+    }
+  />
+);
+
 class RouterApp extends React.Component {
 
   render() {
@@ -66,6 +78,14 @@ class RouterApp extends React.Component {
 
         {authUser && (
           <Fragment>
+            <RestrictedCustomerRoute
+              exact
+              path={`/my-tracks`}
+              component={CustomerTracks}
+              authUser={authUser}
+              isCustomer={permissions.isCustomer}
+            />
+
             <RestrictedRoute
               exact
               path={`/${authUser.rolename}/stats`}

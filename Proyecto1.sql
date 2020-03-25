@@ -199,6 +199,8 @@ INSERT INTO AppPermission(Name) VALUES ('DELETE ALBUM');
 
 INSERT INTO AppPermission(Name) VALUES ('GENERATE REPORT');
 
+INSERT INTO AppPermission(Name) VALUES ('READ ACTIVE SONG');
+
 INSERT INTO AppRole(Name) VALUES ('ADMINISTRATOR');
 INSERT INTO AppRole(Name) VALUES ('MANAGER');
 INSERT INTO AppRole(Name) VALUES ('REPORTER');
@@ -244,11 +246,12 @@ INSERT INTO RolePermission(RoleId,PermissionId) VALUES (4,1);
 INSERT INTO RolePermission(RoleId,PermissionId) VALUES (4,5);
 INSERT INTO RolePermission(RoleId,PermissionId) VALUES (4,10);
 
-/* CUSTOMER role can only READ tracks */
-INSERT INTO RolePermission(RoleId,PermissionId) VALUES (5,5);
+/* CUSTOMER role can only READ active tracks */
+INSERT INTO RolePermission(RoleId,PermissionId) VALUES (5,15);
 
 /*Super User creation*/
 INSERT INTO AppUser(UserName,Password,FirstName,LastName,City,State,Country,PostalCode, Phone,Email,RoleId) VALUES ('admin', '1234', 'Super', 'User', 'GT', 'GT', 'GT','01015', '+502 44891646', 'luis212urbina@gmail.com', 1);
+INSERT INTO AppUser(UserName,Password,FirstName,LastName,City,State,Country,PostalCode, Phone,Email,RoleId) VALUES ('gus', '1234', 'Gus', 'Mendez', 'GT', 'GT', 'GT','01015', '+502 32349997', 'gus@gmail.com', 5);
 
 INSERT INTO Genre (GenreId, Name) VALUES (1,'Rock');
 INSERT INTO Genre (GenreId, Name) VALUES (2,'Jazz');

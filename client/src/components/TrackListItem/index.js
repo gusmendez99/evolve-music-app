@@ -137,22 +137,25 @@ class TrackListItem extends Component {
   };
 
   handleCheck = event => {
-    const { value, checked } = event.target;
+    const { checked, value } = event.target;
     if(!checked){
       axios.delete(`http://localhost:3000/inactivetrack/${value}`)
-      .then(response => console.log(response));
-      const copy = pullAllWith(this.state.isInactive, [{"trackid":value}], isEqual);
+      .then(response => console.log("se elimino",response));
+      const copy = pullAllWith(this.state.isInactive, [{trackid:parseInt(value)}], isEqual);
+      console.log("Esta es la copia -->" , copy);
       this.setState({isInactive:copy});
+
     }
     else {
       axios.post(`http://localhost:3000/inactivetrack/${value}`)
       .then(response => console.log(response));
-      const copy = [...this.state.isInactive, {"trackid": value}]
+      const copy = [...this.state.isInactive, {trackid: parseInt(value)}]
       this.setState({isInactive:copy});
     }
   }
 
   render() {
+
     const { permissions, albums, mediaTypes, genres } = this.props;
 
     const { track, selectedAlbum, selectedGenre, selectedMediaType } = this.state;
@@ -187,7 +190,7 @@ class TrackListItem extends Component {
               type="number"
               placeholder={track.milliseconds}
               aria-describedby="milliseconds"
-              onChange={this.handleFieldChange}
+              onClick={this.handleFieldChange}
             />
           </td>
           <td className="pv3 pr3 bb b--black-20">

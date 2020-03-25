@@ -25,7 +25,8 @@ class RoleListItem extends Component {
       });
     axios.get("http://localhost:3000/permissions")
       .then(response => {
-        this.setState({ allPermissions: response.data });
+        const filterData = pullAllWith(response.data, [{permissionid: 15, name: "READ ACTIVE SONG"}],isEqual);
+        this.setState({ allPermissions: filterData });
       });
   }
 

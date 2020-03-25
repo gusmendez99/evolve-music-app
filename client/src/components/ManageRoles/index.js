@@ -31,7 +31,7 @@ class ManageRoles extends Component {
           <h1 className="f3 fw6">Manage Roles</h1>
         </div>
         <div className="pa4">
-          <div className="overflow-auto">
+          <div className="overflow-y-scroll overflow-x-scroll vh-50 ">
             <table className="f6 w-100 mw-100 center" cellSpacing="0">
               <thead>
                 <tr>

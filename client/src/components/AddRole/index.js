@@ -1,5 +1,6 @@
 import React, {Fragment} from 'react'
 import Select from 'react-select';
+import CustomLink from '../CustomLink';
 import makeAnimated from 'react-select/animated';
 import { connect } from 'react-redux'
 import axios from 'axios';
@@ -56,30 +57,37 @@ class AddRole extends React.Component {
     const { allPermissions } = this.state;
     return (
       <Fragment>
-        <div className="tc dib">
-          <label className="f6 b db mb2">Create New Role</label>
-          <form className="pa4 black-80">
-            <div className="measure">
-              <label className="f6 b db mb2">Role Name</label>
-              <input id="name" className="input-reset ba b--black-20 pa2 mb2 db w-100" type="text" aria-describedby="name-desc" placeholder="Insert a name" onChange={this.handleFieldChange}/>
-            </div>
-            <label className="f6 b db mb2">Permissions</label>
-            <Select
-              className="mt-4 col-md-6 col-offset-4"
-              components={makeAnimated()}
-              isMulti
-              options={allPermissions}
-              onChange={this.handleFieldSelect}
-            />
+        <section className="mw5 mw7-ns center bg-light-gray pa3 ph5-ns tc">
+          <div className="tc dib">
+            <label className="f6 b db mb2">Create New Role</label>
+            <form className="pa4 black-80">
+              <div className="measure">
+                <label className="f6 b db mb2">Role Name</label>
+                <input id="name" className="input-reset ba b--black-20 pa2 mb2 db w-100" type="text" aria-describedby="name-desc" placeholder="Insert a name" onChange={this.handleFieldChange} />
+              </div>
+              <label className="f6 b db mb2">Permissions</label>
+              <Select
+                className="mt-4 col-md-6 col-offset-4"
+                components={makeAnimated()}
+                isMulti
+                options={allPermissions}
+                onChange={this.handleFieldSelect}
+              />
             </form>
-            <button
+
+            <CustomLink
+							to={`/`}
+							className="b ph3 pv2 input-reset ba b--green green bg-transparent grow pointer f6 dib"
+							onClick={this.handleSubmit}>Create</CustomLink>
+
+            {/* <button
               className="b ph3 pv2 input-reset ba b--green green bg-transparent grow pointer f6 dib ma2"
               onClick={this.handleSubmit}
             >
               Create
-            </button>
-
-        </div>
+            </button> */}
+          </div>
+        </section>
       </Fragment>
     );
   }

@@ -13147,3 +13147,13 @@ INSERT INTO PlaylistTrack (PlaylistId, TrackId) VALUES (17, 2095);
 INSERT INTO PlaylistTrack (PlaylistId, TrackId) VALUES (17, 2096);
 INSERT INTO PlaylistTrack (PlaylistId, TrackId) VALUES (17, 3290);
 INSERT INTO PlaylistTrack (PlaylistId, TrackId) VALUES (18, 597);
+
+
+CREATE OR REPLACE FUNCTION addUserCount (user_id int, track_id int)
+    RETURNS void AS
+    $BODY$
+        BEGIN
+            INSERT INTO TrackHistory(UserId, TrackId) VALUES(user_id, track_id);
+        END;
+    $BODY$
+    LANGUAGE 'plpgsql' VOLATILE COST 100;

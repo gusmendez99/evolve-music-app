@@ -23,30 +23,38 @@ class AddTrack extends Component {
   }
 
   componentDidMount() {
-    axios.get("http://localhost:3000/albums")
-      .then(response => {
-        const albumOptions = response.data.map(album => {
-          return { value: album.albumid, label: album.title };
-        });
-        this.setState({ albums: albumOptions });
+    axios({
+      method: "get",
+      url: "http://localhost:3000/albums"
+    })
+    .then(response => {
+      const albumOptions = response.data.map(album => {
+        return { value: album.albumid, label: album.title };
       });
+      this.setState({ albums: albumOptions });
+    });
 
-    axios.get("http://localhost:3000/genres")
-      .then(response => {
-        const genreOptions = response.data.map(genre => {
-          return { value: genre.genreid, label: genre.name };
-        });
-
-        this.setState({ genres: genreOptions });
+    axios({
+      method: "get",
+      url: "http://localhost:3000/genres"
+    })
+    .then(response => {
+      const genreOptions = response.data.map(genre => {
+        return { value: genre.genreid, label: genre.name };
       });
+      this.setState({ genres: genreOptions });
+    });
 
-    axios.get("http://localhost:3000/mediatypes")
-      .then(response => {
-        const mediaTypeOptions = response.data.map(mediatype => {
-          return { value: mediatype.mediatypeid, label: mediatype.name };
-        });
-        this.setState({ mediaTypes: mediaTypeOptions });
+    axios({
+      method: "get",
+      url: "http://localhost:3000/mediatypes"
+    })
+    .then(response => {
+      const mediaTypeOptions = response.data.map(mediatype => {
+        return { value: mediatype.mediatypeid, label: mediatype.name };
       });
+      this.setState({ mediaTypes: mediaTypeOptions });
+    });
   }
 
   handleFieldChange = event => {
@@ -101,7 +109,7 @@ class AddTrack extends Component {
     axios({
       method: "post",
       url: `http://localhost:3000/tracks`,
-      data: this.state.track
+      data: {...this.state.track, 'userid': this.props.authUser.userid}
     })
     .then(response => console.log(response.status))
     .catch(error => console.log(error)); 

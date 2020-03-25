@@ -10,6 +10,8 @@ class ManageUsers extends Component {
   constructor(){
     super()
     this.state = {
+      isSearching: false,
+      searchList: [],
       users: [],
       searchField: '',
       currentUsers: [], 
@@ -36,34 +38,36 @@ class ManageUsers extends Component {
   }
 
   //Este se puede quitar pues el re-render se tiene que hacer de manera mas eficiente
-  updateState = (index) => {
+  updateState = () => {
     axios.get('http://localhost:3000/users')
     .then(response => this.setState({users: response.data}))
     .catch(error => console.log(error));
   }
 
-  handleSearchFieldChange = event => {
+  handleSearchFieldChange = async event => {
     const { value } = event.target;
     console.log(value)
-    this.setState({ searchField: value })
+    
 
     if(value && value !== ""){
+      this.setState({ searchField: value, isSearching: true })
       axios({
         method: "post",
         url: `http://localhost:3000/search/users`,
         data: { query: value }
       }).then(res => {
-        this.setState({ currentUsers: res.data });
+        this.setState({ searchList: res.data });
   
       } );
     } else {
-      this.setState({ currentUsers: this.state.users });
+      this.setState({ searchField: value, isSearching: false })
     }
   }
 
   render(){
     const { authUser } = this.props;
-    const { searchField, users, currentUsers, currentPage, totalPages } = this.state;
+    const { searchField, users, currentUsers, 
+      currentPage, totalPages, isSearching, searchList } = this.state;
 
     const totalUsers = users.length;
     if (totalUsers === 0) return (<h1 className="tc">No users yet...</h1>);
@@ -101,6 +105,22 @@ class ManageUsers extends Component {
               </thead>
               <tbody className="lh-copy">
                 {
+                  isSearching ? (
+                    searchList.map((singleUser, i)=>{
+                      if(singleUser.userid != authUser.userid){
+                        return (
+                          <UserListItem
+                          key={i}
+                          user={singleUser}
+                          currentUser={authUser}
+                          updateState={this.updateState}
+                          index={i}
+                          />
+                        );
+                      }
+                      
+                  })
+                  ) : (
                   currentUsers.map((singleUser, i)=>{
                     if(singleUser.userid != authUser.userid){
                       return (
@@ -114,7 +134,7 @@ class ManageUsers extends Component {
                       );
                     }
                     
-                })
+                }))
                 }
               </tbody>
             </table>

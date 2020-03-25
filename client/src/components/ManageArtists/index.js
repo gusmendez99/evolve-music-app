@@ -11,6 +11,8 @@ class ManageArtists extends Component {
   constructor() {
     super();
     this.state = {
+      isSearching: false,
+      searchList: [],
       artists: [],
       searchField: '',
       currentArtists: [], 
@@ -37,7 +39,7 @@ class ManageArtists extends Component {
   }
 
 
-  updateState = index => {
+  updateState = () => {
     axios.get("http://localhost:3000/artists")
       .then(response => {
         this.setState({ artists: response.data });
@@ -45,28 +47,30 @@ class ManageArtists extends Component {
   };
 
 
-  handleSearchFieldChange = event => {
+  handleSearchFieldChange = async event => {
     const { value } = event.target;
     console.log(value)
-    this.setState({ searchField: value })
+    
 
     if(value && value !== ""){
+      this.setState({ searchField: value, isSearching: true })
       axios({
         method: "post",
         url: `http://localhost:3000/search/artists`,
         data: { query: value }
       }).then(res => {
-        this.setState({ currentArtists: res.data });
+        this.setState({ searchList: res.data });
   
       } );
     } else {
-      this.setState({ currentArtists: this.state.artists });
+      this.setState({ searchField: value, isSearching: false })
     }
   }
 
   render() {
     const { authUser, permissions } = this.props;
-    const { searchField, artists, currentArtists, currentPage, totalPages } = this.state;
+    const { searchField, artists, currentArtists, 
+      currentPage, totalPages, isSearching, searchList } = this.state;
 
     if(!permissions.canReadArtist) return (
       <div className="pa1 ph5-l tc">
@@ -110,14 +114,27 @@ class ManageArtists extends Component {
 
               <tbody className="lh-copy">
                 
-              { currentArtists.map(singleArtist => (
-                <ArtistListItem
-                      key={singleArtist.artistid}
-                      artist={singleArtist}
-                      currentUser={authUser}
-                      updateState={this.updateState}
-                    />
-              ) ) }
+              { 
+                isSearching ? (
+                  searchList.map(singleArtist => (
+                    <ArtistListItem
+                          key={singleArtist.artistid}
+                          artist={singleArtist}
+                          currentUser={authUser}
+                          updateState={this.updateState}
+                        />
+                  ) ) 
+                ) : (
+                currentArtists.map(singleArtist => (
+                  <ArtistListItem
+                        key={singleArtist.artistid}
+                        artist={singleArtist}
+                        currentUser={authUser}
+                        updateState={this.updateState}
+                      />
+                ) ) 
+                )
+              }
               </tbody>
             </table>
           </div>

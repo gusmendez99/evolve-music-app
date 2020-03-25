@@ -15,11 +15,8 @@ class TrackListItem extends Component {
     this.state = {
       track: {},
       selectedAlbum: null,
-      albums: [],
       selectedGenre: null,
-      genres: [],
-      selectedMediaType: null,
-      mediaTypes: []
+      selectedMediaType: null
     };
   }
   componentDidMount() {
@@ -38,32 +35,7 @@ class TrackListItem extends Component {
       })
       .catch(error => console.log(error));
 
-    axios.get("http://localhost:3000/albums")
-      .then(response => {
-        const albumOptions = response.data.map(album => {
-          return { value: album.albumid, label: album.title };
-        });
-        this.setState({ albums: albumOptions });
-      })
-      .catch(error => console.log(error));
-
-    axios.get("http://localhost:3000/genres")
-      .then(response => {
-        const genreOptions = response.data.map(genre => {
-          return { value: genre.genreid, label: genre.name };
-        });
-        this.setState({ genres: genreOptions });
-      })
-      .catch(error => console.log(error));
-
-    axios.get("http://localhost:3000/mediatypes")
-      .then(response => {
-        const mediaTypeOptions = response.data.map(mediatype => {
-          return { value: mediatype.mediatypeid, label: mediatype.name };
-        });
-        this.setState({ mediaTypes: mediaTypeOptions });
-      })
-      .catch(error => console.log(error));
+    
   }
 
   handleUpdate = () => {
@@ -129,10 +101,9 @@ class TrackListItem extends Component {
   };
 
   render() {
-    const { permissions } = this.props;
+    const { permissions, albums, mediaTypes, genres } = this.props;
 
-    const { track, selectedAlbum, albums, 
-      selectedGenre, genres, selectedMediaType, mediaTypes  } = this.state;
+    const { track, selectedAlbum, selectedGenre, selectedMediaType } = this.state;
     
     return (
       <Fragment>

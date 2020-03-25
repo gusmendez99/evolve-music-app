@@ -12,9 +12,12 @@ class ManageTracks extends Component {
   constructor(){
     super()
     this.state = {
+      isSearching: false,
+      searchList: [],
       tracks: [],
-      mediatypes: [],
+      mediaTypes: [],
       genres: [],
+      albums: [],
       searchField: '',
       currentTracks: [], 
       currentPage: null, 
@@ -29,17 +32,32 @@ class ManageTracks extends Component {
     })
     .catch(error => console.log(error));
 
-    axios.get('http://localhost:3000/mediatypes')
-    .then(response => {
-      this.setState({mediatypes: response.data})
-    })
-    .catch(error => console.log(error));
+    axios.get("http://localhost:3000/albums")
+      .then(response => {
+        const albumOptions = response.data.map(album => {
+          return { value: album.albumid, label: album.title };
+        });
+        this.setState({ albums: albumOptions });
+      })
+      .catch(error => console.log(error));
 
-    axios.get('http://localhost:3000/genres')
-    .then(response => {
-      this.setState({genres: response.data})
-    })
-    .catch(error => console.log(error));
+    axios.get("http://localhost:3000/genres")
+      .then(response => {
+        const genreOptions = response.data.map(genre => {
+          return { value: genre.genreid, label: genre.name };
+        });
+        this.setState({ genres: genreOptions });
+      })
+      .catch(error => console.log(error));
+
+    axios.get("http://localhost:3000/mediatypes")
+      .then(response => {
+        const mediaTypeOptions = response.data.map(mediatype => {
+          return { value: mediatype.mediatypeid, label: mediatype.name };
+        });
+        this.setState({ mediaTypes: mediaTypeOptions });
+      })
+      .catch(error => console.log(error));
   }
 
   onPageChanged = data => {
@@ -52,22 +70,23 @@ class ManageTracks extends Component {
     this.setState({ currentPage, currentTracks, totalPages });
   }
 
-  handleSearchFieldChange = event => {
+  handleSearchFieldChange = async event => {
     const { value } = event.target;
     console.log(value)
-    this.setState({ searchField: value })
+    
 
     if(value && value !== ""){
+      this.setState({ searchField: value, isSearching: true })
       axios({
         method: "post",
         url: `http://localhost:3000/search/tracks`,
         data: { query: value }
       }).then(res => {
-        this.setState({ currentTracks: res.data });
+        this.setState({ searchList: res.data });
   
       } );
     } else {
-      this.setState({ currentTracks: this.state.tracks });
+      this.setState({ searchField: value, isSearching: false })
     }
   }
 
@@ -80,7 +99,8 @@ class ManageTracks extends Component {
 
   render(){
     const { authUser, permissions } = this.props;
-    const { searchField, tracks, currentTracks, currentPage, totalPages } = this.state;
+    const { searchField, tracks, currentTracks, currentPage, totalPages,
+      mediaTypes, genres, albums, isSearching, searchList} = this.state;
 
     if(!permissions.canReadTrack) return (
       <div className="pa1 ph5-l tc">
@@ -125,14 +145,33 @@ class ManageTracks extends Component {
                 </tr>
               </thead>
               <tbody className="lh-copy">
-              { currentTracks.map(singleTrack => (
-                <TrackListItem
-                      key={singleTrack.trackid}
-                      track={singleTrack}
-                      currentUser={authUser}
-                      updateState={this.updateState}
-                    />
-              ) ) }
+              { 
+                isSearching ? (
+                  searchList.map(singleTrack => (
+                    <TrackListItem
+                          key={singleTrack.trackid}
+                          track={singleTrack}
+                          mediaTypes={mediaTypes}
+                          albums={albums}
+                          genres={genres}
+                          currentUser={authUser}
+                          updateState={this.updateState}
+                        />
+                  ) )
+                 ) : (
+                  currentTracks.map(singleTrack => (
+                    <TrackListItem
+                          key={singleTrack.trackid}
+                          track={singleTrack}
+                          mediaTypes={mediaTypes}
+                          albums={albums}
+                          genres={genres}
+                          currentUser={authUser}
+                          updateState={this.updateState}
+                        />
+                    ) )
+                  )
+                 }
               </tbody>
             </table>
           </div>

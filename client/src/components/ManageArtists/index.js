@@ -45,12 +45,24 @@ class ManageArtists extends Component {
   };
 
 
-  /*  onChange... 
-  
-    handleSearchFieldChange = event => {
+  handleSearchFieldChange = event => {
     const { value } = event.target;
-    this.setState({ searchField: value });
-  }; */
+    console.log(value)
+    this.setState({ searchField: value })
+
+    if(value && value !== ""){
+      axios({
+        method: "post",
+        url: `http://localhost:3000/search/artists`,
+        data: { query: value }
+      }).then(res => {
+        this.setState({ currentArtists: res.data });
+  
+      } );
+    } else {
+      this.setState({ currentArtists: this.state.artists });
+    }
+  }
 
   render() {
     const { authUser, permissions } = this.props;
@@ -69,7 +81,7 @@ class ManageArtists extends Component {
       <div>
         <div className="pa1 ph5-l tc">
           <h1 className="f3 fw6">Manage Artists</h1>
-          { currentPage && (
+          { currentPage && !searchField && (
             <h6>
               Page { currentPage } / { totalPages }
             </h6>
@@ -78,16 +90,11 @@ class ManageArtists extends Component {
         {/* Search function needs Axios to make a query... */
           <div className="pa3 ph5-l ">
           <label className="f6 b db mb2 blue">Búsqueda</label>
-          <input id="name" name="artist-name"  className="input-reset ba b--black-20 pa2 mb2 db w-100" type="text" aria-describedby="name-desc"/>
+          <input id="search" name="search"  className="input-reset ba b--black-20 pa2 mb2 db w-100" 
+          type="text" aria-describedby="name-desc" onChange={this.handleSearchFieldChange}/>
         </div>}
         <div className="pa3 ph5-l">
           <div className="overflow-y-scroll vh-50">
-          {/*
-            this.state.artists.filter(
-              artist => artist.name.toLowerCase().includes(searchField.toLowerCase())
-            ).length === 0 &&
-            <h4 className="f3 fw6">No artist found</h4>
-            */}
             <table className="f6 w-100" cellSpacing="0">
               <thead>
                 <tr>
@@ -117,7 +124,11 @@ class ManageArtists extends Component {
         </div>
 
         <div className="f3 fw6 pa4 tc">
-          <Pagination totalRecords={totalArtists} pageLimit={15} pageNeighbours={1} onPageChanged={this.onPageChanged} />
+          {
+            !searchField &&
+            <Pagination totalRecords={totalArtists} pageLimit={15} pageNeighbours={1} onPageChanged={this.onPageChanged} />
+          }
+          
         </div>
         
         <div className="tc pa2">

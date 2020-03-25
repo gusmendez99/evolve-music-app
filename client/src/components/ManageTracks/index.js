@@ -52,6 +52,25 @@ class ManageTracks extends Component {
     this.setState({ currentPage, currentTracks, totalPages });
   }
 
+  handleSearchFieldChange = event => {
+    const { value } = event.target;
+    console.log(value)
+    this.setState({ searchField: value })
+
+    if(value && value !== ""){
+      axios({
+        method: "post",
+        url: `http://localhost:3000/search/tracks`,
+        data: { query: value }
+      }).then(res => {
+        this.setState({ currentTracks: res.data });
+  
+      } );
+    } else {
+      this.setState({ currentTracks: this.state.tracks });
+    }
+  }
+
   updateState = () => {
     axios.get('http://localhost:3000/tracks')
     .then(response => {
@@ -61,7 +80,7 @@ class ManageTracks extends Component {
 
   render(){
     const { authUser, permissions } = this.props;
-    const { searchField, tracks, mediatypes, genres, currentTracks, currentPage, totalPages } = this.state;
+    const { searchField, tracks, currentTracks, currentPage, totalPages } = this.state;
 
     if(!permissions.canReadTrack) return (
       <div className="pa1 ph5-l tc">
@@ -76,7 +95,7 @@ class ManageTracks extends Component {
       <div>
         <div className="pa1 ph5-l tc">
           <h1 className="f3 fw6">Manage Tracks</h1>
-          { currentPage && (
+          { currentPage && !searchField && (
             <h6>
               Page { currentPage } / { totalPages }
             </h6>
@@ -85,7 +104,8 @@ class ManageTracks extends Component {
         {/* Search function needs Axios to make a query... */
         <div className="pa3 ph5-l ">
           <label className="f6 b db mb2 blue">Búsqueda</label>
-          <input id="name" name="track-name"  className="input-reset ba b--black-20 pa2 mb2 db w-100" type="text" aria-describedby="name-desc"/>
+          <input id="search" name="search"  className="input-reset ba b--black-20 pa2 mb2 db w-100" 
+          type="text" aria-describedby="name-desc" onChange={this.handleSearchFieldChange}/>
         </div>}
         <div className="pa3 ph5-l">
           <div className="overflow-y-scroll overflow-x-scroll vh-50 ">
@@ -118,7 +138,10 @@ class ManageTracks extends Component {
           </div>
         </div>
         <div className="f3 fw6 pa4 tc">
-          <Pagination totalRecords={totalTracks} pageLimit={15} pageNeighbours={1} onPageChanged={this.onPageChanged} />
+          {
+            !searchField &&
+            <Pagination totalRecords={totalTracks} pageLimit={15} pageNeighbours={1} onPageChanged={this.onPageChanged} />
+          }
         </div>
         <div className="tc pa2">
         {

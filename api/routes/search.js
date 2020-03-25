@@ -1,16 +1,16 @@
 const db = require("../database");
 
-const SEARCH_TRACK = "t.*, g.Name as GenreName, m.Name as MediaTypeName, a.Title as AlbumTitle FROM Track t INNER JOIN Genre g on t.genreid = g.genreid INNER JOIN MediaType m on t.mediatypeid = m.mediatypeid INNER JOIN Album a on t.albumid = a.albumid WHERE t.Name ILIKE $1 LIMIT 10";
-const SEARCH_ALBUM = "SELECT al.*, art.Name AS ArtistName FROM Album al NATURAL JOIN Artist art WHERE al.Title ILIKE $1 LIMIT 10";
+const SEARCH_TRACK = "SELECT t.*, g.Name as GenreName, m.Name as MediaTypeName, a.Title as AlbumTitle FROM Track t INNER JOIN Genre g on t.genreid = g.genreid INNER JOIN MediaType m on t.mediatypeid = m.mediatypeid INNER JOIN Album a on t.albumid = a.albumid WHERE t.Name ILIKE $1 LIMIT 10";
+const SEARCH_ALBUM = "SELECT al.*, art.Name AS ArtistName FROM Album al INNER JOIN Artist art ON art.ArtistId = al.ArtistId WHERE al.Title ILIKE $1 LIMIT 10";
 const SEARCH_ARTIST = "SELECT * FROM Artist WHERE Name ILIKE $1 LIMIT 10";
-const SEARCH_USER = "SELECT * FROM AppUser WHERE UserName ILIKE $1 AND UserId<>$2 LIMIT 10";
+const SEARCH_USER = "SELECT * FROM AppUser WHERE UserName ILIKE $1 LIMIT 10";
 
 const searchTrack = (request, response) => {
   const { query } = request.body;
 
   db.query(
     SEARCH_TRACK,
-    [ query ],
+    [`%${query}%`],
     (error, results) => {
       if (error) {
         throw error;
@@ -25,7 +25,7 @@ const searchAlbum = (request, response) => {
 
   db.query(
     SEARCH_ALBUM,
-    [ query ],
+    [ `%${query}%` ],
     (error, results) => {
       if (error) {
         throw error;
@@ -40,7 +40,7 @@ const searchArtist = (request, response) => {
 
   db.query(
     SEARCH_ARTIST,
-    [ query ],
+    [`%${query}%`],
     (error, results) => {
       if (error) {
         throw error;
@@ -51,11 +51,11 @@ const searchArtist = (request, response) => {
 };
 
 const searchUser = (request, response) => {
-  const { query, userid } = request.body;
+  const { query } = request.body;
 
   db.query(
     SEARCH_USER,
-    [ query, userid ],
+    [`%${query}%` ],
     (error, results) => {
       if (error) {
         throw error;

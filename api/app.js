@@ -116,11 +116,15 @@ app.put("/tracks/:id", trackRouter.updateTrack);
 app.delete("/tracks/:id", trackRouter.deleteTrack);
 
 // Report
-app.get("/reports/genres", reportRouter.getMostCommonGenres);
-app.get("/reports/artists", reportRouter.getMostCommonArtists);
-app.get("/reports/songs", reportRouter.getLongestSongs);
-app.get("/reports/genres-duration", reportRouter.getGenresDurationAvg);
-app.get("/reports/collabs", reportRouter.getMostCollaborativeArtist);
+app.get("/reports/most-common-artists", reportRouter.getMostCommonArtists);
+app.get("/reports/most-common-genres", reportRouter.getMostCommonGenres);
+app.get("/reports/playlist-with-duration", reportRouter.getPlayListByDuration);
+app.get("/reports/longest-songs", reportRouter.getLongestSongs);
+app.get("/reports/most-track-register-user", reportRouter.getUsersWithMoreTracksRegister);
+app.get("/reports/genre-duration-avg", reportRouter.getGenresDurationAvg);
+app.get("/reports/artist-in-playlist", reportRouter.getArtistByPlayListCount);
+app.get("/reports/most-genre-diversity-artist", reportRouter.getArtistWithMoreDiversityGenres);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -19,7 +19,7 @@ class AddArtist extends Component {
     axios({
       method: "post",
       url: `http://localhost:3000/artists`,
-      data: this.state.artist.name
+      data: this.state.artist
     }).then(response => console.log(response.status));
   };
 

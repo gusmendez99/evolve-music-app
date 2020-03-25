@@ -2,9 +2,9 @@ const db = require("../database");
 const requestModule = require("request");
 const spotify = require("../spotify");
 
-const GET_TRACKS = "SELECT * FROM Track ORDER BY Name ASC";
+const GET_TRACKS = "SELECT t.*, g.Name as GenreName, m.Name as MediaTypeName, art.Name as ArtistName, a.Title as AlbumTitle FROM Track t INNER JOIN Genre g on t.genreid = g.genreid INNER JOIN MediaType m on t.mediatypeid = m.mediatypeid INNER JOIN Album a on t.albumid = a.albumid INNER JOIN Artist art ON art.artistid = a.artistid ORDER BY t.Name ASC";
 const GET_TRACK_BY_ID =
-  "SELECT t.*, g.Name as GenreName, m.Name as MediaTypeName, a.Title as AlbumTitle FROM Track t INNER JOIN Genre g on t.genreid = g.genreid INNER JOIN MediaType m on t.mediatypeid = m.mediatypeid INNER JOIN Album a on t.albumid = a.albumid WHERE t.TrackId = $1";
+  "SELECT t.*, g.Name as GenreName, m.Name as MediaTypeName, art.Name as ArtistName, a.Title as AlbumTitle FROM Track t INNER JOIN Genre g on t.genreid = g.genreid INNER JOIN MediaType m on t.mediatypeid = m.mediatypeid INNER JOIN Album a on t.albumid = a.albumid INNER JOIN Artist art ON art.artistid = a.artistid WHERE t.TrackId = $1";
 const ADD_TRACK =
   "INSERT INTO Track (TrackId, Name, Composer, Milliseconds, UnitPrice, Bytes, AlbumId, GenreId, MediaTypeId) SELECT MAX( TrackId ) + 1, $1, $2, $3, $4, $5, $6, $7, $8 FROM Track";
 const UPDATE_TRACK =
@@ -12,7 +12,7 @@ const UPDATE_TRACK =
 const DELETE_TRACK = "DELETE FROM Track WHERE TrackId = $1";
 
 //For Customer page
-const GET_ACTIVE_TRACKS = "SELECT t.*, g.Name as GenreName, m.Name as MediaTypeName, a.Title as AlbumTitle FROM Track t INNER JOIN Genre g on t.genreid = g.genreid INNER JOIN MediaType m on t.mediatypeid = m.mediatypeid INNER JOIN Album a on t.albumid = a.albumid WHERE NOT EXISTS (SELECT FROM InactiveTrack it WHERE it.TrackId = t.TrackId ) ORDER BY t.Name ASC";
+const GET_ACTIVE_TRACKS = "SELECT t.*, g.Name as GenreName, m.Name as MediaTypeName, art.Name as ArtistName, a.Title as AlbumTitle FROM Track t INNER JOIN Genre g on t.genreid = g.genreid INNER JOIN MediaType m on t.mediatypeid = m.mediatypeid INNER JOIN Album a on t.albumid = a.albumid INNER JOIN Artist art ON art.artistid = a.artistid WHERE NOT EXISTS (SELECT FROM InactiveTrack it WHERE it.TrackId = t.TrackId ) ORDER BY t.Name ASC";
 
 const getTracks = (request, response) => {
   db.query(GET_TRACKS, (error, results) => {
@@ -46,7 +46,7 @@ const getTrackById = (request, response) => {
 
 const getTrackMetadata = async (request, response) => {
   let trackName = request.query.name;
-  let trackAlbum = request.query.album;
+  let trackArtistName = request.query.artist;
 
   const token = await spotify.spotifyApi.clientCredentialsGrant().then(
     function(data) {
@@ -61,9 +61,9 @@ const getTrackMetadata = async (request, response) => {
     }
   );
 
-  console.log(token);
+  //console.log(token);
 
-  const queryparam = `q=${encodeURI(trackName + " album:" + trackAlbum)}&type=track&market=US&limit=1`;
+  const queryparam = `q=${encodeURI(`${trackName} artist:${trackArtistName}`)}&type=track&market=US&limit=1`;
   console.log(queryparam);
 
   const options = {
@@ -80,6 +80,8 @@ const getTrackMetadata = async (request, response) => {
         const { album, name, preview_url} = innerResponse.body.tracks.items[0];
 
         response.status(200).json({ image: album.images[1].url, name, previewurl: preview_url  });
+      } else {
+        response.status(200).json(null);
       }
     } else {
       console.log(error);

@@ -203,6 +203,7 @@ INSERT INTO AppRole(Name) VALUES ('ADMINISTRATOR');
 INSERT INTO AppRole(Name) VALUES ('MANAGER');
 INSERT INTO AppRole(Name) VALUES ('REPORTER');
 INSERT INTO AppRole(Name) VALUES ('READER');
+INSERT INTO AppRole(Name) VALUES ('CUSTOMER');
 
 /* ADMINISTRATOR role has all the permissions*/
 INSERT INTO RolePermission(RoleId,PermissionId) VALUES (1,1);
@@ -238,10 +239,13 @@ INSERT INTO RolePermission(RoleId,PermissionId) VALUES (2,13);
 /* REPORTER role can see reports */
 INSERT INTO RolePermission(RoleId,PermissionId) VALUES (3,14);
 
-/* READER role can only READ songs, albums, artists*/
+/* READER role can only READ artists, tracks, albums */
 INSERT INTO RolePermission(RoleId,PermissionId) VALUES (4,1);
 INSERT INTO RolePermission(RoleId,PermissionId) VALUES (4,5);
 INSERT INTO RolePermission(RoleId,PermissionId) VALUES (4,10);
+
+/* CUSTOMER role can only READ tracks */
+INSERT INTO RolePermission(RoleId,PermissionId) VALUES (5,5);
 
 /*Super User creation*/
 INSERT INTO AppUser(UserName,Password,FirstName,LastName,City,State,Country,PostalCode, Phone,Email,RoleId) VALUES ('admin', '1234', 'Super', 'User', 'GT', 'GT', 'GT','01015', '+502 44891646', 'luis212urbina@gmail.com', 1);

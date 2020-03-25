@@ -1,6 +1,5 @@
 import React, { Component } from "react";
-import CustomLink from "../CustomLink";
-import { connect } from "react-redux";
+import CustomLink from "../../components/CustomLink";
 import axios from "axios";
 
 const CUSTOMER_ROLE = 5;

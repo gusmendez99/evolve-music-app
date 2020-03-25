@@ -2,10 +2,6 @@ import React, {Component} from 'react';
 import { Link} from 'react-router-dom';
 import { connect } from 'react-redux';
 import axios from 'axios';
-<<<<<<< HEAD
-=======
-
->>>>>>> 8a0211e144f99c3f2ba7c955a0857bd61b89938b
 
 import RoleListItem from '../RoleListItem';
 
@@ -17,14 +13,6 @@ class ManageRoles extends Component {
       roles: [],
     };
   };
-<<<<<<< HEAD
-  componentDidMount() {
-    axios.get(`http://localhost:3000/roles`)
-      .then(res => {
-        const data = res.data;
-        this.setState({ roles: data });
-      });
-=======
   componentDidMount(){
     axios.get('http://localhost:3000/roles')
     .then(response => this.setState({roles: response.data}))
@@ -34,7 +22,6 @@ class ManageRoles extends Component {
     axios.get('http://localhost:3000/roles')
     .then(response => this.setState({roles: response.data}))
     .catch(error=>console.log(error));
->>>>>>> 8a0211e144f99c3f2ba7c955a0857bd61b89938b
   }
   render(){
     const { authUser } = this.props;

@@ -3,10 +3,6 @@ import pullAllWith from "lodash/pullAllWith";
 import isEqual from "lodash/isEqual";
 import range from "lodash/range";
 import axios from 'axios';
-<<<<<<< HEAD
-
-=======
->>>>>>> 8a0211e144f99c3f2ba7c955a0857bd61b89938b
 
 class RoleListItem extends Component {
   constructor() {
@@ -18,76 +14,6 @@ class RoleListItem extends Component {
     };
   }
   componentDidMount() {
-<<<<<<< HEAD
-
-    axios.get(`http://localhost:3000/roles/${this.props.role.roleid}`)
-    .then(res => {
-      const data = res.data;
-      this.setState({ role: data[0] });
-    });
-
-    axios.get(`http://localhost:3000/roles/${this.props.role.roleid}/permissions`)
-    .then(res => {
-      const data = res.data;
-      this.setState({ permissions: data });
-    });
-
-    axios.get(`http://localhost:3000/permissions`)
-    .then(res => {
-      const data = res.data;
-      this.setState({ allPermissions: data });
-    });
-
-  }
-
-  handleUpdate = () => {
-    axios.put(`http://localhost:3000/roles/${this.state.role.roleid}`, { name: this.state.role.name })
-      .then(res => {
-        console.log(res.status);
-      })
-  };
-
-  handleFieldChange = event => {
-    const { checked, value } = event.target;
-    if (!checked) {
-      const itemToPull = this.state.allPermissions.filter(
-        item => item["permissionid"] == value);
-      const copy = pullAllWith(this.state.permissions, itemToPull, isEqual);
-      this.setState({ permissions: copy });
-
-      axios.delete(`http://localhost:3000/roles/${this.state.role.roleid}/permissions/${value}`)
-        .then(res => {
-          console.log(res.status)
-        });
-
-    } else {
-      const itemToPush = this.state.allPermissions.filter(
-        item => item["permissionid"] == value
-      );
-      const copy = [...this.state.permissions, itemToPush[0]];
-      this.setState({ permissions: copy });
-      axios.post(`http://localhost:3000/roles/${this.state.role.roleid}/permissions`, itemToPush[0])
-        .then(res => {
-          console.log(res.status);
-        });
-
-    };
-  }
-
-  handleInputChange = event => {
-    const { value, name } = event.target;
-    const copy = { ...this.state.role, [name]: value };
-    this.setState({ role: copy });
-  };
-
-  handleDelete = event => {
-
-    axios.delete(`http://localhost:3000/roles/${this.state.role.roleid}`)
-      .then(res => {
-        console.log(res.status)
-      });
-  }
-=======
     axios.get(`http://localhost:3000/roles/${this.props.role.roleid}`)
       .then(response => {
         this.setState({ role: response.data[0] });
@@ -166,7 +92,6 @@ class RoleListItem extends Component {
     .then(response => console.log(response.status))
     .catch(error => console.log(error));
 	};
->>>>>>> 8a0211e144f99c3f2ba7c955a0857bd61b89938b
 
   render() {
     return (

@@ -62,6 +62,7 @@ app.post("/search/users", searchRouter.searchUser);
 app.post("/search/tracks", searchRouter.searchTrack);
 app.post("/search/albums", searchRouter.searchAlbum);
 app.post("/search/artists", searchRouter.searchArtist);
+app.post("/search/tracks/active", searchRouter.searchActiveTrack)
 
 // Users
 app.get("/users", userRouter.getUsers);
@@ -117,6 +118,7 @@ app.get("/mediatypes", mediaTypeRouter.getMediaTypes);
 
 // Track
 app.get("/tracks", trackRouter.getTracks);
+app.get("/tracks/active", trackRouter.getActiveTracks);
 app.get("/tracks/:id", trackRouter.getTrackById);
 app.get("/metadata/tracks", trackRouter.getTrackMetadata);
 app.post("/tracks", trackRouter.createTrack);

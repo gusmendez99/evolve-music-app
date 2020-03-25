@@ -27,6 +27,9 @@ class ManageRoles extends Component {
     const { authUser } = this.props;
     return (
       <div>
+        <div className="pa1 ph5-l tc">
+          <h1 className="f3 fw6">Manage Roles</h1>
+        </div>
         <div className="pa4">
           <div className="overflow-auto">
             <table className="f6 w-100 mw-100 center" cellSpacing="0">

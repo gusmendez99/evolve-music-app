@@ -5,7 +5,8 @@ import { connect } from "react-redux";
 
 //Pages
 import HomePage from "../pages/Home";
-import SignInSignUpPage from "../pages/SignInAndSignUp";
+import SignIn from "../pages/SignIn";
+import SignUp from '../pages/SignUp'
 
 //Components
 import Nav from "../components/Nav";
@@ -60,7 +61,9 @@ class RouterApp extends React.Component {
       <Switch>
         
         <Route exact path="/" component={HomePage} />
-        <Route exact path="/login"  component={SignInSignUpPage} />
+        <Route exact path="/login"  component={SignIn} />
+        <Route exact path="/signup"  component={SignUp} />
+
         {authUser && (
           <Fragment>
             <RestrictedRoute

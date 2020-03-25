@@ -10,8 +10,7 @@ class AlbumListItem extends Component {
     super();
     this.state = {
       album: {},
-			selectedArtist: null,
-      artists: []
+			selectedArtist: null
     };
   }
   componentDidMount() {
@@ -22,15 +21,7 @@ class AlbumListItem extends Component {
       })
       .catch(error=>console.log(error));
 
-    axios.get("http://localhost:3000/artists")
-      .then(response => {
-
-				const artistOptions = response.data.map(artist => {
-					return { value: artist.artistid, label: artist.name }
-				})
-        this.setState({ artists: artistOptions });
-      })
-      .catch(error=>console.log(error));
+    
   }
 
   handleUpdate = () => {
@@ -70,8 +61,8 @@ class AlbumListItem extends Component {
   };
   
   render() {
-    const { permissions } = this.props;
-		const { album, selectedArtist, artists } = this.state;
+    const { permissions, artists } = this.props;
+		const { album, selectedArtist } = this.state;
 
     return (
       <Fragment>

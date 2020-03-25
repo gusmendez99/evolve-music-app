@@ -17,7 +17,6 @@ class TrackListItem extends Component {
     this.state = {
       track: {},
       selectedAlbum: null,
-      albums: [],
       selectedGenre: null,
       genres: [],
       selectedMediaType: null,
@@ -154,10 +153,9 @@ class TrackListItem extends Component {
   }
 
   render() {
-    const { permissions } = this.props;
+    const { permissions, albums, mediaTypes, genres } = this.props;
 
-    const { track, selectedAlbum, albums, 
-      selectedGenre, genres, selectedMediaType, mediaTypes  } = this.state;
+    const { track, selectedAlbum, selectedGenre, selectedMediaType } = this.state;
     
     return (
       <Fragment>

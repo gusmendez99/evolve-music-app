@@ -24,7 +24,9 @@ class ArtistListItem extends Component {
       url: `http://localhost:3000/artists/${this.state.artist.artistid}`,
       data: this.state.artist
     })
-    .then(response => console.log(response.status));
+    .then(response => {
+      console.log(response.status)
+    });
   };
 
   handleDelete = () => {

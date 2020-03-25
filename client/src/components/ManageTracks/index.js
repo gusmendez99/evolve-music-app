@@ -12,9 +12,12 @@ class ManageTracks extends Component {
   constructor(){
     super()
     this.state = {
+      isSearching: false,
+      searchList: [],
       tracks: [],
-      mediatypes: [],
+      mediaTypes: [],
       genres: [],
+      albums: [],
       searchField: '',
       currentTracks: [], 
       currentPage: null, 
@@ -29,17 +32,32 @@ class ManageTracks extends Component {
     })
     .catch(error => console.log(error));
 
-    axios.get('http://localhost:3000/mediatypes')
-    .then(response => {
-      this.setState({mediatypes: response.data})
-    })
-    .catch(error => console.log(error));
+    axios.get("http://localhost:3000/albums")
+      .then(response => {
+        const albumOptions = response.data.map(album => {
+          return { value: album.albumid, label: album.title };
+        });
+        this.setState({ albums: albumOptions });
+      })
+      .catch(error => console.log(error));
 
-    axios.get('http://localhost:3000/genres')
-    .then(response => {
-      this.setState({genres: response.data})
-    })
-    .catch(error => console.log(error));
+    axios.get("http://localhost:3000/genres")
+      .then(response => {
+        const genreOptions = response.data.map(genre => {
+          return { value: genre.genreid, label: genre.name };
+        });
+        this.setState({ genres: genreOptions });
+      })
+      .catch(error => console.log(error));
+
+    axios.get("http://localhost:3000/mediatypes")
+      .then(response => {
+        const mediaTypeOptions = response.data.map(mediatype => {
+          return { value: mediatype.mediatypeid, label: mediatype.name };
+        });
+        this.setState({ mediaTypes: mediaTypeOptions });
+      })
+      .catch(error => console.log(error));
   }
 
   onPageChanged = data => {
@@ -52,6 +70,26 @@ class ManageTracks extends Component {
     this.setState({ currentPage, currentTracks, totalPages });
   }
 
+  handleSearchFieldChange = async event => {
+    const { value } = event.target;
+    console.log(value)
+    
+
+    if(value && value !== ""){
+      this.setState({ searchField: value, isSearching: true })
+      axios({
+        method: "post",
+        url: `http://localhost:3000/search/tracks`,
+        data: { query: value }
+      }).then(res => {
+        this.setState({ searchList: res.data });
+  
+      } );
+    } else {
+      this.setState({ searchField: value, isSearching: false })
+    }
+  }
+
   updateState = () => {
     axios.get('http://localhost:3000/tracks')
     .then(response => {
@@ -61,7 +99,8 @@ class ManageTracks extends Component {
 
   render(){
     const { authUser, permissions } = this.props;
-    const { searchField, tracks, mediatypes, genres, currentTracks, currentPage, totalPages } = this.state;
+    const { searchField, tracks, currentTracks, currentPage, totalPages,
+      mediaTypes, genres, albums, isSearching, searchList} = this.state;
 
     if(!permissions.canReadTrack) return (
       <div className="pa1 ph5-l tc">
@@ -76,7 +115,7 @@ class ManageTracks extends Component {
       <div>
         <div className="pa1 ph5-l tc">
           <h1 className="f3 fw6">Manage Tracks</h1>
-          { currentPage && (
+          { currentPage && !searchField && (
             <h6>
               Page { currentPage } / { totalPages }
             </h6>
@@ -85,7 +124,8 @@ class ManageTracks extends Component {
         {/* Search function needs Axios to make a query... */
         <div className="pa3 ph5-l ">
           <label className="f6 b db mb2 blue">Búsqueda</label>
-          <input id="name" name="track-name"  className="input-reset ba b--black-20 pa2 mb2 db w-100" type="text" aria-describedby="name-desc"/>
+          <input id="search" name="search"  className="input-reset ba b--black-20 pa2 mb2 db w-100" 
+          type="text" aria-describedby="name-desc" onChange={this.handleSearchFieldChange}/>
         </div>}
         <div className="pa3 ph5-l">
           <div className="overflow-y-scroll overflow-x-scroll vh-50 ">
@@ -106,20 +146,42 @@ class ManageTracks extends Component {
                 </tr>
               </thead>
               <tbody className="lh-copy">
-              { currentTracks.map(singleTrack => (
-                <TrackListItem
-                      key={singleTrack.trackid}
-                      track={singleTrack}
-                      currentUser={authUser}
-                      updateState={this.updateState}
-                    />
-              ) ) }
+              { 
+                isSearching ? (
+                  searchList.map(singleTrack => (
+                    <TrackListItem
+                          key={singleTrack.trackid}
+                          track={singleTrack}
+                          mediaTypes={mediaTypes}
+                          albums={albums}
+                          genres={genres}
+                          currentUser={authUser}
+                          updateState={this.updateState}
+                        />
+                  ) )
+                 ) : (
+                  currentTracks.map(singleTrack => (
+                    <TrackListItem
+                          key={singleTrack.trackid}
+                          track={singleTrack}
+                          mediaTypes={mediaTypes}
+                          albums={albums}
+                          genres={genres}
+                          currentUser={authUser}
+                          updateState={this.updateState}
+                        />
+                    ) )
+                  )
+                 }
               </tbody>
             </table>
           </div>
         </div>
         <div className="f3 fw6 pa4 tc">
-          <Pagination totalRecords={totalTracks} pageLimit={15} pageNeighbours={1} onPageChanged={this.onPageChanged} />
+          {
+            !searchField &&
+            <Pagination totalRecords={totalTracks} pageLimit={15} pageNeighbours={1} onPageChanged={this.onPageChanged} />
+          }
         </div>
         <div className="tc pa2">
         {

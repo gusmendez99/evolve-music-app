@@ -11,8 +11,20 @@ const UPDATE_TRACK =
   "UPDATE Track SET Name=$1, Composer=$2, Milliseconds=$3, UnitPrice=$4, Bytes=$5, AlbumId=$6, GenreId=$7, MediaTypeId=$8 WHERE TrackId=$9";
 const DELETE_TRACK = "DELETE FROM Track WHERE TrackId = $1";
 
+//For Customer page
+const GET_ACTIVE_TRACKS = "SELECT t.*, g.Name as GenreName, m.Name as MediaTypeName, a.Title as AlbumTitle FROM Track t INNER JOIN Genre g on t.genreid = g.genreid INNER JOIN MediaType m on t.mediatypeid = m.mediatypeid INNER JOIN Album a on t.albumid = a.albumid WHERE NOT EXISTS (SELECT FROM InactiveTrack it WHERE it.TrackId = t.TrackId ) ORDER BY t.Name ASC";
+
 const getTracks = (request, response) => {
   db.query(GET_TRACKS, (error, results) => {
+    if (error) {
+      throw error;
+    }
+    response.status(200).json(results.rows);
+  });
+};
+
+const getActiveTracks = (request, response) => {
+  db.query(GET_ACTIVE_TRACKS, (error, results) => {
     if (error) {
       throw error;
     }
@@ -160,6 +172,7 @@ const deleteTrack = (request, response) => {
 
 module.exports = {
   getTracks,
+  getActiveTracks,
   getTrackById,
   createTrack,
   updateTrack,

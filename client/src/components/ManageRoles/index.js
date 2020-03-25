@@ -5,6 +5,14 @@ import axios from 'axios';
 
 import RoleListItem from '../RoleListItem';
 
+const RESTRICTED_ROLES = [
+  "administrator",
+  "manager",
+  "customer",
+  "reporter",
+  "reader"
+]
+
 
 class ManageRoles extends Component {
   constructor(){
@@ -55,7 +63,7 @@ class ManageRoles extends Component {
               </thead>
               <tbody className="lh-copy">
                 {
-                  this.state.roles.filter(role => role.name.toLowerCase() !== "administrator").map((singleRole, i)=>{
+                  this.state.roles.filter(role => !RESTRICTED_ROLES.includes(role.name.toLowerCase()) ).map((singleRole, i)=>{
                     return (
                       <RoleListItem
                       key={singleRole.roleid}

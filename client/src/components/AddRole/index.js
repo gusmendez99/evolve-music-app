@@ -55,11 +55,12 @@ class AddRole extends React.Component {
   }
   render() {
     const { allPermissions } = this.state;
+    const { authUser } = this.props;
     return (
       <Fragment>
-        <section className="mw5 mw7-ns center bg-light-gray pa3 ph5-ns tc">
+        <section className="mw5 mw7-ns center pa3 ph5-ns tc">
           <div className="tc dib">
-            <label className="f6 b db mb2">Create New Role</label>
+            <h1 className="f6 b db mb2">Create New Role</h1>
             <form className="pa4 black-80">
               <div className="measure">
                 <label className="f6 b db mb2">Role Name</label>
@@ -76,7 +77,7 @@ class AddRole extends React.Component {
             </form>
 
             <CustomLink
-							to={`/`}
+              to={`/${authUser.rolename}/manageroles`}
 							className="b ph3 pv2 input-reset ba b--green green bg-transparent grow pointer f6 dib"
 							onClick={this.handleSubmit}>Create</CustomLink>
 

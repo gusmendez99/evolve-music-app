@@ -47,7 +47,9 @@ class AddArtist extends Component {
             <CustomLink
               to={`/${authUser.rolename}/manageartists`}
               className="b ph3 pv2 input-reset ba b--green green bg-transparent grow pointer f6 dib"
-              onClick={this.handleSubmit}
+              onClick={() => {
+                this.handleSubmit();
+              }}
             >
               Add Artist
             </CustomLink>

@@ -62,7 +62,7 @@ class Statistics extends Component {
 			this.myChart.options.scales.xAxes[0].scaleLabel.labelString='Song and Artist'
 		} 
 		else if (this.state.selectedStat === 'most-track-register-user'){
-			this.myChart.data.labels = this.state.data.map(item => item.name);
+			this.myChart.data.labels = this.state.data.map(item => item.username);
 			this.myChart.data.datasets[0].data = this.state.data.map(item => parseInt(item.tracksregister));
 			this.myChart.data.datasets[0].label='Number Of Songs';
 			this.myChart.options.title.text='Users With More Registered Songs';

@@ -14,7 +14,7 @@ const Nav = ({ authUser, permissions, onSignOut }) => {
         title="Home"
       >
         <img
-          src="http://tachyons.io/img/logo.jpg"
+          src="https://www.buythelogo.com/wp-content/uploads/2019/03/Letter-E-geometric-line-abstract-shape-logo-vector.jpg"
           className="dib w2 h2 br-100"
           alt="Evolve"
         />

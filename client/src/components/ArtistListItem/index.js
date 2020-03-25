@@ -65,13 +65,18 @@ class ArtistListItem extends Component {
             {permissions.canDeleteArtist && <CustomLink
               to={`/${this.props.currentUser.rolename}/manageartists`}
               className="b ph3 pv2 input-reset ba b--red red bg-transparent grow pointer f6 dib"
-              onClick={this.handleDelete}
+              onClick={() => {
+                this.handleDelete()            
+              }}
             >
               Delete
             </CustomLink>}
             {permissions.canUpdateArtist && <button
               className="b ph3 pv2 input-reset ba b--blue blue bg-transparent grow pointer f6 dib ma2"
-              onClick={this.handleUpdate}
+              onClick={() => {
+                this.handleUpdate()
+                
+              }}
             >
               Update
             </button>}

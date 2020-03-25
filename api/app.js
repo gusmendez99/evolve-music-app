@@ -18,6 +18,7 @@ var genreRouter = require("./routes/genre");
 var trackRouter = require("./routes/track");
 var mediaTypeRouter = require("./routes/media-type");
 var reportRouter = require("./routes/report");
+var searchRouter = require('./routes/search')
 
 var app = express();
 
@@ -54,6 +55,12 @@ app.use("/", indexRouter);
 // Login
 
 app.post("/login", userRouter.login);
+
+// Search
+app.post("/search/users", searchRouter.searchUser);
+app.post("/search/tracks", searchRouter.searchTrack);
+app.post("/search/albums", searchRouter.searchAlbum);
+app.post("/search/artists", searchRouter.searchArtist);
 
 // Users
 app.get("/users", userRouter.getUsers);

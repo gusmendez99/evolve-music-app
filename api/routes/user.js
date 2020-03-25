@@ -48,7 +48,7 @@ const createUser = (request, response) => {
   
   db.query(
     ADD_USER,
-    [ username, firstname, password, lastname, city, state, country, postalcode, phone, email, roleid ],
+    [ username, password, firstname, lastname, city, state, country, postalcode, phone, email, roleid ],
     (error, results) => {
       if (error) {
         throw error;
@@ -61,9 +61,6 @@ const createUser = (request, response) => {
 const updateUser = (request, response) => {
   const id = parseInt(request.params.id);
   const { username, firstname, password, lastname, city, state, country, postalcode, phone, email, roleid } = request.body;
-  response.header("Access-Control-Allow-Origin", "*");
-  response.header('Access-Control-Allow-Methods', 'DELETE, PUT');
-  response.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   db.query(
     UPDATE_USER,
     [username, password,firstname, lastname, city, state, country, postalcode, phone, email, roleid, id],

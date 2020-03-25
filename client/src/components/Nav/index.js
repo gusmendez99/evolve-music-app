@@ -5,7 +5,7 @@ import { connect } from 'react-redux';
 
 import * as actions from "../../redux/user/user.actions";
 
-const Nav = ({ authUser, onSignOut }) => {
+const Nav = ({ authUser, permissions, onSignOut }) => {
   return (
     <nav className="db dt-l w-100 border-box pa3 ph5-l">
       <Link
@@ -20,7 +20,7 @@ const Nav = ({ authUser, onSignOut }) => {
         />
       </Link>
       <div className="db dtc-l v-mid w-100 w-75-l tc tr-l">
-        {authUser && (
+        {authUser && permissions.canGenerateReport && (
           <Link
             className="link dim dark-gray f6 f5-l dib mr3 mr4-l"
             to={`/${authUser.rolename}/stats`}
@@ -30,7 +30,7 @@ const Nav = ({ authUser, onSignOut }) => {
           </Link>
         )}
 
-        {authUser && (
+        {authUser && permissions.canReadArtist && (
           <Link
             className="link dim dark-gray f6 f5-l dib mr3 mr4-l"
             to={`/${authUser.rolename}/manageartists`}
@@ -40,7 +40,7 @@ const Nav = ({ authUser, onSignOut }) => {
           </Link>
         )}
 
-        {authUser && (
+        {authUser && permissions.canReadAlbum && (
           <Link
             className="link dim dark-gray f6 f5-l dib mr3 mr4-l"
             to={`/${authUser.rolename}/managealbums`}
@@ -50,7 +50,7 @@ const Nav = ({ authUser, onSignOut }) => {
           </Link>
         )}
 
-        {authUser && (
+        {authUser && permissions.canReadTrack && (
           <Link
             className="link dim dark-gray f6 f5-l dib mr3 mr4-l"
             to={`/${authUser.rolename}/managetracks`}
@@ -60,7 +60,7 @@ const Nav = ({ authUser, onSignOut }) => {
           </Link>
         )}
 
-        {authUser && (
+        {authUser && permissions.isAdmin && (
           <Link
             className="link dim dark-gray f6 f5-l dib mr3 mr4-l"
             to={`/${authUser.rolename}/manageusers`}
@@ -69,7 +69,7 @@ const Nav = ({ authUser, onSignOut }) => {
             Users
           </Link>
         )}
-        {authUser && (
+        {authUser && permissions.isAdmin && (
           <Link
             className="link dim dark-gray f6 f5-l dib mr3 mr4-l"
             to={`/${authUser.rolename}/manageroles`}
@@ -103,8 +103,8 @@ const Nav = ({ authUser, onSignOut }) => {
 };
 
 const mapStateToProps = ({ user }) => {
-  const { authUser } = user;
-  return { authUser };
+  const { authUser, permissions } = user;
+  return { authUser, permissions };
 };
 
 const mapDispatchToProps = dispatch => ({

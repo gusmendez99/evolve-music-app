@@ -1,65 +1,8 @@
-import React, {useState,Fragment} from 'react'
-import Select, { components } from 'react-select';
+import React, {Fragment} from 'react'
+import Select from 'react-select';
 import makeAnimated from 'react-select/animated';
 import { connect } from 'react-redux'
 import axios from 'axios';
-
-
-//esto hay que traerlo con un fetch
-const PERMISSIONS =[
-  {
-    "value": 1,
-    "label": "READ ARTIST"
-  },
-  {
-    "value": 2,
-    "label": "REGISTER ARTIST"
-  },
-  {
-    "value": 3,
-    "label": "UPDATE ARTIST"
-  },
-  {
-    "value": 4,
-    "label": "DELETE ARTIST"
-  },
-  {
-    "value": 5,
-    "label": "READ SONG"
-  },
-  {
-    "value": 6,
-    "label": "REGISTER SONG"
-  },
-  {
-    "value": 7,
-    "label": "UPDATE SONG"
-  },
-  {
-    "value": 8,
-    "label": "DELETE SONG"
-  },
-  {
-    "value": 9,
-    "label": "INACTIVATE SONG"
-  },
-  {
-    "value": 10,
-    "label": "READ ALBUM"
-  },
-  {
-    "value": 11,
-    "label": "REGISTER ALBUM"
-  },
-  {
-    "value": 12,
-    "label": "UPDATE ALBUM"
-  },
-  {
-    "value": 13,
-    "label": "DELETE ALBUM"
-  }
-]
 
 class AddRole extends React.Component {
 
@@ -75,52 +18,42 @@ class AddRole extends React.Component {
   };
   
   componentDidMount() {
-    fetch('http://localhost:3000/roles')
-      .then(response => response.json())
-      .then(data => {
-        this.setState({ roles: data })
+    axios.get('http://localhost:3000/roles')
+      .then(response => this.setState({ roles: response.data }))
+      .catch(error=>console.log(error));
 
-      });
-    fetch('http://localhost:3000/permissions')
-      .then(response => response.json())
-      .then(data => {
-        this.setState({ allPermissions: data })
-
+    axios.get('http://localhost:3000/permissions')
+      .then(response => {
+        const permissionOptions = response.data.map(permission => {
+          return { value: permission.permissionid, label: permission.name };
+        });
+        this.setState({ allPermissions: permissionOptions })
       });
 	}
-
-
   handleSubmit = async event => {
     const { name } = this.state;
     const role = await axios.post(`http://localhost:3000/roles`, { name });
     this.state.permissions.map(async value => {
-      console.log("Este es el value",value)
       return (
         await axios.post(`http://localhost:3000/roles/${role.data.roleid}/permissions`, { permissionid: value.value})
-          .then(res => console.log("respuesta del insert permissions", res))
+          .then(response => console.log(response.status))
       )
     })
   };
-
-
   handleFieldChange = event => {
     const { value } = event.target
     const copy = value;
     this.setState({name:copy})
 
   }
-
   handleFieldSelect = selectedOptions => {
 		if(selectedOptions) {
       const copy = selectedOptions
     	this.setState({ permissions: copy });
-    }
-    
+    } 
   }
-
-
   render() {
-    
+    const { allPermissions } = this.state;
     return (
       <Fragment>
         <div className="tc dib">
@@ -135,7 +68,7 @@ class AddRole extends React.Component {
               className="mt-4 col-md-6 col-offset-4"
               components={makeAnimated()}
               isMulti
-              options={PERMISSIONS}
+              options={allPermissions}
               onChange={this.handleFieldSelect}
             />
             </form>

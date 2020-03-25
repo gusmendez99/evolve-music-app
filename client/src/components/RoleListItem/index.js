@@ -1,10 +1,12 @@
 import React, { Component, Fragment } from "react";
-import CustomLink from "../CustomLink";
 import pullAllWith from "lodash/pullAllWith";
 import isEqual from "lodash/isEqual";
 import range from "lodash/range";
 import axios from 'axios';
+<<<<<<< HEAD
 
+=======
+>>>>>>> 8a0211e144f99c3f2ba7c955a0857bd61b89938b
 
 class RoleListItem extends Component {
   constructor() {
@@ -16,6 +18,7 @@ class RoleListItem extends Component {
     };
   }
   componentDidMount() {
+<<<<<<< HEAD
 
     axios.get(`http://localhost:3000/roles/${this.props.role.roleid}`)
     .then(res => {
@@ -84,9 +87,88 @@ class RoleListItem extends Component {
         console.log(res.status)
       });
   }
+=======
+    axios.get(`http://localhost:3000/roles/${this.props.role.roleid}`)
+      .then(response => {
+        this.setState({ role: response.data[0] });
+      });
+
+    axios.get(`http://localhost:3000/roles/${this.props.role.roleid}/permissions`)
+      .then(response => {
+        this.setState({ permissions: response.data });
+      });
+    axios.get("http://localhost:3000/permissions")
+      .then(response => {
+        this.setState({ allPermissions: response.data });
+      });
+  }
+
+	handleUpdate = () => {
+		axios({
+      method: "put",
+      url:`http://localhost:3000/roles/${this.state.role.roleid}`, 
+			data: { name: this.state.role.name }
+    }).then(response => console.log(response.status))
+    .catch(error => console.log(error));
+	};
+
+	handleFieldChange = event => {
+		const { checked, value } = event.target;
+		if (!checked) {
+			console.log(this.state.permissions);
+			const itemToPull = this.state.allPermissions.filter(
+				item => item["permissionid"] == value
+			);
+			
+      console.log("Esto le mando ->".itemToPull);
+
+      axios.delete(`http://localhost:3000/roles/${this.state.role.roleid}/permissions/${value}`)
+      .then(response => {
+        console.log(response.status);
+        if(response.status === 200){
+          const copy = pullAllWith(this.state.permissions, itemToPull, isEqual);
+		    	this.setState({ permissions: copy });
+        }
+      })
+      .catch(error=> console.log(error));
+		} else {
+			const itemToPush = this.state.allPermissions.filter(
+				item => item["permissionid"] == value
+			);
+			console.log(itemToPush[0]);
+      axios({
+        method: "post",
+        url: `http://localhost:3000/roles/${this.state.role.roleid}/permissions`,
+        data: itemToPush[0]
+      })
+      .then(response =>{ 
+        console.log(response.status);
+        if (response.status===201){
+        const copy = [...this.state.permissions, itemToPush[0]];
+        this.setState({ permissions: copy });
+      }})
+      .catch(error=> console.log(error));
+		}
+	};
+	
+	handleInputChange = event => {
+		const { value, name } = event.target;
+		const copy = { ...this.state.role, [name]: value };
+		this.setState({ role: copy });
+	};
+  // TODO: hay que aplicar onDelete cascade porque el server tira error ya que en rolepermission está
+  // esta llave de rol como llave foránea
+	handleDelete = event => {
+		axios({
+      method: "delete",
+      url: `http://localhost:3000/roles/${this.state.role.roleid}`,
+    })
+    .then(response => console.log(response.status))
+    .catch(error => console.log(error));
+	};
+>>>>>>> 8a0211e144f99c3f2ba7c955a0857bd61b89938b
 
   render() {
-    //console.log("aquí va el state", this.state.permissions);
     return (
       <Fragment>
         <tr className="tc">

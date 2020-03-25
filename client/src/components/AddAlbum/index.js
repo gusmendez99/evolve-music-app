@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import CustomLink from "../CustomLink";
 import { connect } from "react-redux";
+import axios from 'axios';
 import Select from "react-select";
 
 class AddAlbum extends Component {
@@ -13,13 +14,11 @@ class AddAlbum extends Component {
     };
   }
   componentDidMount() {
-    fetch("http://localhost:3000/artists")
-      .then(response => response.json())
-      .then(data => {
-        const artistOptions = data.map(artist => {
-          return { value: artist.artistid, label: artist.name };
-        });
-
+    axios.get("http://localhost:3000/artists")
+    .then(response => {
+      const artistOptions = response.data.map(artist => {
+        return { value: artist.artistid, label: artist.name };
+      });
         this.setState({ artists: artistOptions });
       });
   }
@@ -33,19 +32,18 @@ class AddAlbum extends Component {
 		if(selectedOption) {
 			const copy = { ...this.state.album, artistid: selectedOption.value };
     	this.setState({ album: copy });
-		} 
-		
-		this.setState({ selectedArtist: selectedOption }, () => console.log(`Option selected:`, selectedOption));
-		    
+		}
+		this.setState({ selectedArtist: selectedOption }, () => console.log(`Option selected:`, selectedOption));  
   };
 
   handleSubmit = () => {
-    // agregar rolid por defecto, va a ser el default value del select
-    fetch(`http://localhost:3000/albums`, {
+    axios({
       method: "post",
-      headers: { "Content-type": "application/json" },
-      body: JSON.stringify(this.state.album)
-    }).then(response => console.log(response.status));
+      url: `http://localhost:3000/albums`,
+      data: this.state.album
+    })
+    .then(response => console.log(response.status))
+    .catch(error=> console.log(error));
   };
 
   render() {

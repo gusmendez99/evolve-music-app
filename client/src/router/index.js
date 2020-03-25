@@ -21,6 +21,15 @@ import AddTrack from '../components/AddTrack'
 import Statistics from "../components/Statistics";
 import AddRole from "../components/AddRole";
 
+const RestrictedCreateRoute = ({ component: Component, authUser, canCreate, ...props }) => (
+  <Route
+    {...props}
+    render={props =>
+      (authUser && canCreate) ? <Component {...props} /> : <Redirect to="/" />
+    }
+  />
+);
+
 const RestrictedRoute = ({ component: Component, authUser, ...props }) => (
   <Route
     {...props}
@@ -30,13 +39,24 @@ const RestrictedRoute = ({ component: Component, authUser, ...props }) => (
   />
 );
 
+const RestrictedAdminRoute = ({ component: Component, authUser, isAdmin, ...props }) => (
+  <Route
+    {...props}
+    render={props =>
+      (authUser && isAdmin) ? <Component {...props} /> : <Redirect to="/" />
+    }
+  />
+);
+
 class RouterApp extends React.Component {
 
   render() {
     const { authUser, permissions } = this.props;
+       
+
     return (
       <Fragment>
-      <Nav authUser={authUser}/>
+      <Nav />
       <Switch>
         
         <Route exact path="/" component={HomePage} />
@@ -56,11 +76,12 @@ class RouterApp extends React.Component {
               component={ManageArtists}
               authUser={authUser}
             />
-            <RestrictedRoute
+            <RestrictedCreateRoute
               exact
               path={`/${authUser.rolename}/manageartists/new`}
               component={AddArtist}
               authUser={authUser}
+              canCreate={permissions.canCreateArtist}
             />
 
             <RestrictedRoute
@@ -69,11 +90,12 @@ class RouterApp extends React.Component {
               component={ManageAlbums}
               authUser={authUser}
             />
-            <RestrictedRoute
+            <RestrictedCreateRoute
               exact
               path={`/${authUser.rolename}/managealbums/new`}
               component={AddAlbum}
               authUser={authUser}
+              canCreate={permissions.canCreateAlbum}
             />
 
             <RestrictedRoute
@@ -82,38 +104,43 @@ class RouterApp extends React.Component {
               component={ManageTracks}
               authUser={authUser}
             />
-            <RestrictedRoute
+            <RestrictedCreateRoute
               exact
               path={`/${authUser.rolename}/managetracks/new`}
               component={AddTrack}
               authUser={authUser}
+              canCreate={permissions.canCreateTrack}
             />
 
-            <RestrictedRoute
+            <RestrictedAdminRoute
               exact
               path={`/${authUser.rolename}/manageusers`}
               component={ManageUsers}
               authUser={authUser}
+              isAdmin={permissions.isAdmin}
             />
-            <RestrictedRoute
+            <RestrictedAdminRoute
               exact
               path={`/${authUser.rolename}/manageusers/new`}
               component={AddUser}
               authUser={authUser}
+              isAdmin={permissions.isAdmin}
             />
 
-            <RestrictedRoute
+            <RestrictedAdminRoute
               exact
               path={`/${authUser.rolename}/manageroles`}
               component={ManageRoles}
               authUser={authUser}
+              isAdmin={permissions.isAdmin}
             />
 
-            <RestrictedRoute
+            <RestrictedAdminRoute
               exact
               path={`/${authUser.rolename}/manageroles/new`}
               component={AddRole}
               authUser={authUser}
+              isAdmin={permissions.isAdmin}
             />
 
           </Fragment>

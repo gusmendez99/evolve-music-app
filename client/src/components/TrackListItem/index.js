@@ -1,6 +1,8 @@
 import React, { Component, Fragment } from "react";
 import CustomLink from "../CustomLink";
 import Select from "react-select";
+import { connect } from 'react-redux'
+import axios from 'axios';
 
 const SELECT_ALBUM_OPTION = "SELECT_ALBUM_OPTION"
 const SELECT_GENRE_OPTION = "SELECT_GENRE_OPTION"
@@ -21,8 +23,8 @@ class TrackListItem extends Component {
     };
   }
   componentDidMount() {
-    fetch(`http://localhost:3000/tracks/${this.props.track.trackid}`)
-      .then(response => response.json())
+    axios.get(`http://localhost:3000/tracks/${this.props.track.trackid}`)
+      .then(response => response.data)
       .then(data => {
         this.setState({
           track: data[0],
@@ -33,55 +35,56 @@ class TrackListItem extends Component {
             label: data[0].mediatypename
           }
         });
-      });
+      })
+      .catch(error => console.log(error));
 
-    fetch("http://localhost:3000/albums")
-      .then(response => response.json())
-      .then(data => {
-        const albumOptions = data.map(album => {
+    axios.get("http://localhost:3000/albums")
+      .then(response => {
+        const albumOptions = response.data.map(album => {
           return { value: album.albumid, label: album.title };
         });
-
         this.setState({ albums: albumOptions });
-      });
+      })
+      .catch(error => console.log(error));
 
-    fetch("http://localhost:3000/genres")
-      .then(response => response.json())
-      .then(data => {
-        const genreOptions = data.map(genre => {
+    axios.get("http://localhost:3000/genres")
+      .then(response => {
+        const genreOptions = response.data.map(genre => {
           return { value: genre.genreid, label: genre.name };
         });
-
         this.setState({ genres: genreOptions });
-      });
+      })
+      .catch(error => console.log(error));
 
-    fetch("http://localhost:3000/mediatypes")
-      .then(response => response.json())
-      .then(data => {
-        const mediaTypeOptions = data.map(mediatype => {
+    axios.get("http://localhost:3000/mediatypes")
+      .then(response => {
+        const mediaTypeOptions = response.data.map(mediatype => {
           return { value: mediatype.mediatypeid, label: mediatype.name };
         });
-
         this.setState({ mediaTypes: mediaTypeOptions });
-      });
+      })
+      .catch(error => console.log(error));
   }
 
   handleUpdate = () => {
-    fetch(`http://localhost:3000/tracks/${this.state.track.trackid}`, {
+    axios({
       method: "put",
-      headers: { "Content-type": "application/json" },
-      body: JSON.stringify(this.state.track)
-    }).then(response => console.log(response.status));
+      url: `http://localhost:3000/tracks/${this.state.track.trackid}`,
+      data: this.state.track
+    })
+    .then(response => console.log(response.status))
+    .catch(error => console.log(error));
   };
 
+  // TODO on delete cascade porque hay una llave foránea en playlisttrack referenciando al id de la pista
   handleDelete = () => {
-    fetch(`http://localhost:3000/tracks/${this.state.track.trackid}`, {
-      method: "delete"
-    }).then(response => {
+    axios.delete(`http://localhost:3000/tracks/${this.state.track.trackid}`)
+    .then(response => {
       if (response.status === 200) {
         this.props.updateState();
       }
-    });
+    })
+    .catch(error => console.log(error));
   };
 
   handleFieldChange = event => {
@@ -126,6 +129,8 @@ class TrackListItem extends Component {
   };
 
   render() {
+    const { permissions } = this.props;
+
     const { track, selectedAlbum, albums, 
       selectedGenre, genres, selectedMediaType, mediaTypes  } = this.state;
     
@@ -211,25 +216,30 @@ class TrackListItem extends Component {
           </td>          
           
           
-          <td className="pv3 pr3 bb b--black-20 tc justify-center items-center">
-            <CustomLink
+          {(permissions.canDeleteTrack || permissions.canUpdateTrack) && <td className="pv3 pr3 bb b--black-20 tc justify-center items-center">
+            {permissions.canDeleteTrack && <CustomLink
               to={`/${this.props.currentUser.rolename}/managetracks`}
               className="b ph3 pv2 input-reset ba b--red red bg-transparent grow pointer f6 dib"
               onClick={this.handleDelete}
             >
               Delete
-            </CustomLink>
-            <button
+            </CustomLink>}
+            {permissions.canUpdateTrack && <button
               className="b ph3 pv2 input-reset ba b--blue blue bg-transparent grow pointer f6 dib ma2"
               onClick={this.handleUpdate}
             >
               Update
-            </button>
-          </td>
+            </button>}
+          </td>}
         </tr>
       </Fragment>
     );
   }
 }
 
-export default TrackListItem;
+const mapStateToProps = ({ user }) => {
+  const { permissions } = user;
+  return { permissions };
+};
+
+export default connect(mapStateToProps)(TrackListItem);

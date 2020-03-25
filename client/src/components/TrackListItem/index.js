@@ -3,6 +3,8 @@ import CustomLink from "../CustomLink";
 import Select from "react-select";
 import { connect } from 'react-redux'
 import axios from 'axios';
+import pullAllWith from "lodash/pullAllWith";
+import isEqual from "lodash/isEqual";
 
 const SELECT_ALBUM_OPTION = "SELECT_ALBUM_OPTION"
 const SELECT_GENRE_OPTION = "SELECT_GENRE_OPTION"
@@ -19,7 +21,8 @@ class TrackListItem extends Component {
       selectedGenre: null,
       genres: [],
       selectedMediaType: null,
-      mediaTypes: []
+      mediaTypes: [],
+      isInactive:[]
     };
   }
   componentDidMount() {
@@ -64,6 +67,12 @@ class TrackListItem extends Component {
         this.setState({ mediaTypes: mediaTypeOptions });
       })
       .catch(error => console.log(error));
+
+    axios.get("http://localhost:3000/inactivetrack")
+    .then(response => {
+      this.setState({isInactive: response.data})
+    })
+    .catch(error => console.log(error));
   }
 
   handleUpdate = () => {
@@ -127,6 +136,22 @@ class TrackListItem extends Component {
   handleMediaTypeSelectChange = selectedOption => {
     if (selectedOption) this.handleSelectChange(selectedOption, SELECT_MEDIATYPE_OPTION)
   };
+
+  handleCheck = event => {
+    const { value, checked } = event.target;
+    if(!checked){
+      axios.delete(`http://localhost:3000/inactivetrack/${value}`)
+      .then(response => console.log(response));
+      const copy = pullAllWith(this.state.isInactive, [{"trackid":value}], isEqual);
+      this.setState({isInactive:copy});
+    }
+    else {
+      axios.post(`http://localhost:3000/inactivetrack/${value}`)
+      .then(response => console.log(response));
+      const copy = [...this.state.isInactive, {"trackid": value}]
+      this.setState({isInactive:copy});
+    }
+  }
 
   render() {
     const { permissions } = this.props;
@@ -214,7 +239,18 @@ class TrackListItem extends Component {
               onChange={this.handleMediaTypeSelectChange}
             />
           </td>          
-          
+          <td className="pv3 pr3 bb b--black-20 w-10">
+            <div className="tc">
+              <input
+                className="mr2"
+                value={this.state.track.trackid}
+                type="checkbox"
+                checked={this.state.isInactive.filter(
+                  item => item["trackid"] == this.state.track.trackid).length > 0}
+                onChange={this.handleCheck}
+              />
+            </div>
+            </td>
           
           {(permissions.canDeleteTrack || permissions.canUpdateTrack) && <td className="pv3 pr3 bb b--black-20 tc justify-center items-center">
             {permissions.canDeleteTrack && <CustomLink

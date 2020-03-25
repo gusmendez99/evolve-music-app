@@ -6,7 +6,7 @@ const GET_TRACKS = "SELECT * FROM Track ORDER BY Name ASC";
 const GET_TRACK_BY_ID =
   "SELECT t.*, g.Name as GenreName, m.Name as MediaTypeName, a.Title as AlbumTitle FROM Track t INNER JOIN Genre g on t.genreid = g.genreid INNER JOIN MediaType m on t.mediatypeid = m.mediatypeid INNER JOIN Album a on t.albumid = a.albumid WHERE t.TrackId = $1";
 const ADD_TRACK =
-  "INSERT INTO Track (TrackId, Name, Composer, Milliseconds, UnitPrice, Bytes, AlbumId, GenreId, MediaTypeId) SELECT MAX( TrackId ) + 1, $1, $2, $3, $4, $5, $6, $7, $8 FROM Track";
+  "INSERT INTO Track (TrackId, Name, Composer, Milliseconds, UnitPrice, Bytes, AlbumId, GenreId, MediaTypeId) SELECT MAX( TrackId ) + 1, $1, $2, $3, $4, $5, $6, $7, $8 FROM Track RETURNING *";
 const UPDATE_TRACK =
   "UPDATE Track SET Name=$1, Composer=$2, Milliseconds=$3, UnitPrice=$4, Bytes=$5, AlbumId=$6, GenreId=$7, MediaTypeId=$8 WHERE TrackId=$9";
 const DELETE_TRACK = "DELETE FROM Track WHERE TrackId = $1";
@@ -100,7 +100,8 @@ const createTrack = (request, response) => {
     bytes,
     albumid,
     genreid,
-    mediatypeid
+    mediatypeid,
+    userid
   } = request.body;
 
   db.query(
@@ -119,6 +120,12 @@ const createTrack = (request, response) => {
       if (error) {
         throw error;
       }
+      db.query('select addUserCount($1,$2)',
+      [userid, results.rows[0].trackid],
+      (error, results) => {
+        if (error) {
+        throw error;
+      }});
       response.status(201).send(`Track added successfully`);
     }
   );

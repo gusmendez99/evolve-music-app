@@ -140,6 +140,7 @@ class ManageTracks extends Component {
                   <th className="fw6 bb b--black-20 tc pb3 pr3 bg-white w-10 select-field">Album</th>
                   <th className="fw6 bb b--black-20 tc pb3 pr3 bg-white w-10 select-field">Genre</th>
                   <th className="fw6 bb b--black-20 tc pb3 pr3 bg-white w-10 select-field">Media Type</th>
+                  <th className="fw6 bb b--black-20 tc pb3 pr3 bg-white w-10 select-field">Is Inactivated</th>
                   
                   {(permissions.canDeleteTrack || permissions.canUpdateTrack) && <th className="fw6 bb b--black-20 tc pb3 pr3 bg-white w-10 select-field">Acciones</th>}
                 </tr>

@@ -80,7 +80,7 @@ class Statistics extends Component {
 		else if (this.state.selectedStat === 'artist-in-playlist'){
 			this.myChart.data.labels = this.state.data.map(item => item.name);
 			this.myChart.data.datasets[0].data = this.state.data.map(item => parseFloat(item.artists));
-			this.myChart.data.datasets[0].label='Artists per Playlist';
+			this.myChart.data.datasets[0].label='Number of Artists';
 			this.myChart.options.title.text='Quantity of Artists per Playlist';
 			this.myChart.options.scales.yAxes[0].scaleLabel.labelString='Number of Artists';
 			this.myChart.options.scales.xAxes[0].scaleLabel.labelString='Playlist';
@@ -88,7 +88,7 @@ class Statistics extends Component {
 		else if (this.state.selectedStat === 'most-genre-diversity-artist'){
 			this.myChart.data.labels = this.state.data.map(item => item.name);
 			this.myChart.data.datasets[0].data = this.state.data.map(item => parseFloat(item.genres));
-			this.myChart.data.datasets[0].label='Genres Per Artist';
+			this.myChart.data.datasets[0].label='Number of Genres';
 			this.myChart.options.title.text='Artist With More Diversity of Genres';
 			this.myChart.options.scales.yAxes[0].scaleLabel.labelString='Number of Genres';
 			this.myChart.options.scales.xAxes[0].scaleLabel.labelString='Artist';

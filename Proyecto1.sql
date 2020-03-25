@@ -13149,7 +13149,7 @@ INSERT INTO PlaylistTrack (PlaylistId, TrackId) VALUES (17, 3290);
 INSERT INTO PlaylistTrack (PlaylistId, TrackId) VALUES (18, 597);
 
 
-CREATE OR REPLACE FUNCTION addUserCount (user_id, track_id)
+CREATE OR REPLACE FUNCTION addUserCount (user_id int, track_id int)
     RETURNS void AS
     $BODY$
         BEGIN

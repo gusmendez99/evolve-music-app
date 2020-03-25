@@ -3,6 +3,8 @@ import CustomLink from "../CustomLink";
 import pullAllWith from "lodash/pullAllWith";
 import isEqual from "lodash/isEqual";
 import range from "lodash/range";
+import axios from 'axios';
+
 
 class RoleListItem extends Component {
   constructor() {
@@ -14,83 +16,74 @@ class RoleListItem extends Component {
     };
   }
   componentDidMount() {
-    fetch(`http://localhost:3000/roles/${this.props.role.roleid}`)
-      .then(response => response.json())
-      .then(data => {
-        this.setState({ role: data[0] });
-      });
 
-    fetch(`http://localhost:3000/roles/${this.props.role.roleid}/permissions`)
-      .then(response => response.json())
-      .then(data => {
-        this.setState({ permissions: data });
-      });
-    fetch("http://localhost:3000/permissions")
-      .then(response => response.json())
-      .then(data => {
-        this.setState({ allPermissions: data });
-      });
+    axios.get(`http://localhost:3000/roles/${this.props.role.roleid}`)
+    .then(res => {
+      const data = res.data;
+      this.setState({ role: data[0] });
+    });
+
+    axios.get(`http://localhost:3000/roles/${this.props.role.roleid}/permissions`)
+    .then(res => {
+      const data = res.data;
+      this.setState({ permissions: data });
+    });
+
+    axios.get(`http://localhost:3000/permissions`)
+    .then(res => {
+      const data = res.data;
+      this.setState({ allPermissions: data });
+    });
+
   }
 
-	handleUpdate = () => {
-		fetch(`http://localhost:3000/roles/${this.state.role.roleid}`, {
-			method: "put",
-			headers: { "Content-type": "application/json" },
-			body: JSON.stringify({ name: this.state.role.name })
-		}).then(response => console.log(response.status));
-	};
+  handleUpdate = () => {
+    axios.put(`http://localhost:3000/roles/${this.state.role.roleid}`, { name: this.state.role.name })
+      .then(res => {
+        console.log(res.status);
+      })
+  };
 
-	handleFieldChange = event => {
-		const { checked, value } = event.target;
-		if (!checked) {
-			console.log(this.state.permissions);
-			const itemToPull = this.state.allPermissions.filter(
-				item => item["permissionid"] == value
-			);
-			const copy = pullAllWith(this.state.permissions, itemToPull, isEqual);
-			this.setState({ permissions: copy });
-			console.log("Esto le mando ->".itemToPull);
+  handleFieldChange = event => {
+    const { checked, value } = event.target;
+    if (!checked) {
+      const itemToPull = this.state.allPermissions.filter(
+        item => item["permissionid"] == value);
+      const copy = pullAllWith(this.state.permissions, itemToPull, isEqual);
+      this.setState({ permissions: copy });
 
-			fetch(
-				`http://localhost:3000/roles/${this.state.role.roleid}/permissions/${value}`,
-				{
-					method: "delete"
-				}
-			).then(response => console.log(response.status));
-		} else {
-			const itemToPush = this.state.allPermissions.filter(
-				item => item["permissionid"] == value
-			);
-			const copy = [...this.state.permissions, itemToPush[0]];
-			this.setState({ permissions: copy });
+      axios.delete(`http://localhost:3000/roles/${this.state.role.roleid}/permissions/${value}`)
+        .then(res => {
+          console.log(res.status)
+        });
 
-			console.log(itemToPush[0]);
+    } else {
+      const itemToPush = this.state.allPermissions.filter(
+        item => item["permissionid"] == value
+      );
+      const copy = [...this.state.permissions, itemToPush[0]];
+      this.setState({ permissions: copy });
+      axios.post(`http://localhost:3000/roles/${this.state.role.roleid}/permissions`, itemToPush[0])
+        .then(res => {
+          console.log(res.status);
+        });
 
-			fetch(
-				`http://localhost:3000/roles/${this.state.role.roleid}/permissions`,
-				{
-					method: "post",
-					headers: { "Content-type": "application/json" },
-					body: JSON.stringify(itemToPush[0])
-				}
-			).then(response => console.log(response.status));
-		}
-	};
-	
-	handleInputChange = event => {
-		const { value, name } = event.target;
-		const copy = { ...this.state.role, [name]: value };
-		this.setState({ role: copy });
-	};
+    };
+  }
 
-	handleDelete = event => {
-		fetch(
-			`http://localhost:3000/roles/${this.state.role.roleid}`,
-			{
-				method: "delete"
-			}
-		).then(response => console.log(response.status));
-	};
+  handleInputChange = event => {
+    const { value, name } = event.target;
+    const copy = { ...this.state.role, [name]: value };
+    this.setState({ role: copy });
+  };
+
+  handleDelete = event => {
+
+    axios.delete(`http://localhost:3000/roles/${this.state.role.roleid}`)
+      .then(res => {
+        console.log(res.status)
+      });
+  }
 
   render() {
     //console.log("aquí va el state", this.state.permissions);

@@ -45,6 +45,8 @@ class SignIn extends React.Component {
               console.log(error);
               this.setState({ errorMessage: error });
             });
+        } else {
+          this.setState({ errorMessage: "User doesn't exist, try again..." });
         }
       })
       .catch(error => {
@@ -92,8 +94,11 @@ class SignIn extends React.Component {
             </button>
           </div>
         </form>
+        <div>
+          <h5 className="red">{this.state.errorMessage}</h5>
+        </div>
 
-        {this.state.errorMessage}
+        
       </Fragment>
     );
   }

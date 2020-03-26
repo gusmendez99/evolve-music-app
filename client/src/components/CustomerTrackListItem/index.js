@@ -64,7 +64,7 @@ class CustomerTrackListItem extends Component {
           <div className="dtc v-mid">
             <div className="w-100 tr">
               {(metadata && metadata.previewurl) ? (
-                <button className="f6 button-reset bg-white ba b--black-10 dim pointer pv1 black-60">
+                <button onClick={()=> window.open(`${metadata.previewurl}`, "_blank")} target="_blank" className="f6 button-reset bg-white ba b--black-10 dim pointer pv1 black-60" >
                   Play
                 </button>
               ) : (

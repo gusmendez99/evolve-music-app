@@ -88,8 +88,8 @@ class CustomerTracks extends Component {
         </div>
         {/* Search function needs Axios to make a query... */
         <div className="pa3 ph5-l w-50 center">
-          <label className="f6 b db mb2 blue ">Búsqueda</label>
-          <input id="search" name="search"  className="input-reset ba b--black-20 pa2 mb2 db w-100" 
+          <label className="f6 b db mb2 blue ">Search</label>
+          <input id="search" name="search" placeholder="Search by track or artist..." className="input-reset ba b--black-20 pa2 mb2 db w-100" 
           type="text" aria-describedby="name-desc" onChange={this.handleSearchFieldChange}/>
         </div>}
         <div className="pa3 ph5-l">

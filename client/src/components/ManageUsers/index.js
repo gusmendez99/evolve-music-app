@@ -3,6 +3,8 @@ import { Link} from 'react-router-dom';
 import { connect } from 'react-redux';
 import axios from 'axios';
 
+import * as selectors from '../../redux/root-reducer'
+
 import UserListItem from '../UserListItem';
 import Pagination from '../Pagination';
 
@@ -153,10 +155,10 @@ class ManageUsers extends Component {
     );
   }
 }
-const mapStateToProps = ({ user }) => {
-  const { authUser } = user;
-  return { authUser };
-};
+
+const mapStateToProps = (state) => ({
+  authUser: selectors.getAuthUser(state)
+});
 
 export default connect(mapStateToProps)(ManageUsers);
 

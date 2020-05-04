@@ -2,8 +2,8 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { connect } from 'react-redux';
 
-
-import * as actions from "../../redux/user/user.actions";
+import * as actions from "../../redux/auth/auth.actions";
+import * as selectors from '../../redux/root-reducer'
 
 const Nav = ({ authUser, permissions, onSignOut }) => {
   return (
@@ -111,14 +111,14 @@ const Nav = ({ authUser, permissions, onSignOut }) => {
   );
 };
 
-const mapStateToProps = ({ user }) => {
-  const { authUser, permissions } = user;
-  return { authUser, permissions };
-};
+const mapStateToProps = (state) => ({
+  authUser: selectors.getAuthUser(state),
+  permissions: selectors.getAuthUserPermissions(state)
+});
 
 const mapDispatchToProps = dispatch => ({
   onSignOut() {
-    dispatch(actions.userSignOutSuccess());
+    dispatch(actions.completeSignOut());
   }
 });
 

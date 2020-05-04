@@ -3,6 +3,8 @@ import { withRouter } from "react-router-dom";
 import { Redirect, Route, Switch } from "react-router-dom";
 import { connect } from "react-redux";
 
+import * as selectors from '../redux/root-reducer'
+
 //Pages
 import HomePage from "../pages/Home";
 import SignIn from "../pages/SignIn";
@@ -176,9 +178,10 @@ class RouterApp extends React.Component {
   }
 }
 
-const mapStateToProps = ({ user }) => {
-  const { authUser, permissions } = user;
-  return { authUser, permissions };
-};
+const mapStateToProps = (state) => ({
+    authUser: selectors.getAuthUser(state),
+    permissions: selectors.getAuthUserPermissions(state)
+    
+});
 
 export default withRouter(connect(mapStateToProps)(RouterApp));

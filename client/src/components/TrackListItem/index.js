@@ -6,6 +6,8 @@ import axios from 'axios';
 import pullAllWith from "lodash/pullAllWith";
 import isEqual from "lodash/isEqual";
 
+import * as selectors from '../../redux/root-reducer'
+
 const SELECT_ALBUM_OPTION = "SELECT_ALBUM_OPTION"
 const SELECT_GENRE_OPTION = "SELECT_GENRE_OPTION"
 const SELECT_MEDIATYPE_OPTION = "SELECT_MEDIATYPE_OPTION"
@@ -274,9 +276,8 @@ class TrackListItem extends Component {
   }
 }
 
-const mapStateToProps = ({ user }) => {
-  const { permissions } = user;
-  return { permissions };
-};
+const mapStateToProps = (state) => ({
+  permissions: selectors.getAuthUserPermissions(state)
+});
 
 export default connect(mapStateToProps)(TrackListItem);

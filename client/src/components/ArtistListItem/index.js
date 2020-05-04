@@ -3,6 +3,8 @@ import CustomLink from "../CustomLink";
 import { connect } from 'react-redux';
 import axios from "axios";
 
+import * as selectors from '../../redux/root-reducer'
+
 class ArtistListItem extends Component {
   constructor() {
     super();
@@ -87,9 +89,8 @@ class ArtistListItem extends Component {
   }
 }
 
-const mapStateToProps = ({ user }) => {
-  const { permissions } = user;
-  return { permissions };
-};
+const mapStateToProps = (state) => ({
+  permissions: selectors.getAuthUserPermissions(state)
+});
 
 export default connect(mapStateToProps)(ArtistListItem);

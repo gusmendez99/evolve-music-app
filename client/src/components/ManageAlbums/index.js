@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import axios from "axios";
 
+import * as selectors from '../../redux/root-reducer'
+
 import AlbumListItem from "../AlbumListItem";
 import Pagination from "../Pagination";
 
@@ -196,9 +198,10 @@ class ManageAlbums extends Component {
     );
   }
 }
-const mapStateToProps = ({ user }) => {
-  const { authUser, permissions } = user;
-  return { authUser, permissions };
-};
+
+const mapStateToProps = (state) => ({
+  authUser: selectors.getAuthUser(state),
+  permissions: selectors.getAuthUserPermissions(state)
+});
 
 export default connect(mapStateToProps)(ManageAlbums);

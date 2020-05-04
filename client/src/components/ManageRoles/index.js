@@ -3,6 +3,8 @@ import { Link} from 'react-router-dom';
 import { connect } from 'react-redux';
 import axios from 'axios';
 
+import * as selectors from '../../redux/root-reducer'
+
 import RoleListItem from '../RoleListItem';
 
 const RESTRICTED_ROLES = [
@@ -87,10 +89,9 @@ class ManageRoles extends Component {
     );
   }
 }
-const mapStateToProps = ({ user }) => {
-  const { authUser } = user;
-  return { authUser };
-};
+
+const mapStateToProps = (state) => ({
+  authUser: selectors.getAuthUser(state)
+});
+
 export default connect(mapStateToProps)(ManageRoles);
-
-

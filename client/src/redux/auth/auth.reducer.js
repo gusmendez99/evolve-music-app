@@ -1,12 +1,4 @@
-import {
-  SIGNIN_USER_STARTED,
-  SIGNIN_USER_FAILED,
-  SIGNIN_USER_COMPLETED,
-  SIGNUP_USER_STARTED,
-  SIGNUP_USER_FAILED,
-  SIGNUP_USER_COMPLETED,
-  SIGNOUT_USER_COMPLETED,
-} from './auth.types';
+import * as types from './auth.types';
 import { combineReducers } from 'redux';
 import store from 'store';
 
@@ -22,7 +14,7 @@ const account = (state = INIT_STATE, action) => {
 
   switch (action.type) {
 
-      case SIGNUP_USER_COMPLETED: {
+      case types.SIGNUP_USER_COMPLETED: {
           const permissionsByRole = permissionUtils.getPermissionsByRole(
             action.payload.permissions, action.payload.user.rolename) 
 
@@ -35,7 +27,7 @@ const account = (state = INIT_STATE, action) => {
           }
       }
 
-      case SIGNIN_USER_COMPLETED: {
+      case types.SIGNIN_USER_COMPLETED: {
         const permissionsByRole = permissionUtils.getPermissionsByRole(
           action.payload.permissions, action.payload.user.rolename) 
 
@@ -48,7 +40,7 @@ const account = (state = INIT_STATE, action) => {
         }
       }
       
-      case SIGNOUT_USER_COMPLETED: {
+      case types.SIGNOUT_USER_COMPLETED: {
           store.remove('account_user');
           store.remove('permissions');
           return {
@@ -66,17 +58,17 @@ const account = (state = INIT_STATE, action) => {
 
 const isAuthenticating = (state = false, action) => {
   switch(action.type) {
-    case SIGNIN_USER_STARTED: 
-    case SIGNUP_USER_STARTED: {
+    case types.SIGNIN_USER_STARTED: 
+    case types.SIGNUP_USER_STARTED: {
       return true;
     }
-    case SIGNIN_USER_COMPLETED:
-    case SIGNUP_USER_COMPLETED:
-    case SIGNOUT_USER_COMPLETED: {
+    case types.SIGNIN_USER_COMPLETED:
+    case types.SIGNUP_USER_COMPLETED:
+    case types.SIGNOUT_USER_COMPLETED: {
       return false;
     }
-    case SIGNUP_USER_FAILED: 
-    case SIGNIN_USER_FAILED: {
+    case types.SIGNUP_USER_FAILED: 
+    case types.SIGNIN_USER_FAILED: {
       return false;
     }
   }
@@ -86,17 +78,17 @@ const isAuthenticating = (state = false, action) => {
 
 const error = (state = null, action) => {
   switch(action.type) {
-    case SIGNIN_USER_STARTED:
-    case SIGNUP_USER_STARTED: {
+    case types.SIGNIN_USER_STARTED:
+    case types.SIGNUP_USER_STARTED: {
       return null;
     }
-    case SIGNIN_USER_COMPLETED: 
-    case SIGNUP_USER_COMPLETED:
-    case SIGNOUT_USER_COMPLETED: {
+    case types.SIGNIN_USER_COMPLETED: 
+    case types.SIGNUP_USER_COMPLETED:
+    case types.SIGNOUT_USER_COMPLETED: {
       return null;
     }
-    case SIGNIN_USER_FAILED:
-    case SIGNUP_USER_FAILED: {
+    case types.SIGNIN_USER_FAILED:
+    case types.SIGNUP_USER_FAILED: {
       return action.payload.error;
     }
   }

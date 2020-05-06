@@ -8,9 +8,9 @@ import {
   SIGNOUT_USER_COMPLETED,
 } from './auth.types';
 
-export const startSignIn = (email, password) => ({
+export const startSignIn = ({ username, password }) => ({
   type: SIGNIN_USER_STARTED,
-  payload: { email, password },
+  payload: { username, password },
 });
 
 export const completeSignIn = (user, permissions) => ({
@@ -25,9 +25,9 @@ export const failSignIn = error => ({
 
 
 
-export const startSignUp = (email, password) => ({
+export const startSignUp = (username, password) => ({
   type: SIGNUP_USER_STARTED,
-  payload: { email, password },
+  payload: { username, password },
 });
 
 export const completeSignUp = (authUser, permissions) => ({

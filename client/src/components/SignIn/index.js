@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
 import axios from "axios";
 
-import * as actions from "../../redux/user/user.actions";
+import * as actions from "../../redux/auth/auth.actions";
 
 class SignIn extends React.Component {
   constructor(props) {
@@ -106,7 +106,7 @@ class SignIn extends React.Component {
 
 const mapDispatchToProps = dispatch => ({
   onLoginSuccess(authUser, permissions) {
-    dispatch(actions.userSignInSuccess(authUser, permissions));
+    dispatch(actions.completeSignIn(authUser, permissions));
   }
 });
 

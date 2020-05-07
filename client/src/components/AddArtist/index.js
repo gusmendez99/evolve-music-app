@@ -3,6 +3,8 @@ import CustomLink from "../CustomLink";
 import { connect } from "react-redux";
 import axios from "axios";
 
+import * as selectors from '../../redux/root-reducer';
+
 class AddArtist extends Component {
   constructor() {
     super();
@@ -60,9 +62,8 @@ class AddArtist extends Component {
   }
 }
 
-const mapStateToProps = ({ user }) => {
-  const { authUser } = user;
-  return { authUser };
-};
+const mapStateToProps = (state) => ({
+  authUser: selectors.getAuthUser(state)
+});
 
 export default connect(mapStateToProps)(AddArtist);

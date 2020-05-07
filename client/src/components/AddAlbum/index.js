@@ -4,6 +4,8 @@ import { connect } from "react-redux";
 import axios from 'axios';
 import Select from "react-select";
 
+import * as selectors from '../../redux/root-reducer';
+
 class AddAlbum extends Component {
   constructor() {
     super();
@@ -93,9 +95,8 @@ class AddAlbum extends Component {
   }
 }
 
-const mapStateToProps = ({ user }) => {
-  const { authUser } = user;
-  return { authUser };
-};
+const mapStateToProps = (state) => ({
+  authUser: selectors.getAuthUser(state)
+});
 
 export default connect(mapStateToProps)(AddAlbum);

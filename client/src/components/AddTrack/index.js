@@ -1,8 +1,10 @@
 import React, { Component } from "react";
 import CustomLink from "../CustomLink";
 import { connect } from "react-redux";
-import Select from 'react-select';
-import axios from 'axios';
+import Select from "react-select";
+import axios from "axios";
+
+import * as selectors from "../../redux/root-reducer";
 
 const SELECT_ALBUM_OPTION = "SELECT_ALBUM_OPTION";
 const SELECT_GENRE_OPTION = "SELECT_GENRE_OPTION";
@@ -18,17 +20,16 @@ class AddTrack extends Component {
       selectedGenre: null,
       genres: [],
       selectedMediaType: null,
-      mediaTypes: []
+      mediaTypes: [],
     };
   }
 
   componentDidMount() {
     axios({
       method: "get",
-      url: "http://localhost:3000/albums"
-    })
-    .then(response => {
-      const albumOptions = response.data.map(album => {
+      url: "http://localhost:3000/albums",
+    }).then((response) => {
+      const albumOptions = response.data.map((album) => {
         return { value: album.albumid, label: album.title };
       });
       this.setState({ albums: albumOptions });
@@ -36,10 +37,9 @@ class AddTrack extends Component {
 
     axios({
       method: "get",
-      url: "http://localhost:3000/genres"
-    })
-    .then(response => {
-      const genreOptions = response.data.map(genre => {
+      url: "http://localhost:3000/genres",
+    }).then((response) => {
+      const genreOptions = response.data.map((genre) => {
         return { value: genre.genreid, label: genre.name };
       });
       this.setState({ genres: genreOptions });
@@ -47,17 +47,16 @@ class AddTrack extends Component {
 
     axios({
       method: "get",
-      url: "http://localhost:3000/mediatypes"
-    })
-    .then(response => {
-      const mediaTypeOptions = response.data.map(mediatype => {
+      url: "http://localhost:3000/mediatypes",
+    }).then((response) => {
+      const mediaTypeOptions = response.data.map((mediatype) => {
         return { value: mediatype.mediatypeid, label: mediatype.name };
       });
       this.setState({ mediaTypes: mediaTypeOptions });
     });
   }
 
-  handleFieldChange = event => {
+  handleFieldChange = (event) => {
     const { name, value } = event.target;
     const copy = { ...this.state.track, [name]: value };
     this.setState({ track: copy });
@@ -90,17 +89,17 @@ class AddTrack extends Component {
     this.setState({ track: copy });
   };
 
-  handleAlbumSelectChange = selectedOption => {
+  handleAlbumSelectChange = (selectedOption) => {
     if (selectedOption)
       this.handleSelectChange(selectedOption, SELECT_ALBUM_OPTION);
   };
 
-  handleGenreSelectChange = selectedOption => {
+  handleGenreSelectChange = (selectedOption) => {
     if (selectedOption)
       this.handleSelectChange(selectedOption, SELECT_GENRE_OPTION);
   };
 
-  handleMediaTypeSelectChange = selectedOption => {
+  handleMediaTypeSelectChange = (selectedOption) => {
     if (selectedOption)
       this.handleSelectChange(selectedOption, SELECT_MEDIATYPE_OPTION);
   };
@@ -109,15 +108,22 @@ class AddTrack extends Component {
     axios({
       method: "post",
       url: `http://localhost:3000/tracks`,
-      data: {...this.state.track, 'userid': this.props.authUser.userid}
+      data: { ...this.state.track, userid: this.props.authUser.userid },
     })
-    .then(response => console.log(response.status))
-    .catch(error => console.log(error)); 
+      .then((response) => console.log(response.status))
+      .catch((error) => console.log(error));
   };
 
   render() {
     const { authUser } = this.props;
-    const { selectedAlbum, albums, selectedGenre, genres, selectedMediaType, mediaTypes  } = this.state;
+    const {
+      selectedAlbum,
+      albums,
+      selectedGenre,
+      genres,
+      selectedMediaType,
+      mediaTypes,
+    } = this.state;
     return (
       <main className="pa4 black-80">
         <div className="measure center">
@@ -170,7 +176,7 @@ class AddTrack extends Component {
                 onChange={this.handleFieldChange}
               ></input>
             </div>
-            
+
             <div className="mv3">
               <label className="db fw6 lh-copy f6">Album</label>
               <Select
@@ -217,9 +223,8 @@ class AddTrack extends Component {
   }
 }
 
-const mapStateToProps = ({ user }) => {
-  const { authUser } = user;
-  return { authUser };
-};
+const mapStateToProps = (state) => ({
+  authUser: selectors.getAuthUser(state),
+});
 
 export default connect(mapStateToProps)(AddTrack);

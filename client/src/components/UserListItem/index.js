@@ -67,7 +67,7 @@ class UserListItem extends Component {
 	render(){
 		const {currentRole} =this.state;
 		const myOptions = this.state.roles.map(role => ({value: role.roleid, label: role.name}))
-		console.log(this.state);
+		//console.log(this.state);
 			return (
 				<Fragment>
 					<tr>

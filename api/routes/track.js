@@ -8,9 +8,9 @@ const GET_TRACK_BY_ID =
 const ADD_TRACK =
   "INSERT INTO Track (TrackId, Name, Composer, Milliseconds, UnitPrice, Bytes, AlbumId, GenreId, MediaTypeId) SELECT MAX( TrackId ) + 1, $1, $2, $3, $4, $5, $6, $7, $8 FROM Track RETURNING *";
 const UPDATE_TRACK =
-  "UPDATE Track SET Name=$1, Composer=$2, Milliseconds=$3, UnitPrice=$4, Bytes=$5, AlbumId=$6, GenreId=$7, MediaTypeId=$8 WHERE TrackId=$9";
-const DELETE_TRACK = "DELETE FROM Track WHERE TrackId = $1";
-
+  "UPDATE Track SET Name=$1, Composer=$2, Milliseconds=$3, UnitPrice=$4, Bytes=$5, AlbumId=$6, GenreId=$7, MediaTypeId=$8 WHERE TrackId=$9 RETURNING *";
+const DELETE_TRACK = "DELETE FROM Track WHERE TrackId = $1 RETURNING *";
+const UPDATE_LOGBOOK = "SELECT updateLogbook($1,$2,$3,$4)";
 //For Customer page
 const GET_ACTIVE_TRACKS = "SELECT t.*, g.Name as GenreName, m.Name as MediaTypeName, art.Name as ArtistName, a.Title as AlbumTitle FROM Track t INNER JOIN Genre g on t.genreid = g.genreid INNER JOIN MediaType m on t.mediatypeid = m.mediatypeid INNER JOIN Album a on t.albumid = a.albumid INNER JOIN Artist art ON art.artistid = a.artistid WHERE NOT EXISTS (SELECT FROM InactiveTrack it WHERE it.TrackId = t.TrackId ) ORDER BY t.Name ASC";
 
@@ -122,8 +122,8 @@ const createTrack = (request, response) => {
       if (error) {
         throw error;
       }
-      db.query('select addUserCount($1,$2)',
-      [userid, results.rows[0].trackid],
+      db.query(UPDATE_LOGBOOK,
+      [userid,'INSERT',results.rows[0].trackid, 'TRACK'],
       (error, results) => {
         if (error) {
         throw error;
@@ -143,7 +143,8 @@ const updateTrack = (request, response) => {
     bytes,
     albumid,
     genreid,
-    mediatypeid
+    mediatypeid,
+    userid
   } = request.body;
 
   db.query(
@@ -163,6 +164,12 @@ const updateTrack = (request, response) => {
       if (error) {
         throw error;
       }
+      db.query(UPDATE_LOGBOOK,
+      [userid,'UPDATE',results.rows[0].trackid, 'TRACK'],
+      (error, results) => {
+        if (error) {
+        throw error;
+      }});
       response.status(200).send(`Track modified with ID: ${id}`);
     }
   );
@@ -170,12 +177,20 @@ const updateTrack = (request, response) => {
 
 const deleteTrack = (request, response) => {
   const id = parseInt(request.params.id);
+  const { userid } = request.body;
 
   db.query(DELETE_TRACK, [id], (error, results) => {
     if (error) {
       throw error;
     }
-    response.status(200).send(`Track deleted with ID: ${id}`);
+    db.query(UPDATE_LOGBOOK,
+    [userid,'DELETE',results.rows[0].trackid, 'TRACK'],
+    (error, results) => {
+      if (error) {
+        throw error;
+      }
+    });
+      response.status(200).send(`Track deleted with ID: ${id}`);
   });
 };
 

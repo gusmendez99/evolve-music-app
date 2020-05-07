@@ -20,6 +20,7 @@ var mediaTypeRouter = require("./routes/media-type");
 var reportRouter = require("./routes/report");
 var searchRouter = require('./routes/search');
 var inactiveTrack = require('./routes/inactivate-songs');
+var playlistRouter = require('./routes/playlist');
 
 var app = express();
 
@@ -140,6 +141,14 @@ app.get("/reports/most-track-register-user", reportRouter.getUsersWithMoreTracks
 app.get("/reports/genre-duration-avg", reportRouter.getGenresDurationAvg);
 app.get("/reports/artist-in-playlist", reportRouter.getArtistByPlayListCount);
 app.get("/reports/most-genre-diversity-artist", reportRouter.getArtistWithMoreDiversityGenres);
+app.get("/reports/logbook", reportRouter.getLogBook);
+
+// Playlist
+app.get("/playlists", playlistRouter.getPlaylists);
+app.get("/playlists/:id", playlistRouter.getPlaylistById);
+app.post("/playlists", playlistRouter.createPlaylist);
+app.put("/playlists/:id", playlistRouter.updatePlaylist);
+app.delete("/playlists/:id", playlistRouter.deletePlaylist);
 
 
 // catch 404 and forward to error handler

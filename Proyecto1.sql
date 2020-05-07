@@ -124,6 +124,17 @@ CREATE TABLE Track
     FOREIGN KEY (MediaTypeId) REFERENCES MediaType (MediaTypeId) ON delete NO ACTION ON UPDATE NO ACTION
 );
 
+DROP TABLE IF EXISTS PlaybackRecord;
+CREATE TABLE PlaybackRecord(
+    PlaybackRecordId SERIAL NOT NULL,
+    UserId INT NOT NULL,
+    TrackId INT NOT NULL,
+    PlaybackDate TIMESTAMP NOT NULL DEFAULT NOW(),
+    CONSTRAINT PK_PlaybackRecord PRIMARY KEY (PlaybackRecordId),
+    FOREIGN KEY (UserId) REFERENCES AppUser (UserId) ON DELETE CASCADE ON UPDATE NO ACTION,
+    FOREIGN KEY (TrackId) REFERENCES Track (TrackId) ON DELETE CASCADE ON UPDATE NO ACTION
+);
+
 DROP TABLE IF EXISTS InvoiceLine CASCADE;
 CREATE TABLE InvoiceLine
 (
@@ -180,7 +191,8 @@ CREATE TABLE LogBook
     itemId INT NOT NULL,
     recordDate TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
     Type VARCHAR(20) NOT NULL,
-    CONSTRAINT PK_LogBook PRIMARY KEY (LogBookId)
+    CONSTRAINT PK_LogBook PRIMARY KEY (LogBookId),
+    FOREIGN KEY (UserId) REFERENCES AppUser(UserId)  ON DELETE CASCADE ON UPDATE NO ACTION
 );
 
 /*******************************************************************************
@@ -217,6 +229,17 @@ DROP INDEX IF EXISTS IFK_RolePermissionAppPermission;
 CREATE INDEX IFK_RolePermissionAppPermission ON RolePermission (PermissionId);
 DROP INDEX IF EXISTS IFK_InactiveTrackTrack;
 CREATE INDEX IFK_InactiveTrackTrack ON InactiveTrack(TrackId);
+
+DROP INDEX IF EXISTS IFK_PlaybackRecordUserId;
+CREATE INDEX IFK_PlaybackRecordUserId ON PlaybackRecord (UserId);
+
+DROP INDEX IF EXISTS IFK_PlaybackRecordTrackId;
+CREATE INDEX IFK_PlaybackRecordTrackId ON PlaybackRecord (TrackId);
+
+DROP INDEX IF EXISTS IFK_LogBookUserId;
+CREATE INDEX IFK_LogBookUserId ON LogBook (UserId);
+
+
 
 
 /*******************************************************************************
@@ -15918,3 +15941,144 @@ CREATE OR REPLACE FUNCTION addUserCount (user_id int, track_id int)
         END;
     $BODY$
     LANGUAGE 'plpgsql' VOLATILE COST 100;
+
+
+/* MANAGE TRACK CRUD REGISTER */
+
+DROP FUNCTION IF EXISTS registerTrackAction;
+	
+DROP TRIGGER IF EXISTS  insertTrack ON Track;
+DROP TRIGGER IF EXISTS updateTrack ON Track;
+DROP TRIGGER IF EXISTS deleteTrack ON Track;
+
+DROP FUNCTION IF EXISTS registerArtistAction;
+
+DROP TRIGGER IF EXISTS insertArtist on Artist;
+DROP TRIGGER IF EXISTS updateArtist on Artist;
+DROP TRIGGER IF EXISTS deleteArtist on Artist;
+
+
+DROP FUNCTION IF EXISTS registerAlbumAction;
+
+DROP TRIGGER IF EXISTS insertAlbum on Album;
+DROP TRIGGER IF EXISTS updateAlbum on Album;
+DROP TRIGGER IF EXISTS deleteAlbum on Album;
+
+DROP FUNCTION IF EXISTS registerPlaylistAction;
+
+DROP TRIGGER IF EXISTS insertPlaylist on Playlist;
+DROP TRIGGER IF EXISTS updatePlaylist on Playlist;
+DROP TRIGGER IF EXISTS deletePlaylist on Playlist;
+
+DROP FUNCTION IF EXISTS updateLogbook;
+CREATE OR REPLACE FUNCTION updateLogbook(user_id INT, executed_action TEXT, item_id INT, item_type TEXT)
+	RETURNS void AS
+	$$
+		BEGIN
+            INSERT INTO LogBook(UserId, Action, ItemId, Type) VALUES (user_id, executed_action, item_id, item_type);
+		END;
+	$$
+	LANGUAGE 'plpgsql';
+
+
+
+/* Statistics functions */
+drop function if exists getSalesPerWeek;
+CREATE OR REPLACE FUNCTION getSalesPerWeek(initial_date TEXT, final_date TEXT)
+    RETURNS TABLE ( week_of_year DOUBLE PRECISION
+                    , number_of_sales BIGINT) AS
+$func$
+BEGIN
+    RETURN QUERY
+    select date_part('week', InvoiceDate::date) AS weekly, 
+    COUNT(*) as sales           
+    FROM invoice
+    where InvoiceDate >= to_timestamp(initial_date, 'YYYY.MM.DD') and InvoiceDate <= to_timestamp(final_date, 'YYYY.MM.DD')
+    GROUP BY weekly
+    ORDER BY weekly;
+END;
+$func$  
+LANGUAGE plpgsql;
+
+-- SELECT * FROM getSalesPerWeek('2009/1/1','2009/2/3');
+
+
+drop function if exists getProfitableArtists;
+CREATE OR REPLACE FUNCTION getProfitableArtists(initial_date TEXT, final_date TEXT, results_limit INT)
+    RETURNS TABLE ( artist_name VARCHAR
+                    , number_of_sales BIGINT) AS
+$func$
+BEGIN
+    RETURN QUERY
+    SELECT Artist.name,
+    COUNT(*) as sales           
+    FROM Artist 
+    INNER JOIN
+    Album ON Album.ArtistId = Artist.ArtistId
+    INNER JOIN
+    Track ON Track.AlbumId = Album.AlbumId
+    INNER JOIN
+    InvoiceLine ON InvoiceLine.TrackId = Track.TrackId
+    INNER JOIN
+    Invoice ON Invoice.InvoiceId = InvoiceLine.InvoiceId
+    
+    WHERE InvoiceDate >= to_timestamp(initial_date, 'YYYY.MM.DD') and InvoiceDate <= to_timestamp(final_date, 'YYYY.MM.DD')
+    
+    GROUP BY Artist.Name
+    order by sales desc
+    LIMIT results_limit;
+END;
+$func$  
+LANGUAGE plpgsql;
+
+-- SELECT * FROM getprofitableartists('2009/1/1','2009/2/3',3);
+
+DROP FUNCTION IF EXISTS getSalesPerGenre;
+CREATE OR REPLACE FUNCTION getSalesPerGenre(initial_date TEXT, final_date TEXT)
+    RETURNS TABLE ( genre VARCHAR
+                    , number_of_sales BIGINT ) AS
+$func$
+BEGIN
+    RETURN QUERY
+    SELECT Genre.Name,
+    COUNT(*) AS sales
+    FROM Genre
+    INNER JOIN
+    Track ON Track.GenreId = Genre.GenreId
+    INNER JOIN
+    InvoiceLine ON InvoiceLine.TrackId = Track.TrackId
+    INNER JOIN
+    Invoice ON Invoice.InvoiceId = InvoiceLine.InvoiceId
+    WHERE InvoiceDate >= to_timestamp(initial_date, 'YYYY.MM.DD') and InvoiceDate <= to_timestamp(final_date, 'YYYY.MM.DD')
+    GROUP BY Genre.Name
+    ORDER BY sales DESC;
+END;
+$func$  
+LANGUAGE plpgsql;
+
+-- SELECT * FROM getSalesPerGenre('2009/1/1','2009/2/3');
+
+DROP FUNCTION IF EXISTS getPlaybackRecordByArtist;
+CREATE OR REPLACE FUNCTION getPlaybackRecordByArtist(artist_name TEXT)
+    RETURNS TABLE ( song_name VARCHAR
+                    , number_of_playbacks BIGINT ) AS
+$func$
+BEGIN
+    RETURN QUERY
+    SELECT Track.Name,
+    COUNT(*) AS playbacks
+    FROM Track 
+    INNER JOIN
+    Album ON Album.AlbumId = Track.AlbumId
+    INNER JOIN
+    Artist ON Artist.ArtistId = Album.ArtistId
+    INNER JOIN
+    PlaybackRecord ON PlaybackRecord.TrackId = Track.TrackId
+    WHERE lower(Artist.Name) like lower(artist_name) 
+    GROUP BY Track.Name
+    ORDER BY playbacks desc;
+END;
+$func$  
+LANGUAGE plpgsql;
+
+--SELECT * FROM getPlaybackRecordByArtist('aC/Dc');

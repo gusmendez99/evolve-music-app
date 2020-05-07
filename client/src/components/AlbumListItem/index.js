@@ -30,7 +30,7 @@ class AlbumListItem extends Component {
     axios({
       method: "put",
       url: `http://localhost:3000/albums/${this.state.album.albumid}`,
-      data: this.state.album
+      data: { ...this.state.album, userid: this.props.authUser.userid }
     })
     .then(response => console.log(response.status))
     .catch(error=>console.log(error));
@@ -39,7 +39,8 @@ class AlbumListItem extends Component {
   handleDelete = () => {
     axios({
       method: "delete",
-      url: `http://localhost:3000/albums/${this.state.album.albumid}`
+      url: `http://localhost:3000/albums/${this.state.album.albumid}`,
+      data: { userid: this.props.authUser.userid }
     })
     .then(response => {
       if (response.status === 200) {this.props.updateState();}
@@ -110,6 +111,7 @@ class AlbumListItem extends Component {
 }
 
 const mapStateToProps = (state) => ({
+  authUser: selectors.getAuthUser(state),
   permissions: selectors.getAuthUserPermissions(state)
 });
 

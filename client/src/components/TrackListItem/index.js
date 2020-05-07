@@ -80,7 +80,7 @@ class TrackListItem extends Component {
     axios({
       method: "put",
       url: `http://localhost:3000/tracks/${this.state.track.trackid}`,
-      data: this.state.track
+      data: { ...this.state.track, userid: this.props.authUser.userid }
     })
     .then(response => console.log(response.status))
     .catch(error => console.log(error));
@@ -88,7 +88,11 @@ class TrackListItem extends Component {
 
   // TODO on delete cascade porque hay una llave foránea en playlisttrack referenciando al id de la pista
   handleDelete = () => {
-    axios.delete(`http://localhost:3000/tracks/${this.state.track.trackid}`)
+    axios({
+      method: "delete",
+      url: `http://localhost:3000/tracks/${this.state.track.trackid}`,
+      data: {userid: this.props.authUser.userid}
+    })
     .then(response => {
       if (response.status === 200) {
         this.props.updateState();
@@ -277,6 +281,7 @@ class TrackListItem extends Component {
 }
 
 const mapStateToProps = (state) => ({
+  authUser: selectors.getAuthUser(state),
   permissions: selectors.getAuthUserPermissions(state)
 });
 

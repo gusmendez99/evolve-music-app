@@ -24,7 +24,7 @@ class ArtistListItem extends Component {
     axios({
       method: "put",
       url: `http://localhost:3000/artists/${this.state.artist.artistid}`,
-      data: this.state.artist
+      data: { ...this.state.artist, userid: this.props.authUser.userid }
     })
     .then(response => {
       console.log(response.status)
@@ -34,7 +34,8 @@ class ArtistListItem extends Component {
   handleDelete = () => {
     axios({
       method: "delete",
-      url: `http://localhost:3000/artists/${this.state.artist.artistid}`
+      url: `http://localhost:3000/artists/${this.state.artist.artistid}`,
+      data: {userid: this.props.authUser.userid}
     }).then(response => {
       if (response.status === 200) {
         this.props.updateState();
@@ -49,7 +50,6 @@ class ArtistListItem extends Component {
 
   render() {
     const { permissions } = this.props;
-
     return (
       <Fragment>
         <tr>
@@ -90,6 +90,7 @@ class ArtistListItem extends Component {
 }
 
 const mapStateToProps = (state) => ({
+  authUser: selectors.getAuthUser(state),
   permissions: selectors.getAuthUserPermissions(state)
 });
 

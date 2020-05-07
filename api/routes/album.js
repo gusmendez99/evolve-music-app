@@ -84,7 +84,7 @@ const deleteAlbum = (request, response) => {
       throw error;
     }
     db.query(UPDATE_LOGBOOK,
-      [userid,'DELETE',results.rows[0].albumid, 'ALBUM'],
+      [userid,'DELETE',id, 'ALBUM'],
       (error, results) => {
         if (error) {
         throw error;

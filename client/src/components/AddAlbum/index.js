@@ -42,7 +42,7 @@ class AddAlbum extends Component {
     axios({
       method: "post",
       url: `http://localhost:3000/albums`,
-      data: this.state.album
+      data: { ...this.state.album, userid: this.props.authUser.userid }
     })
     .then(response => console.log(response.status))
     .catch(error=> console.log(error));

@@ -184,7 +184,7 @@ const deleteTrack = (request, response) => {
       throw error;
     }
     db.query(UPDATE_LOGBOOK,
-    [userid,'DELETE',results.rows[0].trackid, 'TRACK'],
+    [userid,'DELETE', id, 'TRACK'],
     (error, results) => {
       if (error) {
         throw error;

@@ -21,7 +21,7 @@ class AddArtist extends Component {
     axios({
       method: "post",
       url: `http://localhost:3000/artists`,
-      data: this.state.artist
+      data: { ...this.state.artist, userid: this.props.authUser.userid }
     }).then(response => console.log(response.status));
   };
 

@@ -23,7 +23,7 @@ import ManageTracks from '../components/ManageTracks'
 import AddTrack from '../components/AddTrack'
 import Statistics from "../components/Statistics";
 import AddRole from "../components/AddRole";
-
+import LogBook from '../components/LogBook';
 //Customer Home
 import CustomerTracks from '../components/CustomerTracks'
 
@@ -94,7 +94,6 @@ class RouterApp extends React.Component {
               component={Statistics}
               authUser={authUser}
             />
-
             <RestrictedRoute
               exact
               path={`/${authUser.rolename}/manageartists`}
@@ -164,6 +163,14 @@ class RouterApp extends React.Component {
               exact
               path={`/${authUser.rolename}/manageroles/new`}
               component={AddRole}
+              authUser={authUser}
+              isAdmin={permissions.isAdmin}
+            />
+
+            <RestrictedAdminRoute
+              exact
+              path={`/${authUser.rolename}/logbook`}
+              component={LogBook}
               authUser={authUser}
               isAdmin={permissions.isAdmin}
             />

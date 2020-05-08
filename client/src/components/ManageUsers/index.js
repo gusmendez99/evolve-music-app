@@ -122,7 +122,7 @@ const ManageUsers = ({ authUser, users, isLoading, onLoad }) => {
                 <tbody className="lh-copy">
                   {isSearching
                     ? searchList.map((singleUser, i) => {
-                        if (singleUser.userid != authUser.userid) {
+                        if (singleUser.userid !== authUser.userid) {
                           return (
                             <UserListItem
                               key={singleUser.userid}
@@ -134,7 +134,7 @@ const ManageUsers = ({ authUser, users, isLoading, onLoad }) => {
                         }
                       })
                     : currentUsers.map((singleUser, i) => {
-                        if (singleUser.userid != authUser.userid) {
+                        if (singleUser.userid !== authUser.userid) {
                           return (
                             <UserListItem
                               key={singleUser.userid}

@@ -30,6 +30,16 @@ const Nav = ({ authUser, permissions, onSignOut }) => {
           </Link>
         )}
 
+        {authUser && permissions.isAdmin && (
+          <Link
+            className="link dim dark-gray f6 f5-l dib mr3 mr4-l"
+            to={`/${authUser.rolename}/logbook`}
+            title="LogBook"
+          >
+            LogBook
+          </Link>
+        )}
+
         {authUser && permissions.canReadArtist && (
           <Link
             className="link dim dark-gray f6 f5-l dib mr3 mr4-l"

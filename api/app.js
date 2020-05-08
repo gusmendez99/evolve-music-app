@@ -63,7 +63,8 @@ app.post("/search/users", searchRouter.searchUser);
 app.post("/search/tracks", searchRouter.searchTrack);
 app.post("/search/albums", searchRouter.searchAlbum);
 app.post("/search/artists", searchRouter.searchArtist);
-app.post("/search/tracks/active", searchRouter.searchActiveTrack)
+app.post("/search/tracks/active", searchRouter.searchActiveTrack);
+app.post("/search/logs", searchRouter.searchLog);
 
 // Users
 app.get("/users", userRouter.getUsers);

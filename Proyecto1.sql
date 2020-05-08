@@ -15981,38 +15981,39 @@ CREATE OR REPLACE FUNCTION updateLogbook(user_id INT, executed_action TEXT, item
 	$$
 	LANGUAGE 'plpgsql';
 
-
-
 /* Statistics functions */
 drop function if exists getSalesPerWeek;
 CREATE OR REPLACE FUNCTION getSalesPerWeek(initial_date TEXT, final_date TEXT)
-    RETURNS TABLE ( week_of_year DOUBLE PRECISION
-                    , number_of_sales BIGINT) AS
+    RETURNS TABLE ( year DOUBLE PRECISION
+    				,week_of_year DOUBLE PRECISION
+                    , sales INTEGER) AS
 $func$
 BEGIN
     RETURN QUERY
-    select date_part('week', InvoiceDate::date) AS weekly, 
-    COUNT(*) as sales           
+    select
+    date_part('year', invoicedate::date) as year,
+    date_part('week', InvoiceDate::date) AS weekly, 
+    COUNT(*)::INTEGER as sales           
     FROM invoice
     where InvoiceDate >= to_timestamp(initial_date, 'YYYY.MM.DD') and InvoiceDate <= to_timestamp(final_date, 'YYYY.MM.DD')
-    GROUP BY weekly
-    ORDER BY weekly;
+    GROUP BY year, weekly
+    ORDER BY year, weekly;
 END;
 $func$  
 LANGUAGE plpgsql;
 
--- SELECT * FROM getSalesPerWeek('2009/1/1','2009/2/3');
+--SELECT * FROM getSalesPerWeek('2009/1/28','2010/2/28');
 
 
 drop function if exists getProfitableArtists;
 CREATE OR REPLACE FUNCTION getProfitableArtists(initial_date TEXT, final_date TEXT, results_limit INT)
-    RETURNS TABLE ( artist_name VARCHAR
-                    , number_of_sales BIGINT) AS
+    RETURNS TABLE ( name VARCHAR
+                    , sales INTEGER) AS
 $func$
 BEGIN
     RETURN QUERY
     SELECT Artist.name,
-    COUNT(*) as sales           
+    COUNT(*)::INTEGER as sales           
     FROM Artist 
     INNER JOIN
     Album ON Album.ArtistId = Artist.ArtistId
@@ -16032,17 +16033,17 @@ END;
 $func$  
 LANGUAGE plpgsql;
 
--- SELECT * FROM getprofitableartists('2009/1/1','2009/2/3',3);
+--SELECT * FROM getprofitableartists('2009/1/1','2009/2/3',3);
 
 DROP FUNCTION IF EXISTS getSalesPerGenre;
 CREATE OR REPLACE FUNCTION getSalesPerGenre(initial_date TEXT, final_date TEXT)
     RETURNS TABLE ( genre VARCHAR
-                    , number_of_sales BIGINT ) AS
+                    , sales INTEGER ) AS
 $func$
 BEGIN
     RETURN QUERY
     SELECT Genre.Name,
-    COUNT(*) AS sales
+    COUNT(*)::INTEGER AS sales
     FROM Genre
     INNER JOIN
     Track ON Track.GenreId = Genre.GenreId
@@ -16057,20 +16058,20 @@ END;
 $func$  
 LANGUAGE plpgsql;
 
--- SELECT * FROM getSalesPerGenre('2009/1/1','2009/2/3');
+--SELECT * FROM getSalesPerGenre('2009/1/28','2010/2/28');
 
 DROP FUNCTION IF EXISTS getPlaybackRecordByArtist;
 CREATE OR REPLACE FUNCTION getPlaybackRecordByArtist(artist_name TEXT)
-    RETURNS TABLE ( song_name VARCHAR
-                    , number_of_playbacks BIGINT ) AS
+    RETURNS TABLE ( name VARCHAR
+                    , playbacks INTEGER ) AS
 $func$
 BEGIN
     RETURN QUERY
     SELECT Track.Name,
-    COUNT(*) AS playbacks
+    COUNT(*)::INTEGER AS playbacks
     FROM Track 
     INNER JOIN
-    Album ON Album.AlbumId = Track.AlbumId
+    Album ON Album.AlbumId = Track.AlbumId	
     INNER JOIN
     Artist ON Artist.ArtistId = Album.ArtistId
     INNER JOIN
@@ -16079,7 +16080,7 @@ BEGIN
     GROUP BY Track.Name
     ORDER BY playbacks desc;
 END;
-$func$  
+$func$  	
 LANGUAGE plpgsql;
 
---SELECT * FROM getPlaybackRecordByArtist('aC/Dc');
+SELECT * FROM getPlaybackRecordByArtist('Ac/DC');

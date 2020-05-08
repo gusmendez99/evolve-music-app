@@ -143,6 +143,11 @@ app.get("/reports/genre-duration-avg", reportRouter.getGenresDurationAvg);
 app.get("/reports/artist-in-playlist", reportRouter.getArtistByPlayListCount);
 app.get("/reports/most-genre-diversity-artist", reportRouter.getArtistWithMoreDiversityGenres);
 app.get("/reports/logbook", reportRouter.getLogBook);
+app.post("/reports/sales-per-week", reportRouter.getSalesPerWeek);
+app.post("/reports/profitable-artists", reportRouter.getprofitableartists);
+app.post("/reports/sales-per-genre", reportRouter.getSalesPerGenre);
+app.post("/reports/playback-record-by-artist", reportRouter.getPlaybackRecordByArtist);
+
 
 // Playlist
 app.get("/playlists", playlistRouter.getPlaylists);

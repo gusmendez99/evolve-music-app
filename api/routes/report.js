@@ -10,7 +10,10 @@ const GET_GENRES_DURATION_AVG = "SELECT g.GenreId, g.Name as Genre, cast((avg(t.
 const GET_COUNT_ARTIST_BY_PLAYLIST = "SELECT ArtistPlayList.Name, COUNT(ArtistPlayList.Name) as artists FROM (SELECT pl.Name as Name, COUNT(t.AlbumId) as ArtistCount FROM PlaylistTrack plt INNER JOIN Playlist pl ON plt.PlaylistId = pl.PlaylistId INNER JOIN Track t ON plt.TrackId = t.TrackId GROUP BY (pl.Name, t.AlbumId)) ArtistPlayList GROUP BY ArtistPlayList.name ORDER BY COUNT(ArtistPlayList.Name) DESC";
 const GET_ARTIST_WITH_MORE_GENRES = "SELECT a.Name, COUNT(a.Name) as genres FROM (SELECT a.ArtistId, t.GenreId FROM Artist a INNER JOIN Album al ON a.ArtistId = al.ArtistId INNER JOIN Track t ON al.AlbumId = t.AlbumId GROUP BY(a.ArtistId, t.GenreId)) ArtistGenre INNER JOIN Artist a ON ArtistGenre.ArtistId = a.ArtistId INNER JOIN Genre g ON ArtistGenre.GenreId = g.GenreId GROUP BY (a.Name) ORDER BY COUNT(a.Name) DESC LIMIT 5";
 const GET_LOGBOOK = "SELECT LogBook.LogBookId, AppUser.username, LogBook.itemid,LogBook.action, LogBook.type, LogBook.recorddate from LogBook inner join AppUser on AppUser.userid = LogBook.userid ORDER by LogBook.recorddate desc";
-
+const GET_SALES_PER_WEEK = "SELECT * FROM getSalesPerWeek($1,$2)";
+const GET_PROFITABLE_ARTISTS = "SELECT * FROM getprofitableartists($1,$2,$3)";
+const GET_SALES_PER_GENTRE = "SELECT * FROM getSalesPerGenre($1,$2)";
+const GET_PLAYBACK_RECORD_BY_ARTIST = "SELECT * FROM getPlaybackRecordByArtist($1)";
 
 const getMostCommonArtists = (request, response) => {
   db.query(GET_MOST_COMMON_ARTISTS, (error, results) => {
@@ -93,6 +96,46 @@ const getLogBook = (request, response) => {
   });
 };
 
+const getSalesPerWeek = (request, response) => {
+  const { initial_date, final_date } = request.body;
+  db.query(GET_SALES_PER_WEEK,[initial_date, final_date], (error, results) => {
+    if (error) {
+      throw error;
+    }
+    response.status(200).json(results.rows);
+  });
+};
+
+const getprofitableartists = (request, response) => {
+  const { initial_date, final_date, results_limit }  = request.body;
+  db.query(GET_PROFITABLE_ARTISTS,[initial_date, final_date, results_limit], (error, results) => {
+    if (error) {
+      throw error;
+    }
+    response.status(200).json(results.rows);
+  });
+};
+
+const getSalesPerGenre = (request, response) => {
+  const { initial_date, final_date}  = request.body;
+  db.query(GET_SALES_PER_GENTRE,[initial_date, final_date], (error, results) => {
+    if (error) {
+      throw error;
+    }
+    response.status(200).json(results.rows);
+  });
+};
+
+const getPlaybackRecordByArtist = (request, response) => {
+  const { artist_name }  = request.body;
+  db.query(GET_PLAYBACK_RECORD_BY_ARTIST,[artist_name], (error, results) => {
+    if (error) {
+      throw error;
+    }
+    response.status(200).json(results.rows);
+  });
+};
+
 module.exports = {
   getMostCommonArtists,
   getMostCommonGenres,
@@ -102,5 +145,9 @@ module.exports = {
   getGenresDurationAvg,
   getArtistByPlayListCount,
   getArtistWithMoreDiversityGenres,
-  getLogBook
+  getLogBook,
+  getSalesPerWeek,
+  getprofitableartists,
+  getSalesPerGenre,
+  getPlaybackRecordByArtist
 };

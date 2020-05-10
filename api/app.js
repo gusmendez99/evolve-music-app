@@ -10,6 +10,8 @@ var indexRouter = require("./routes/index");
 var userRouter = require("./routes/user");
 var roleRouter = require("./routes/role");
 var permissionRouter = require("./routes/permission");
+var invoice = require("./routes/invoice");
+var script = require("./routes/mongo");
 
 // Original DB
 var albumRouter = require("./routes/album");
@@ -156,6 +158,9 @@ app.post("/playlists", playlistRouter.createPlaylist);
 app.put("/playlists/:id", playlistRouter.updatePlaylist);
 app.delete("/playlists/:id", playlistRouter.deletePlaylist);
 
+//invoice
+app.post("/invoice", invoice.getInvoice);
+app.post("/mongo", script.main);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

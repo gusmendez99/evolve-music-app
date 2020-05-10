@@ -5,24 +5,11 @@ import axios from "axios";
 import * as selectors from "../root-reducer";
 import * as actions from "./user.actions";
 import * as types from "./user.types";
-import { v4 as uuid } from "uuid";
 
 const USER_API_ROUTE = "http://localhost:3000/users";
 
 export function fetchUsersFromApi() {
   return axios.get(USER_API_ROUTE);
-}
-
-export function addUserFromApi(user) {
-  return axios.post(USER_API_ROUTE, user);
-}
-
-export function removeUserFromApi(userId) {
-  return axios.delete(`${USER_API_ROUTE}/${userId}`);
-}
-
-export function updateUserFromApi(userId, user) {
-  return axios.put(`${USER_API_ROUTE}/${userId}`, user);
 }
 
 function* fetchUsers(action) {
@@ -32,7 +19,7 @@ function* fetchUsers(action) {
       const response = yield fetchUsersFromApi();
 
       if (response.status === 200) {
-        console.log("Response was>", response.data);
+        console.log("Response was: ", response.data);
 
         let entities = {};
         let order = [];
@@ -40,17 +27,17 @@ function* fetchUsers(action) {
         const data = response.data;
 
         yield data.forEach((user) => {
-          const id = uuid()
+          const id = user.userid;
           entities = { ...entities, [id]: user };
           order = [...order, id];
         });
 
         yield put(actions.completeFetchingUsers(entities, order));
       } else {
-        throw "Bad request from server...";
+        actions.failFetchingUsers("Bad request from server...");
       }
     } else {
-      throw "You are not authenticated...";
+      actions.failFetchingUsers("You are not authenticated...");
     }
   } catch (error) {
     console.log(error);
@@ -60,10 +47,11 @@ function* fetchUsers(action) {
   }
 }
 
-export function* watchFetchOwners() {
+
+export function* watchFetchUsers() {
   yield takeEvery(types.USERS_FETCH_STARTED, fetchUsers);
 }
 
 export function* userSagas() {
-  yield all([call(watchFetchOwners)]);
+  yield all([call(watchFetchUsers)]);
 }

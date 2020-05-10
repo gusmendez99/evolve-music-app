@@ -4,12 +4,13 @@ import { connect } from "react-redux";
 import axios from "axios";
 
 import * as selectors from "../../redux/root-reducer";
-import * as actions from "../../redux/user/user.actions";
+import * as userActions from "../../redux/user/user.actions";
+import * as roleActions from "../../redux/role/role.actions";
 
 import UserListItem from "../UserListItem";
 import Pagination from "../Pagination";
 
-const ManageUsers = ({ authUser, users, isLoading, onLoad }) => {
+const ManageUsers = ({ authUser, users, roles, isLoading, onLoad }) => {
 
   const [isSearching, changeIsSearching] = useState(false);
   const [isPaginating, changeIsPaginating] = useState(false);
@@ -52,15 +53,8 @@ const ManageUsers = ({ authUser, users, isLoading, onLoad }) => {
       changeIsSearching(false);
     }
   };
-
-  const shouldUpdate = () => {
-    if(users.length === 0) {
-      onLoad()
-    }
-  }
-
   //Update on changes, pending update...
-  useEffect(shouldUpdate, [currentUsers]);
+  useEffect(onLoad, []);
 
   return (
     <Fragment>
@@ -75,7 +69,7 @@ const ManageUsers = ({ authUser, users, isLoading, onLoad }) => {
       {users.length === 0 && !isLoading && <p>{"No users yet..."}</p>}
       {isLoading && <p>{"Cargando..."}</p>}
 
-      {users.length > 0 && !isLoading && !isPaginating && (
+      {users.length > 0 && roles.length > 0 && !isLoading && !isPaginating && (
         <Fragment>
           <div className="pa3 ph5-l ">
             <label className="f6 b db mb2 blue">Búsqueda</label>
@@ -127,6 +121,7 @@ const ManageUsers = ({ authUser, users, isLoading, onLoad }) => {
                             <UserListItem
                               key={singleUser.userid}
                               user={singleUser}
+                              roles={roles}
                               currentUser={authUser}
                               index={i}
                             />
@@ -139,6 +134,7 @@ const ManageUsers = ({ authUser, users, isLoading, onLoad }) => {
                             <UserListItem
                               key={singleUser.userid}
                               user={singleUser}
+                              roles={roles}
                               currentUser={authUser}
                               index={i}
                             />
@@ -177,12 +173,14 @@ const ManageUsers = ({ authUser, users, isLoading, onLoad }) => {
 const mapStateToProps = state => ({
   authUser: selectors.getAuthUser(state),
   users: selectors.getUsers(state),
+  roles: selectors.getRoles(state),
   isLoading: selectors.isFetchingUsers(state),
 });
 
 const mapDispatchToProps = dispatch => ({
   onLoad() {
-    dispatch(actions.startFetchingUsers());
+    dispatch(userActions.startFetchingUsers());
+    dispatch(roleActions.startFetchingRoles());
   },
 });
 

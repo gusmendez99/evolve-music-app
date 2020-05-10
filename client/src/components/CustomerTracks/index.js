@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import { connect } from 'react-redux';
 import axios from 'axios';
 
 import CustomerTrackListItem from '../CustomerTrackListItem'
@@ -69,7 +68,6 @@ class CustomerTracks extends Component {
   }
 
   render(){
-    const { authUser } = this.props;
     const { searchField, tracks, currentTracks, currentPage, totalPages,
       isSearching, searchList} = this.state;
 
@@ -126,11 +124,7 @@ class CustomerTracks extends Component {
     );
   }
 }
-const mapStateToProps = ({ user }) => {
-  const { authUser } = user;
-  return { authUser };
-};
 
-export default connect(mapStateToProps)(CustomerTracks);
+export default CustomerTracks;
 
 

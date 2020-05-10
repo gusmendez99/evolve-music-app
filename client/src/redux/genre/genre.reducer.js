@@ -1,11 +1,11 @@
-import union from 'lodash/union'
+import union from 'lodash/union';
 import { combineReducers } from "redux";
 
-import * as types from "./user.types";
+import * as types from "./genre.types";
 
 const byId = (state = {}, action) => {
   switch (action.type) {
-    case types.USERS_FETCH_COMPLETED: {
+    case types.GENRES_FETCH_COMPLETED: {
       const { entities, order } = action.payload;
       const newState = { ...state };
       order.forEach((id) => {
@@ -25,8 +25,8 @@ const byId = (state = {}, action) => {
 
 const order = (state = [], action) => {
   switch (action.type) {
-    case types.USERS_FETCH_COMPLETED: {
-      return union(...state, action.payload.order);
+    case types.GENRES_FETCH_COMPLETED: {
+      return union(...state, action.payload.order)
     }
     default: {
       return state;
@@ -36,13 +36,13 @@ const order = (state = [], action) => {
 
 const isFetching = (state = false, action) => {
   switch (action.type) {
-    case types.USERS_FETCH_STARTED: {
+    case types.GENRES_FETCH_STARTED: {
       return true;
     }
-    case types.USERS_FETCH_COMPLETED: {
+    case types.GENRES_FETCH_COMPLETED: {
       return false;
     }
-    case types.USERS_FETCH_FAILED: {
+    case types.GENRES_FETCH_FAILED: {
       return false;
     }
     default: {
@@ -53,13 +53,13 @@ const isFetching = (state = false, action) => {
 
 const error = (state = null, action) => {
   switch (action.type) {
-    case types.USERS_FETCH_FAILED: {
+    case types.GENRES_FETCH_FAILED: {
       return action.payload.error;
     }
-    case types.USERS_FETCH_STARTED: {
+    case types.GENRES_FETCH_STARTED: {
       return null;
     }
-    case types.USERS_FETCH_COMPLETED: {
+    case types.GENRES_FETCH_COMPLETED: {
       return null;
     }
     default: {
@@ -75,7 +75,7 @@ export default combineReducers({
   error,
 });
 
-export const getUser = (state, id) => state.byId[id];
-export const getUsers = (state) =>  state.order.map((id) => getUser(state, id));
-export const isFetchingUsers = (state) => state.isFetching;
-export const getFetchingUsersError = (state) => state.error;
+export const getGenre = (state, id) => state.byId[id];
+export const getGenres = (state) =>  state.order.map((id) => getGenre(state, id));
+export const isFetchingGenres = (state) => state.isFetching;
+export const getFetchingGenresError = (state) => state.error;

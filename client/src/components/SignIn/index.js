@@ -1,7 +1,6 @@
 import React, { Fragment, useState, useEffect } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import axios from "axios";
 
 import * as actions from "../../redux/auth/auth.actions";
 import * as selectors from "../../redux/root-reducer";

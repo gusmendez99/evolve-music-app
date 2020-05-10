@@ -1,7 +1,5 @@
 import React, { Fragment } from "react";
-import Select from "react-select";
 import CustomLink from "../CustomLink";
-import makeAnimated from "react-select/animated";
 import { connect } from "react-redux";
 import axios from "axios";
 
@@ -13,8 +11,6 @@ class AddRole extends React.Component {
     this.state = {
       role: {},
       name: "",
-      permissions: [],
-      allPermissions: [],
       id: null,
     };
   }
@@ -25,37 +21,19 @@ class AddRole extends React.Component {
       .then((response) => this.setState({ roles: response.data }))
       .catch((error) => console.log(error));
 
-    axios.get("http://localhost:3000/permissions").then((response) => {
-      const permissionOptions = response.data.map((permission) => {
-        return { value: permission.permissionid, label: permission.name };
-      });
-      this.setState({ allPermissions: permissionOptions });
-    });
   }
   handleSubmit = async (event) => {
     const { name } = this.state;
-    const role = await axios.post(`http://localhost:3000/roles`, { name });
-    this.state.permissions.map(async (value) => {
-      return await axios
-        .post(`http://localhost:3000/roles/${role.data.roleid}/permissions`, {
-          permissionid: value.value,
-        })
-        .then((response) => console.log(response.status));
-    });
+    axios.post(`http://localhost:3000/roles`, { name }).then(response => console.log(response));
   };
+
   handleFieldChange = (event) => {
     const { value } = event.target;
     const copy = value;
     this.setState({ name: copy });
   };
-  handleFieldSelect = (selectedOptions) => {
-    if (selectedOptions) {
-      const copy = selectedOptions;
-      this.setState({ permissions: copy });
-    }
-  };
+  
   render() {
-    const { allPermissions } = this.state;
     const { authUser } = this.props;
     return (
       <Fragment>
@@ -74,14 +52,6 @@ class AddRole extends React.Component {
                   onChange={this.handleFieldChange}
                 />
               </div>
-              <label className="f6 b db mb2">Permissions</label>
-              <Select
-                className="mt-4 col-md-6 col-offset-4"
-                components={makeAnimated()}
-                isMulti
-                options={allPermissions}
-                onChange={this.handleFieldSelect}
-              />
             </form>
 
             <CustomLink

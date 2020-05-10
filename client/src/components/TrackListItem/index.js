@@ -20,9 +20,7 @@ class TrackListItem extends Component {
       track: {},
       selectedAlbum: null,
       selectedGenre: null,
-      genres: [],
       selectedMediaType: null,
-      mediaTypes: [],
       isInactive:[]
     };
   }
@@ -39,33 +37,6 @@ class TrackListItem extends Component {
             label: data[0].mediatypename
           }
         });
-      })
-      .catch(error => console.log(error));
-
-    axios.get("http://localhost:3000/albums")
-      .then(response => {
-        const albumOptions = response.data.map(album => {
-          return { value: album.albumid, label: album.title };
-        });
-        this.setState({ albums: albumOptions });
-      })
-      .catch(error => console.log(error));
-
-    axios.get("http://localhost:3000/genres")
-      .then(response => {
-        const genreOptions = response.data.map(genre => {
-          return { value: genre.genreid, label: genre.name };
-        });
-        this.setState({ genres: genreOptions });
-      })
-      .catch(error => console.log(error));
-
-    axios.get("http://localhost:3000/mediatypes")
-      .then(response => {
-        const mediaTypeOptions = response.data.map(mediatype => {
-          return { value: mediatype.mediatypeid, label: mediatype.name };
-        });
-        this.setState({ mediaTypes: mediaTypeOptions });
       })
       .catch(error => console.log(error));
 

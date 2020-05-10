@@ -1,7 +1,7 @@
 import { all, call, put, takeLatest } from "redux-saga/effects";
 import axios from "axios";
 
-import { completeSignIn, failSignIn } from "./auth.actions";
+import * as actions from "./auth.actions";
 import * as types from "./auth.types";
 
 const LOGIN_API_ROUTE = "http://localhost:3000/login";
@@ -25,19 +25,19 @@ export function* signIn(action) {
           userAuth.roleid
         );
         if (permissionsResponse.status == 200) {
-          yield put(completeSignIn(userAuth, permissionsResponse.data));
+          yield put(actions.completeSignIn(userAuth, permissionsResponse.data));
         } else {
-          throw "Permissions were not fetched successfully";
+          actions.failSignIn("Permissions were not fetched successfully");
         }
       } else {
-        throw "User doesnt exist on database...";
+        actions.failSignIn("User doesnt exist on database...");
       }
     } else {
-      throw "Something went wrong on server...";
+      actions.failSignIn("You are not authenticated...");
     }
   } catch (error) {
     console.log(error);
-    yield put(failSignIn(error));
+    yield put(actions.failSignIn(error));
   }
 }
 

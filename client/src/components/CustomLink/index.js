@@ -2,9 +2,11 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { withRouter } from 'react-router'
 
+import createHistory from 'history/createBrowserHistory'
+const history = createHistory({ forceRefresh: true });
+
 const CustomLink = (props) => {
   const {
-    history,
     location,
     match,
     staticContext,

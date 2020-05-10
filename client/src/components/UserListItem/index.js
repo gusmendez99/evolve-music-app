@@ -2,14 +2,14 @@ import React, {Component, Fragment} from 'react';
 import Select from 'react-select';
 import axios from 'axios';
 import CustomLink from '../CustomLink';
+
 class UserListItem extends Component {
 
 	constructor(){
 		super()
 		this.state = {
 			user: {},
-			currentRole: {},
-			roles: []
+			currentRole: {}
 		};
 	};
 	componentDidMount(){
@@ -28,11 +28,6 @@ class UserListItem extends Component {
 		.catch(error => console.log(error));
 		
 		
-		axios.get('http://localhost:3000/roles')
-		.then(response => {
-			this.setState({roles: response.data})
-		})
-		.catch(error => console.log(error));
 	}
 
 	handleUpdate = () => {
@@ -66,7 +61,8 @@ class UserListItem extends Component {
 	}
 	render(){
 		const {currentRole} =this.state;
-		const myOptions = this.state.roles.map(role => ({value: role.roleid, label: role.name}))
+		const { roles } = this.props;
+		const myOptions = roles.map(role => ({value: role.roleid, label: role.name}))
 		//console.log(this.state);
 			return (
 				<Fragment>

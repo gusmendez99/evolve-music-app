@@ -68,12 +68,11 @@ const isAuthenticating = (state = false, action) => {
       return false;
     }
     case types.SIGNUP_USER_FAILED: 
-    case types.SIGNIN_USER_FAILED: {
+    case types.SIGNIN_USER_FAILED: 
+    default: {
       return false;
     }
   }
-
-  return state;
 };
 
 const error = (state = null, action) => {
@@ -91,9 +90,9 @@ const error = (state = null, action) => {
     case types.SIGNUP_USER_FAILED: {
       return action.payload.error;
     }
+    default:
+      return state;
   }
-
-  return state;
 };
 
 const auth = combineReducers({

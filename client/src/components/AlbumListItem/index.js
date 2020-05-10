@@ -65,11 +65,13 @@ class AlbumListItem extends Component {
   
   render() {
     const { permissions, artists } = this.props;
-		const { album, selectedArtist } = this.state;
+    const { album, selectedArtist } = this.state;
+    
+    console.log('Artists len: ',artists)
 
     return (
       <Fragment>
-        <tr>
+        {artists.length > 0 && (<tr>
           <td className="pv3 pr3 bb b--black-20">
             <input
               name="title"
@@ -104,7 +106,7 @@ class AlbumListItem extends Component {
               Update
             </button>}
           </td>}
-        </tr>
+        </tr>)}
       </Fragment>
     );
   }

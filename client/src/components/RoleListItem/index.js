@@ -4,6 +4,8 @@ import isEqual from "lodash/isEqual";
 import range from "lodash/range";
 import axios from 'axios';
 
+import CustomLink from '../CustomLink'
+
 class RoleListItem extends Component {
   constructor() {
     super();
@@ -132,12 +134,11 @@ class RoleListItem extends Component {
             >
               Update
             </button>
-						<button
-              className="b ph3 pv2 input-reset ba b--red red bg-transparent grow pointer f6 dib ma2"
-              onClick={this.handleDelete}
-            >
-              Delete
-            </button>
+
+            <CustomLink
+								to={`/${this.props.currentUser.rolename}/manageroles`}
+								className="b ph3 pv2 input-reset ba b--red red bg-transparent grow pointer f6 dib ma2"
+								onClick={this.handleDelete}>Delete</CustomLink>
           </td>
         </tr>
       </Fragment>

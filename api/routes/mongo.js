@@ -1,43 +1,39 @@
-const db = require("../database");
 const MongoClient = require('mongodb').MongoClient;
+const fetch = require('node-fetch');
+const uri = "mongodb+srv://user1:12345@mycluster-gr3gp.mongodb.net/test?retryWrites=true&w=majority";
+const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
 
-//constants
-const GETINVOICE = "SELECT * FROM invoice WHERE invoicedate between $1 and $2";
+async function main(request, response) {
 
+  const { initial_date, final_date } = request.body;
 
+  const result = await fetch('http://localhost:3000/invoice',
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ initial_date, final_date })
+    });
 
-async function main() {
+  const listings = await result.json();
 
+  createListings(listings).then(() => response.status(200).send("Ready lo logramos Apollo 13!!!")).catch(error => console.log(error));
 
-  const uri = "mongodb+srv://user1:12345@mycluster-gr3gp.mongodb.net/test?retryWrites=true&w=majority";
+  
+  
 
-  const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:true});
+}
 
+// main().catch(console.error);
 
+async function createListings(newListings) {
   try {
 
     await client.connect();
-    
-    const firsDate = '2010-01-01';
-    const lastDate = '2011-01-01';
-
-    let result = new Promise((resolve, reject) => 
-    db.query(GETINVOICE, [firsDate, lastDate], (error, results) => {
-      if (error) {
-        reject(error);
-      }
-      resolve(results);
-    })); 
-
-    const resp =  result.then(res => {
-      console.log(res.rows);
-    });
-    
-    createListings(client, res.rows)
-
-    //aquí todo el cachimbasal de código funciones etc ....
-
-  } catch (e) {
+    const result = await client.db("evolve1").collection("invoice").insertMany(newListings);
+    console.log(`${result.insertedCount} new listing(s) created with the following id(s):`);
+    console.log(result.insertedIds);
+  }
+  catch (e) {
 
     console.error(e);
 
@@ -46,14 +42,9 @@ async function main() {
     await client.close();
 
   }
-
 }
 
-main().catch(console.err);
 
-async function createListings(client, newListings){
-
-  const result = await client.db("evolve1").collection("invoice").insertMany(newListings);
-  console.log(`${result.insertedCount} new listing(s) created with the following id(s):`);
-  console.log(result.insertedIds);
-}
+module.exports = {
+  main,
+};

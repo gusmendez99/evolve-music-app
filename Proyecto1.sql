@@ -16083,4 +16083,26 @@ END;
 $func$  	
 LANGUAGE plpgsql;
 
-SELECT * FROM getPlaybackRecordByArtist('Ac/DC');
+--SELECT * FROM getPlaybackRecordByArtist('Ac/DC');
+
+
+drop function if exists usersSales;
+CREATE OR REPLACE FUNCTION usersSales(initial_date TEXT, final_date TEXT)
+    RETURNS TABLE ( userid INTEGER
+    				, invoiceid INTEGER
+                    , firstname VARCHAR
+				  	, lastname VARCHAR
+				   	, city VARCHAR
+				   	, invoicedate TIMESTAMP WITHOUT TIME ZONE
+				   	, total NUMERIC) AS
+$func$
+BEGIN
+    RETURN QUERY
+	SELECT u.userid, i.invoiceid,u.firstname, u.lastname, u.city, i.invoicedate, i.total 
+	FROM AppUser u 
+	INNER JOIN Invoice i 
+	ON u.userid = i.userid 
+	WHERE i.invoicedate BETWEEN to_timestamp(initial_date, 'YYYY.MM.DD') AND to_timestamp(final_date, 'YYYY.MM.DD');    
+END;
+$func$  
+LANGUAGE plpgsql;

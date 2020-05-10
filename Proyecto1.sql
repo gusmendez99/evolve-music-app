@@ -16083,4 +16083,4 @@ END;
 $func$  	
 LANGUAGE plpgsql;
 
-SELECT * FROM getPlaybackRecordByArtist('Ac/DC');
+--SELECT * FROM getPlaybackRecordByArtist('Ac/DC');

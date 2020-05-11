@@ -16106,3 +16106,45 @@ BEGIN
 END;
 $func$  
 LANGUAGE plpgsql;
+
+-- RECOMMENDATIONS
+CREATE OR REPLACE VIEW latestRegisteredSongs
+AS
+SELECT distinct lb.recorddate, t.trackid, t.name, a.albumid, a.title as album, ar.artistid, ar.name as artist, g.genreid, g.name as genre, t.uri FROM logbook lb
+	INNER JOIN track t on lb.itemid = t.trackid
+	INNER JOIN genre g on t.genreid = t.genreid 
+	INNER JOIN album a on t.albumid = a.albumid 
+	INNER JOIN artist ar on a.artistid = ar.artistid 
+	WHERE itemid NOT IN (
+	   SELECT itemid
+	   FROM logbook
+	   WHERE action = 'DELETE' or action = 'UPDATE'
+	) and type = 'TRACK' and lb.recorddate >= date_trunc('year', now()) - interval '1 year' ORDER BY lb.recorddate desc;
+
+-- Track recommendation based on purchased artists or genres tracks
+DROP FUNCTION IF EXISTS getTrackRecommendationsByUser;
+CREATE OR REPLACE FUNCTION getTrackRecommendationsByUser(user_id INT)
+    RETURNS TABLE ( trackid INT, trackname VARCHAR
+                    , albumtitle VARCHAR, artistname VARCHAR, genre VARCHAR, uri VARCHAR ) AS
+$func$
+BEGIN
+    RETURN QUERY
+    select distinct lrs.trackid, lrs.name, lrs.album, lrs.artist, lrs.genre, lrs.uri
+    FROM latestRegisteredSongs lrs
+    where lrs.genreid in (    
+	    select distinct t.genreid from invoiceline il
+		inner join track t on t.trackid  = il.trackid 
+		inner join invoice i on il.invoiceid  = i.invoiceid
+		inner join appuser au on au.userid = i.userid 
+		where i.userid = user_id
+	) or lrs.artistid in (
+		select distinct a.artistid from invoiceline il
+		inner join track t on t.trackid  = il.trackid 
+		inner join album a on t.albumid  = a.albumid 
+		inner join invoice i on il.invoiceid  = i.invoiceid
+		inner join appuser au on au.userid = i.userid 
+		where i.userid = user_id
+	);
+END;
+$func$  	
+LANGUAGE plpgsql;

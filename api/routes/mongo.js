@@ -56,6 +56,8 @@ async function createListings(newListings, trackRecommendations) {
 
     // Invoice
     await client.connect();
+
+    await client.db("evolve1").collection("invoice").deleteMany({}, {})
     const resultInvoice = await client.db("evolve1").collection("invoice").insertMany(newListings);
     console.log(`${resultInvoice.insertedCount} new listing(s) created with the following id(s):`);
     console.log(resultInvoice.insertedIds);

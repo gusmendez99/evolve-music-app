@@ -16176,14 +16176,14 @@ CREATE OR REPLACE VIEW latestRegisteredSongs
 AS
 SELECT distinct lb.recorddate, t.trackid, t.name, a.albumid, a.title as album, ar.artistid, ar.name as artist, g.genreid, g.name as genre, t.uri FROM logbook lb
 	INNER JOIN track t on lb.itemid = t.trackid
-	INNER JOIN genre g on t.genreid = t.genreid 
+	INNER JOIN genre g on t.genreid = g.genreid 
 	INNER JOIN album a on t.albumid = a.albumid 
 	INNER JOIN artist ar on a.artistid = ar.artistid 
 	WHERE itemid NOT IN (
 	   SELECT itemid
 	   FROM logbook
 	   WHERE action = 'DELETE' or action = 'UPDATE'
-	) and type = 'TRACK' and lb.recorddate >= date_trunc('year', now()) - interval '1 year' ORDER BY lb.recorddate desc;
+	) and type = 'TRACK' and lb.recorddate >= date_trunc('year', now()) - interval '1 year' ORDER BY lb.recorddate DESC LIMIT 100;
 
 -- Track recommendation based on purchased artists or genres tracks
 DROP FUNCTION IF EXISTS getTrackRecommendationsByUser;

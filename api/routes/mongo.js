@@ -42,7 +42,7 @@ async function main(request, response) {
   }
 
   console.log('Passed 1')
-  console.log(trackRecommendations)
+  console.log(JSON.stringify(trackRecommendations))
 
   createListings(listings, trackRecommendations).then(() => response.status(200).send("Ready lo logramos Apollo 13!!!")).catch(error => console.log(error));
 
@@ -63,7 +63,8 @@ async function createListings(newListings, trackRecommendations) {
     console.log('Passed 2')
 
     //Recommendations
-    const resultRecommendations = await client.db("evolve1").collection("recommendations").insertMany(trackRecommendations);
+    await client.db("evolve1").collection("recommendations").deleteMany({}, {})
+    const resultRecommendations = await client.db("evolve1").collection("recommendations").insertMany(trackRecommendations)
     console.log(`${resultRecommendations.insertedCount} new listing(s) created with the following id(s):`);
     console.log(resultRecommendations.insertedIds);
 

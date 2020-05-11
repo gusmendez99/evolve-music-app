@@ -16,22 +16,59 @@ async function main(request, response) {
 
   const listings = await result.json();
 
-  createListings(listings).then(() => response.status(200).send("Ready lo logramos Apollo 13!!!")).catch(error => console.log(error));
+  const usersQuery = await fetch('http://localhost:3000/invoice/users-with-most-purchases',
+    {
+      method: 'GET',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' }
+    });
+  
+  const users = await usersQuery.json();
+  const trackRecommendations = [];
 
-  
-  
+
+  for(let i=0; i<users.length; i++) {
+    console.log('User: ', users[i].userid)
+    const idUser = users[i].userid;
+
+    const trackQuery = await fetch('http://localhost:3000/track-recommendations',
+    {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ idUser })
+    });
+
+    const tracks = await trackQuery.json();
+    trackRecommendations.push({ _id: users[i].userid, tracks })
+  }
+
+  console.log('Passed 1')
+  console.log(trackRecommendations)
+
+  createListings(listings, trackRecommendations).then(() => response.status(200).send("Ready lo logramos Apollo 13!!!")).catch(error => console.log(error));
+
 
 }
 
 // main().catch(console.error);
 
-async function createListings(newListings) {
+async function createListings(newListings, trackRecommendations) {
   try {
 
+    // Invoice
     await client.connect();
-    const result = await client.db("evolve1").collection("invoice").insertMany(newListings);
-    console.log(`${result.insertedCount} new listing(s) created with the following id(s):`);
-    console.log(result.insertedIds);
+    const resultInvoice = await client.db("evolve1").collection("invoice").insertMany(newListings);
+    console.log(`${resultInvoice.insertedCount} new listing(s) created with the following id(s):`);
+    console.log(resultInvoice.insertedIds);
+
+    console.log('Passed 2')
+
+    //Recommendations
+    const resultRecommendations = await client.db("evolve1").collection("recommendations").insertMany(trackRecommendations);
+    console.log(`${resultRecommendations.insertedCount} new listing(s) created with the following id(s):`);
+    console.log(resultRecommendations.insertedIds);
+
+    console.log('Passed 3')
+
   }
   catch (e) {
 
@@ -44,7 +81,6 @@ async function createListings(newListings) {
   }
 }
 
-
 module.exports = {
-  main,
-};
+  main
+}

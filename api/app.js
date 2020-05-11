@@ -11,6 +11,7 @@ var userRouter = require("./routes/user");
 var roleRouter = require("./routes/role");
 var permissionRouter = require("./routes/permission");
 var invoice = require("./routes/invoice");
+var recommendation = require("./routes/recommendation");
 var script = require("./routes/mongo");
 
 // Original DB
@@ -158,8 +159,14 @@ app.post("/playlists", playlistRouter.createPlaylist);
 app.put("/playlists/:id", playlistRouter.updatePlaylist);
 app.delete("/playlists/:id", playlistRouter.deletePlaylist);
 
-//invoice
+// Invoice
 app.post("/invoice", invoice.getInvoice);
+app.get("/invoice/users-with-most-purchases", invoice.getUsersWithMorePurchasedSongs)
+
+// Recommendations
+app.post("/track-recommendations", recommendation.getRecommendations)
+
+// Script
 app.post("/mongo", script.main);
 
 // catch 404 and forward to error handler

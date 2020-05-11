@@ -91,12 +91,22 @@ const Nav = ({ authUser, permissions, onSignOut }) => {
         {authUser && permissions.isCustomer && (
           <Link
             className="link dim dark-gray f6 f5-l dib mr3 mr4-l"
+            to={`/store`}
+            title="Store"
+          >
+            Store
+          </Link>
+        )}
+        {authUser && permissions.isCustomer && (
+          <Link
+            className="link dim dark-gray f6 f5-l dib mr3 mr4-l"
             to={`/my-tracks`}
             title="My Tracks"
           >
             My Tracks
           </Link>
         )}
+        
         {authUser && (
           <span
             style={{ cursor: "pointer" }}

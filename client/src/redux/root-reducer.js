@@ -8,6 +8,7 @@ import genre, * as genreSelectors from './genre/genre.reducer';
 import mediatype, * as mediaTypeSelectors from './mediatype/mediatype.reducer';
 import album, * as albumSelectors from './album/album.reducer';
 import track, * as trackSelectors from './track/track.reducer';
+import cart, * as cartSelectors from './cart/cart.reducer';
 
 const reducer = combineReducers({
     auth,
@@ -17,7 +18,8 @@ const reducer = combineReducers({
     album,
     track,
     mediatype,
-    genre
+    genre,
+    cart
 })
 
 export default reducer;
@@ -63,3 +65,8 @@ export const getTrack = (state, id) => trackSelectors.getTrack(state.track, id);
 export const getTracks = state => trackSelectors.getTracks(state.track);
 export const isFetchingTracks = state => trackSelectors.isFetchingTracks(state.track);
 export const getFetchingTracksError = state => trackSelectors.getFetchingTracksError(state.track);
+
+export const getCartTrack = (state, id) => cartSelectors.getCartTrack(state.cart, id);
+export const getCartTracks = (state) => cartSelectors.getCartTracks(state.cart)
+export const isExecutingCheckout = (state) => cartSelectors.isExecutingCheckout(state.cart);
+export const getCheckoutError = (state) => cartSelectors.getCheckoutError(state.cart);

@@ -24,6 +24,7 @@ import AddTrack from '../components/AddTrack'
 import Statistics from "../components/Statistics";
 import AddRole from "../components/AddRole";
 import LogBook from '../components/LogBook';
+import StoreTracks from "../components/StoreTracks"
 //Customer Home
 import CustomerTracks from '../components/CustomerTracks'
 
@@ -84,6 +85,14 @@ class RouterApp extends React.Component {
               exact
               path={`/my-tracks`}
               component={CustomerTracks}
+              authUser={authUser}
+              isCustomer={permissions.isCustomer}
+            />
+
+            <RestrictedCustomerRoute
+              exact
+              path={`/store`}
+              component={StoreTracks}
               authUser={authUser}
               isCustomer={permissions.isCustomer}
             />

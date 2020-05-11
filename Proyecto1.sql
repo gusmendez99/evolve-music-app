@@ -241,7 +241,85 @@ DROP INDEX IF EXISTS IFK_LogBookUserId;
 CREATE INDEX IFK_LogBookUserId ON LogBook (UserId);
 
 
+/*******************************************************************************
+   Triggers for logbook created
+********************************************************************************/
+DROP FUNCTION IF EXISTS registerTrackAction;
+/* MANAGE TRACKS CRUD REGISTER */
+CREATE OR REPLACE FUNCTION registerTrackAction()
+	RETURNS trigger AS
+	$$
+		BEGIN
+			INSERT INTO LogBook(UserId, Action, ItemId, Type) VALUES (1, TG_ARGV[0], NEW.TrackId, 'TRACK');
+			RETURN NEW;
+		END;
+	$$
+	LANGUAGE 'plpgsql';
 
+DROP TRIGGER IF EXISTS insertTrack ON Track;
+
+CREATE TRIGGER insertTrack
+AFTER INSERT ON Track
+FOR EACH ROW
+EXECUTE PROCEDURE registerTrackAction('INSERT');
+
+/* MANAGE ARTISTS CRUD REGISTER */
+DROP FUNCTION IF EXISTS registerArtistAction;
+CREATE OR REPLACE FUNCTION registerArtistAction()
+	RETURNS trigger AS
+	$$
+		BEGIN
+			INSERT INTO LogBook(UserId, Action, ItemId, Type) VALUES (1, TG_ARGV[0], NEW.ArtistId, 'ARTIST');
+			RETURN NEW;
+		END;
+	$$
+	LANGUAGE 'plpgsql';
+
+DROP TRIGGER IF EXISTS insertArtist on Artist;
+
+
+CREATE TRIGGER insertArtist
+AFTER INSERT ON Artist
+FOR EACH ROW
+EXECUTE PROCEDURE registerArtistAction('INSERT');
+
+/* MANAGE ALBUMS CRUD REGISTER */
+DROP FUNCTION IF EXISTS registerAlbumAction;
+CREATE OR REPLACE FUNCTION registerAlbumAction()
+	RETURNS trigger as
+	$BODY$
+		BEGIN
+			INSERT INTO LogBook(UserId, Action, ItemId, Type) VALUES(1, TG_ARGV[0], NEW.AlbumId, 'ALBUM');
+			RETURN NEW;
+		END;
+	$BODY$
+	LANGUAGE 'plpgsql';
+
+DROP TRIGGER IF EXISTS insertAlbum on Album;
+
+CREATE TRIGGER insertAlbum
+AFTER INSERT ON Album
+FOR EACH ROW
+EXECUTE PROCEDURE registerAlbumAction('INSERT');
+
+/* MANAGE PLAYLIST CRUD REGISTER */
+DROP FUNCTION IF EXISTS registerPlaylistAction;
+CREATE OR REPLACE FUNCTION registerPlaylistAction()
+	RETURNS trigger as
+	$BODY$
+		BEGIN
+			INSERT INTO LogBook(UserId, Action, ItemId, Type) VALUES(1, TG_ARGV[0], NEW.PlaylistId, 'PLAYLIST');
+			RETURN NEW;
+		END;
+	$BODY$
+	LANGUAGE 'plpgsql';
+
+DROP TRIGGER IF EXISTS insertPlaylist on Playlist;
+
+CREATE TRIGGER insertPlaylist
+AFTER INSERT ON Playlist
+FOR EACH ROW
+EXECUTE PROCEDURE registerPlaylistAction('INSERT');
 
 /*******************************************************************************
    Populate Tables
@@ -316,7 +394,6 @@ INSERT INTO RolePermission(RoleId,PermissionId) VALUES (5,15);
 
 
 /*Super User creation*/
-
 
 INSERT INTO AppUser(UserName,Password,FirstName,LastName,City,State,Country,PostalCode, Phone,Email,RoleId) VALUES ('admin', '1234', 'Super', 'User', 'Guatemala City', 'GT', 'Guatemala','01015', '+502 44891646', 'luis212urbina@gmail.com', 1);
 INSERT INTO AppUser(UserName,Password,FirstName,LastName,City,State,Country,PostalCode, Phone,Email,RoleId) VALUES ('gus', '1234', 'Gus', 'Mendez','Guatemala City', 'GT', 'Guatemala','01015', '+502 32349997', 'gus@gmail.com', 2);
@@ -15931,9 +16008,24 @@ INSERT INTO PlaylistTrack (PlaylistId, TrackId) VALUES (17, 3290);
 INSERT INTO PlaylistTrack (PlaylistId, TrackId) VALUES (18, 597);
 
 /*******************************************************************************
-   Create Triggers and almacenated procedures
+   Create almacenated procedures
 ********************************************************************************/
 
+/* DROP  CRUD REGISTER FUNCTIONS AND TRIGGERS SINCE WE WONT NEED THEM ANYMORE */
+DROP TRIGGER IF EXISTS  insertTrack ON Track;
+DROP FUNCTION IF EXISTS registerTrackAction;
+
+DROP TRIGGER IF EXISTS insertArtist on Artist;
+DROP FUNCTION IF EXISTS registerArtistAction;
+
+DROP TRIGGER IF EXISTS insertAlbum on Album;
+DROP FUNCTION IF EXISTS registerAlbumAction;
+
+DROP TRIGGER IF EXISTS insertPlaylist on Playlist;
+DROP FUNCTION IF EXISTS registerPlaylistAction;
+
+
+DROP FUNCTION IF EXISTS addUserCount;
 CREATE OR REPLACE FUNCTION addUserCount (user_id int, track_id int)
     RETURNS void AS
     $BODY$
@@ -15942,34 +16034,6 @@ CREATE OR REPLACE FUNCTION addUserCount (user_id int, track_id int)
         END;
     $BODY$
     LANGUAGE 'plpgsql' VOLATILE COST 100;
-
-
-/* MANAGE TRACK CRUD REGISTER */
-
-DROP FUNCTION IF EXISTS registerTrackAction;
-	
-DROP TRIGGER IF EXISTS  insertTrack ON Track;
-DROP TRIGGER IF EXISTS updateTrack ON Track;
-DROP TRIGGER IF EXISTS deleteTrack ON Track;
-
-DROP FUNCTION IF EXISTS registerArtistAction;
-
-DROP TRIGGER IF EXISTS insertArtist on Artist;
-DROP TRIGGER IF EXISTS updateArtist on Artist;
-DROP TRIGGER IF EXISTS deleteArtist on Artist;
-
-
-DROP FUNCTION IF EXISTS registerAlbumAction;
-
-DROP TRIGGER IF EXISTS insertAlbum on Album;
-DROP TRIGGER IF EXISTS updateAlbum on Album;
-DROP TRIGGER IF EXISTS deleteAlbum on Album;
-
-DROP FUNCTION IF EXISTS registerPlaylistAction;
-
-DROP TRIGGER IF EXISTS insertPlaylist on Playlist;
-DROP TRIGGER IF EXISTS updatePlaylist on Playlist;
-DROP TRIGGER IF EXISTS deletePlaylist on Playlist;
 
 DROP FUNCTION IF EXISTS updateLogbook;
 CREATE OR REPLACE FUNCTION updateLogbook(user_id INT, executed_action TEXT, item_id INT, item_type TEXT)

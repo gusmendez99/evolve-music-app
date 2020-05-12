@@ -3,7 +3,7 @@ import axios from "axios";
 
 import { connect } from "react-redux";
 
-import * as cartActions from '../../redux/cart/cart.actions';
+import * as actions from '../../redux/cart/cart.actions';
 import * as selectors from "../../redux/root-reducer";
 
 
@@ -86,7 +86,7 @@ const mapStateToProps = (state, {track}) => ({
 
 const mapDispatchToProps = (dispatch, {track}) => ({
 		addTrackToCart(){ 
-			dispatch(cartActions.addTrackToCart({...track, 'quantity': 1}))
+			dispatch(actions.addTrackToCart({...track, 'quantity': 1}))
 		}
 });
 

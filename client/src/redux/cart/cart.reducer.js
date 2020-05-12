@@ -59,6 +59,23 @@ const error = (state = null, action) => {
     }
 };
 
+// const invoiceId = (state = null, action) => {
+//   switch(action.type) {
+//     case types.CHECKOUT_FAILED: {
+//       return null;
+//     }
+//     case types.CHECKOUT_STARTED: {
+//       return null;
+//     }
+//     case types.CHECKOUT_COMPLETED: {
+//       return action.payload;
+//     }
+//     default: {
+//       return state;
+//     }
+//   }
+// };
+
 export default combineReducers({
   byId,
   isExecuting,

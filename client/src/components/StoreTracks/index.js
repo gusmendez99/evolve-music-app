@@ -4,6 +4,10 @@ import axios from 'axios';
 import StoreTrackListItem from '../StoreTrackListItem'
 import Pagination from '../Pagination';
 
+import { connect } from "react-redux";
+
+import * as actions from '../../redux/cart/cart.actions';
+
 //TODO: EN LOS FETCHS HAY QUE CAMBIAR Y MOSTRAR NO SOLO LAS CANCIONES ACTIVAS
 // SINO LAS CANCIONES ACTIVAS QUE NO HAYAN SIDO COMPRADAS YA POR EL CLIENTE
 
@@ -66,12 +70,18 @@ class StoreTracks extends Component {
     const { searchField, tracks, currentTracks, currentPage, totalPages,
       isSearching, searchList} = this.state;
 
+    const { checkout } = this.props;
+
     const totalTracks = tracks.length;
     if (totalTracks === 0) return (<h1 className="tc">No tracks yet...</h1>);
 
     return (
       <div>
         <div className="pa1 ph5-l tc">
+          <button
+              className="f6 dim ph3 pv2 mb0 mr3 dib white bg-green h-100"
+              onClick={checkout}
+					>Probar Saga</button>
           <h1 className="f3 fw6">Search Tracks</h1>
           { currentPage && !searchField && (
             <h6>
@@ -120,6 +130,20 @@ class StoreTracks extends Component {
   }
 }
 
-export default StoreTracks;
+const mapDispatchToProps = (dispatch) => ({
+  checkout(){ 
+    dispatch(actions.startCheckout({
+      invoicedate: '2020/10/10',
+      billingaddress: 'A',
+      billingcity: 'B',
+      billingstate: 'C',
+      billingcountry: 'E',
+      billingpostalcode: 'X',
+      total: 0.99
+    }))
+  }
+});
+
+export default connect(null,mapDispatchToProps)(StoreTracks);
 
 

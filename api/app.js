@@ -11,6 +11,7 @@ var userRouter = require("./routes/user");
 var roleRouter = require("./routes/role");
 var permissionRouter = require("./routes/permission");
 var invoice = require("./routes/invoice");
+var invoiceline = require("./routes/invoiceline");
 var recommendation = require("./routes/recommendation");
 var script = require("./routes/mongo");
 
@@ -161,8 +162,12 @@ app.delete("/playlists/:id", playlistRouter.deletePlaylist);
 
 // Invoice
 app.post("/invoice", invoice.getInvoice);
-app.get("/invoice/users-with-most-purchases", invoice.getUsersWithMorePurchasedSongs)
+app.get("/invoice/users-with-most-purchases", invoice.getUsersWithMorePurchasedSongs);
+app.post("/invoice/new", cors(),invoice.createInvoice);
 
+// InvoiceLine 
+app.post("/invoiceline", invoiceline.createInvoiceLine);
+ 
 // Recommendations
 app.post("/track-recommendations", recommendation.getRecommendations)
 

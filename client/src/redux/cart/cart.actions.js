@@ -18,8 +18,9 @@ export const modifyQuantity = (trackid, quantity) => ({
     quantity
   }
 });
-export const startCheckout = () => ({
+export const startCheckout = (checkoutData) => ({
   type: types.CHECKOUT_STARTED,
+  payload: {checkoutData}
 });
 
 export const completeCheckout = () => ({
@@ -33,4 +34,22 @@ export const failCheckout = (error) => ({
     },
 });
 
+export const startUploadingInvoiceLine = (track, invoiceid) => ({
+  type: types.UPLOAD_INVOICELINE_STARTED,
+  payload: {
+    track,
+    invoiceid
+  }
+});
+
+export const completeUploadingInvoiceLine = () => ({
+    type: types.UPLOAD_INVOICELINE_COMPLETED,
+});
+
+export const failUploadingInvoiceLine = (error) => ({
+    type: types.UPLOAD_INVOICELINE_FAILED,
+    payload: {
+      error,
+    },
+});
 

@@ -37,7 +37,7 @@ class StoreTrackListItem extends Component {
 
   render() {
 		const { track, metadata } = this.state;
-		const {isAddedToCart, authUser, addTrackToCart} = this.props;
+		const {isAddedToCart, addTrackToCart} = this.props;
     return (
       <Fragment>
         <article className="dt w-100 bb b--black-05 pb2 mt2" href="#0">
@@ -80,7 +80,6 @@ class StoreTrackListItem extends Component {
   }
 }
 const mapStateToProps = (state, {track}) => ({
-	authUser: selectors.getAuthUser(state),
 	isAddedToCart: (selectors.getCartTrack(state, track.trackid) === undefined) ? false: true,
 });
 

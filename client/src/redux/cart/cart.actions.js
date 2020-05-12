@@ -34,22 +34,21 @@ export const failCheckout = (error) => ({
     },
 });
 
-export const startUploadingInvoiceLine = (track, invoiceid) => ({
+export const startUploadingInvoiceLine = (tracks, invoiceid) => ({
   type: types.UPLOAD_INVOICELINE_STARTED,
   payload: {
-    track,
+    tracks,
     invoiceid
   }
 });
 
-export const completeUploadingInvoiceLine = () => ({
+export const completeUploadingInvoiceLine = (statusCode) => ({
     type: types.UPLOAD_INVOICELINE_COMPLETED,
+    payload: statusCode
 });
 
 export const failUploadingInvoiceLine = (error) => ({
     type: types.UPLOAD_INVOICELINE_FAILED,
-    payload: {
-      error,
-    },
+    payload: error,
 });
 

@@ -70,3 +70,4 @@ export const getCartTrack = (state, id) => cartSelectors.getCartTrack(state.cart
 export const getCartTracks = (state) => cartSelectors.getCartTracks(state.cart)
 export const isExecutingCheckout = (state) => cartSelectors.isExecutingCheckout(state.cart);
 export const getCheckoutError = (state) => cartSelectors.getCheckoutError(state.cart);
+export const getInvoiceLinesStatusCode = (state) => {console.log(cartSelectors.getInvoiceLinesStatusCode(state.cart));  return cartSelectors.getInvoiceLinesStatusCode(state.cart)};

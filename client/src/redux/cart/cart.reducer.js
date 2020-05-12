@@ -34,7 +34,7 @@ const isExecuting = (state = false, action) => {
       case types.CHECKOUT_FAILED: {
         return false;
       }
-      case types.CHECKOUT_FAILED: {
+      case types.CHECKOUT_COMPLETED: {
         return false;
       }
       default: {
@@ -59,30 +59,33 @@ const error = (state = null, action) => {
     }
 };
 
-// const invoiceId = (state = null, action) => {
-//   switch(action.type) {
-//     case types.CHECKOUT_FAILED: {
-//       return null;
-//     }
-//     case types.CHECKOUT_STARTED: {
-//       return null;
-//     }
-//     case types.CHECKOUT_COMPLETED: {
-//       return action.payload;
-//     }
-//     default: {
-//       return state;
-//     }
-//   }
-// };
+const invoiceLinesStatusCode = (state = null, action) => {
+  switch(action.type) {
+    case types.UPLOAD_INVOICELINE_STARTED: {
+      return null;
+    }
+    case types.UPLOAD_INVOICELINE_COMPLETED: {
+      return action.payload;
+    }
+    case types.UPLOAD_INVOICELINE_FAILED: {
+      return null;
+    }
+    default: {
+      return state;
+    }
+  }
+};
+
 
 export default combineReducers({
   byId,
   isExecuting,
-  error
+  error,
+  invoiceLinesStatusCode
 })
 
 export const getCartTrack = (state, id) => state.byId[id];
 export const getCartTracks = (state) =>  Object.values((state.byId));
 export const isExecutingCheckout = (state) => state.isExecuting;
 export const getCheckoutError = (state) => state.error;
+export const getInvoiceLinesStatusCode = (state) => state.invoiceLinesStatusCode;

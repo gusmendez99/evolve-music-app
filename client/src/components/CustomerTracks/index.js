@@ -1,5 +1,6 @@
 import React, {Component} from 'react';
 import axios from 'axios';
+import { v4 as uuidv4 } from 'uuid'
 import { connect } from "react-redux";
 
 import * as selectors from "../../redux/root-reducer";
@@ -44,6 +45,7 @@ class CustomerTracks extends Component {
 
   handleSearchFieldChange = async event => {
     const { value } = event.target;
+    const { userid } = this.props.authUser;
     console.log(value)
     
 
@@ -51,8 +53,8 @@ class CustomerTracks extends Component {
       this.setState({ searchField: value, isSearching: true })
       axios({
         method: "post",
-        url: `http://localhost:3000/search/tracks/active`,
-        data: { query: value }
+        url: `http://localhost:3000/search/my-tracks`,
+        data: { query: value, idUser: userid }
       }).then(res => {
         console.log(res.data)
         this.setState({ searchList: res.data });
@@ -94,14 +96,14 @@ class CustomerTracks extends Component {
           isSearching ? (
             searchList.map(singleTrack => (
               <CustomerTrackListItem
-                    key={singleTrack.trackid}
+                    key={uuidv4()}
                     track={singleTrack}
                   />
             ) )
            ) : (
             currentTracks.map(singleTrack => (
               <CustomerTrackListItem
-                    key={singleTrack.trackid}
+                    key={uuidv4()}
                     track={singleTrack}
                   />
               ) )

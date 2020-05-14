@@ -91,6 +91,15 @@ const Nav = ({ authUser, permissions, onSignOut }) => {
         {authUser && permissions.isCustomer && (
           <Link
             className="link dim dark-gray f6 f5-l dib mr3 mr4-l"
+            to={`/checkout`}
+            title="CheckOut"
+          >
+            Check Out
+          </Link>
+        )}
+        {authUser && permissions.isCustomer && (
+          <Link
+            className="link dim dark-gray f6 f5-l dib mr3 mr4-l"
             to={`/store`}
             title="Store"
           >

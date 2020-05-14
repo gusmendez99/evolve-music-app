@@ -25,6 +25,7 @@ import Statistics from "../components/Statistics";
 import AddRole from "../components/AddRole";
 import LogBook from '../components/LogBook';
 import StoreTracks from "../components/StoreTracks"
+import CheckOut from "../components/CheckOut";
 //Customer Home
 import CustomerTracks from '../components/CustomerTracks'
 
@@ -88,6 +89,14 @@ class RouterApp extends React.Component {
               authUser={authUser}
               isCustomer={permissions.isCustomer}
             />
+
+            <RestrictedCustomerRoute
+            exact
+            path={`/checkout`}
+            component={CheckOut}
+            authUser={authUser}
+            isCustomer={permissions.isCustomer}
+          />
 
             <RestrictedCustomerRoute
               exact

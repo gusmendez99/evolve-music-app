@@ -14,6 +14,11 @@ const UPDATE_LOGBOOK = "SELECT updateLogbook($1,$2,$3,$4)";
 //For Customer page
 const GET_ACTIVE_TRACKS = "SELECT t.*, g.Name as GenreName, m.Name as MediaTypeName, art.Name as ArtistName, a.Title as AlbumTitle FROM Track t INNER JOIN Genre g on t.genreid = g.genreid INNER JOIN MediaType m on t.mediatypeid = m.mediatypeid INNER JOIN Album a on t.albumid = a.albumid INNER JOIN Artist art ON art.artistid = a.artistid WHERE NOT EXISTS (SELECT FROM InactiveTrack it WHERE it.TrackId = t.TrackId ) ORDER BY t.Name ASC";
 
+// For user display
+const GET_PURCHASED_ACTIVE_TRACKS_BY_USER = "select distinct t.*, g.Name as GenreName, m.Name as MediaTypeName, art.Name as ArtistName, a.Title as AlbumTitle, i.invoicedate FROM InvoiceLine il inner join invoice i on il.invoiceid = i.invoiceid inner join Track t on t.trackid = il.trackid INNER JOIN Genre g on t.genreid = g.genreid INNER JOIN MediaType m on t.mediatypeid = m.mediatypeid INNER JOIN Album a on t.albumid = a.albumid INNER JOIN Artist art ON art.artistid = a.artistid WHERE NOT EXISTS (SELECT FROM InactiveTrack it WHERE it.TrackId = t.TrackId ) and i.userid = $1 ORDER by t.Name asc, i.invoicedate desc;"
+const GET_AVAILABLE_ACTIVE_TRACKS_BY_USER = "select distinct t.*, g.Name as GenreName, m.Name as MediaTypeName, art.Name as ArtistName, a.Title as AlbumTitle FROM Track t  INNER JOIN Genre g on t.genreid = g.genreid INNER JOIN MediaType m on t.mediatypeid = m.mediatypeid INNER JOIN Album a on t.albumid = a.albumid INNER JOIN Artist art ON art.artistid = a.artistid WHERE NOT EXISTS (SELECT FROM InactiveTrack it WHERE it.TrackId = t.TrackId ) and t.trackid not in (select distinct il2.trackid from invoiceline il2 inner join invoice i2 on i2.invoiceid = il2.invoiceid where i2.userid = $1) ORDER BY t.Name asc;"
+
+
 const getTracks = (request, response) => {
   db.query(GET_TRACKS, (error, results) => {
     if (error) {
@@ -92,6 +97,31 @@ const getTrackMetadata = async (request, response) => {
   });
 
 }
+
+// Track listing on User views
+const getPurchasedActiveTracksByUser = (request, response) => {
+  const idUser = parseInt(request.params.id);
+
+  db.query(GET_PURCHASED_ACTIVE_TRACKS_BY_USER, [idUser], (error, results) => {
+    if (error) {
+      throw error;
+    }
+    
+    response.status(200).json(results.rows);
+  });
+};
+
+const getAvailableActiveTracksByUser = (request, response) => {
+  const idUser = parseInt(request.params.id);
+
+  db.query(GET_AVAILABLE_ACTIVE_TRACKS_BY_USER, [idUser], (error, results) => {
+    if (error) {
+      throw error;
+    }
+    
+    response.status(200).json(results.rows);
+  });
+};
 
 const createTrack = (request, response) => {
   const {
@@ -201,5 +231,7 @@ module.exports = {
   createTrack,
   updateTrack,
   deleteTrack,
-  getTrackMetadata
+  getTrackMetadata,
+  getPurchasedActiveTracksByUser,
+  getAvailableActiveTracksByUser
 };

@@ -75,6 +75,8 @@ app.get("/users", userRouter.getUsers);
 app.get("/users/:id", userRouter.getUserById);
 app.get("/users/:id/permissions", userRouter.getPermissionsByUser);
 app.get("/users/:id/role", userRouter.getRoleByUserId);
+app.get("/users/:id/purchased-tracks", trackRouter.getPurchasedActiveTracksByUser);
+app.get("/users/:id/available-tracks", trackRouter.getAvailableActiveTracksByUser);
 app.post("/users", userRouter.createUser);
 app.put("/users/:id", userRouter.updateUser);
 app.delete("/users/:id", userRouter.deleteUser);

@@ -6,6 +6,7 @@ import Pagination from '../Pagination';
 
 import { connect } from "react-redux";
 
+import * as selectors from "../../redux/root-reducer";
 import * as actions from '../../redux/cart/cart.actions';
 
 //TODO: EN LOS FETCHS HAY QUE CAMBIAR Y MOSTRAR NO SOLO LAS CANCIONES ACTIVAS
@@ -26,7 +27,7 @@ class StoreTracks extends Component {
   };
 
   componentDidMount(){
-    axios.get('http://localhost:3000/tracks/active')
+    axios.get(`http://localhost:3000/users/${this.props.authUser.userid}/available-tracks`)
     .then(response => {
       this.setState({tracks: response.data})
     })
@@ -130,6 +131,10 @@ class StoreTracks extends Component {
   }
 }
 
+const mapStateToProps = state => ({
+  authUser: selectors.getAuthUser(state)
+})
+
 const mapDispatchToProps = (dispatch) => ({
   checkout(){ 
     dispatch(actions.startCheckout({
@@ -144,6 +149,6 @@ const mapDispatchToProps = (dispatch) => ({
   }
 });
 
-export default connect(null,mapDispatchToProps)(StoreTracks);
+export default connect(mapStateToProps,mapDispatchToProps)(StoreTracks);
 
 

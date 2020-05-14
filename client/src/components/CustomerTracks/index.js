@@ -1,5 +1,8 @@
 import React, {Component} from 'react';
 import axios from 'axios';
+import { connect } from "react-redux";
+
+import * as selectors from "../../redux/root-reducer";
 
 import CustomerTrackListItem from '../CustomerTrackListItem'
 import Pagination from '../Pagination';
@@ -20,7 +23,7 @@ class CustomerTracks extends Component {
   };
 
   componentDidMount(){
-    axios.get('http://localhost:3000/tracks/active')
+    axios.get(`http://localhost:3000/users/${this.props.authUser.userid}/purchased-tracks`)
     .then(response => {
       this.setState({tracks: response.data})
     })
@@ -60,12 +63,6 @@ class CustomerTracks extends Component {
     }
   }
 
-  updateState = () => {
-    axios.get('http://localhost:3000/tracks/active')
-    .then(response => {
-      this.setState({tracks: response.data})
-    });
-  }
 
   render(){
     const { searchField, tracks, currentTracks, currentPage, totalPages,
@@ -125,6 +122,8 @@ class CustomerTracks extends Component {
   }
 }
 
-export default CustomerTracks;
+const mapStateToProps = (state) => ({
+  authUser: selectors.getAuthUser(state)
+});
 
-
+export default connect(mapStateToProps)(CustomerTracks);

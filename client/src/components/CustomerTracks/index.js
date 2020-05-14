@@ -1,5 +1,9 @@
 import React, {Component} from 'react';
 import axios from 'axios';
+import { v4 as uuidv4 } from 'uuid'
+import { connect } from "react-redux";
+
+import * as selectors from "../../redux/root-reducer";
 
 import CustomerTrackListItem from '../CustomerTrackListItem'
 import Pagination from '../Pagination';
@@ -20,7 +24,7 @@ class CustomerTracks extends Component {
   };
 
   componentDidMount(){
-    axios.get('http://localhost:3000/tracks/active')
+    axios.get(`http://localhost:3000/users/${this.props.authUser.userid}/purchased-tracks`)
     .then(response => {
       this.setState({tracks: response.data})
     })
@@ -41,6 +45,7 @@ class CustomerTracks extends Component {
 
   handleSearchFieldChange = async event => {
     const { value } = event.target;
+    const { userid } = this.props.authUser;
     console.log(value)
     
 
@@ -48,8 +53,8 @@ class CustomerTracks extends Component {
       this.setState({ searchField: value, isSearching: true })
       axios({
         method: "post",
-        url: `http://localhost:3000/search/tracks/active`,
-        data: { query: value }
+        url: `http://localhost:3000/search/my-tracks`,
+        data: { query: value, idUser: userid }
       }).then(res => {
         console.log(res.data)
         this.setState({ searchList: res.data });
@@ -60,12 +65,6 @@ class CustomerTracks extends Component {
     }
   }
 
-  updateState = () => {
-    axios.get('http://localhost:3000/tracks/active')
-    .then(response => {
-      this.setState({tracks: response.data})
-    });
-  }
 
   render(){
     const { searchField, tracks, currentTracks, currentPage, totalPages,
@@ -97,14 +96,14 @@ class CustomerTracks extends Component {
           isSearching ? (
             searchList.map(singleTrack => (
               <CustomerTrackListItem
-                    key={singleTrack.trackid}
+                    key={uuidv4()}
                     track={singleTrack}
                   />
             ) )
            ) : (
             currentTracks.map(singleTrack => (
               <CustomerTrackListItem
-                    key={singleTrack.trackid}
+                    key={uuidv4()}
                     track={singleTrack}
                   />
               ) )
@@ -125,6 +124,8 @@ class CustomerTracks extends Component {
   }
 }
 
-export default CustomerTracks;
+const mapStateToProps = (state) => ({
+  authUser: selectors.getAuthUser(state)
+});
 
-
+export default connect(mapStateToProps)(CustomerTracks);

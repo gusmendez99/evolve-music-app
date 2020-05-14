@@ -1,11 +1,13 @@
 import React, {Component} from 'react';
 import axios from 'axios';
+import { v4 as uuidv4 } from 'uuid';
 
 import StoreTrackListItem from '../StoreTrackListItem'
 import Pagination from '../Pagination';
 
 import { connect } from "react-redux";
 
+import * as selectors from "../../redux/root-reducer";
 import * as actions from '../../redux/cart/cart.actions';
 
 //TODO: EN LOS FETCHS HAY QUE CAMBIAR Y MOSTRAR NO SOLO LAS CANCIONES ACTIVAS
@@ -26,7 +28,7 @@ class StoreTracks extends Component {
   };
 
   componentDidMount(){
-    axios.get('http://localhost:3000/tracks/active')
+    axios.get(`http://localhost:3000/users/${this.props.authUser.userid}/available-tracks`)
     .then(response => {
       this.setState({tracks: response.data})
     })
@@ -47,6 +49,8 @@ class StoreTracks extends Component {
 
   handleSearchFieldChange = async event => {
     const { value } = event.target;
+    const { userid } = this.props.authUser;
+
     console.log(value)
     
 
@@ -54,8 +58,8 @@ class StoreTracks extends Component {
       this.setState({ searchField: value, isSearching: true })
       axios({
         method: "post",
-        url: `http://localhost:3000/search/tracks/active`,
-        data: { query: value }
+        url: `http://localhost:3000/search/available-tracks`,
+        data: { query: value, idUser: userid }
       }).then(res => {
         console.log(res.data)
         this.setState({ searchList: res.data });
@@ -102,14 +106,14 @@ class StoreTracks extends Component {
           isSearching ? (
             searchList.map(singleTrack => (
               <StoreTrackListItem
-                    key={singleTrack.trackid}
+                    key={uuidv4()}
                     track={singleTrack}
                   />
             ) )
            ) : (
             currentTracks.map(singleTrack => (
               <StoreTrackListItem
-                    key={singleTrack.trackid}
+                    key={uuidv4()}
                     track={singleTrack}
                   />
               ) )
@@ -130,6 +134,10 @@ class StoreTracks extends Component {
   }
 }
 
+const mapStateToProps = state => ({
+  authUser: selectors.getAuthUser(state)
+})
+
 const mapDispatchToProps = (dispatch) => ({
   checkout(){ 
     dispatch(actions.startCheckout({
@@ -144,6 +152,6 @@ const mapDispatchToProps = (dispatch) => ({
   }
 });
 
-export default connect(null,mapDispatchToProps)(StoreTracks);
+export default connect(mapStateToProps,mapDispatchToProps)(StoreTracks);
 
 

@@ -17,8 +17,7 @@ class CheckoutTrackListItem extends Component {
 
 
   render() {
-    const { track, permissions, onDelete } = this.props;
-    console.log(permissions.isCustomer);
+    const { track, permissions, onDelete, total } = this.props;
     return (
       <Fragment>
         <article className="dt w-100 bb b--black-05 pb2 mt2" href="#0">
@@ -35,7 +34,7 @@ class CheckoutTrackListItem extends Component {
                 <span></span>
                 :
                 <input type="number" id="quantity" name="quantity" min="1" max="5"></input>
-               
+
               }
               <button
                 className="f6 dim ph3 pv2 mb0 mr3 dib red bg-white h-100"

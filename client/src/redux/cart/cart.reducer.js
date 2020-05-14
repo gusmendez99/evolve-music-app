@@ -1,4 +1,9 @@
 import omit from 'lodash/omit';
+import forEach from 'lodash/forEach';
+import toArray from 'lodash/toArray';
+import sum from 'lodash/sum';
+
+
 import { combineReducers } from 'redux';
 
 import * as types from './cart.types';
@@ -89,3 +94,11 @@ export const getCartTracks = (state) =>  Object.values((state.byId));
 export const isExecutingCheckout = (state) => state.isExecuting;
 export const getCheckoutError = (state) => state.error;
 export const getInvoiceLinesStatusCode = (state) => state.invoiceLinesStatusCode;
+export function getTotalPriceInvoice(state){
+  let x = 0;
+  const subTotal = forEach(state.byId, (value) =>
+    x += parseFloat(value.unitprice) * value.quantity 
+  );
+  return x;
+}
+

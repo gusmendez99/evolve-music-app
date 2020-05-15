@@ -1,8 +1,10 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 
 import CheckoutTrackListItem from '../CheckoutTrackListItem';
+import CheckoutForm from '../CheckoutForm';
 import * as selectors from '../../redux/root-reducer';
 import { connect } from 'react-redux';
+import logo from '../../noItemsInCart.png';
 
 class CheckOut extends Component {
   constructor(){
@@ -16,17 +18,43 @@ class CheckOut extends Component {
 
   render() {
     const { tracks } = this.props;
+
     return (
-      <div>
-        {tracks.length === 0 ? <h1>No hay tracks en tu carrito, intenta agregar</h1> :
-          tracks.map(track => (
-            <CheckoutTrackListItem
-              key={track.id}
-              track={track}
-            />
-            ))
+      <Fragment>
+        {tracks.length === 0 ?
+          <div className="flex felx-row justify-center pa5">
+            <div className='flex flex-column justify-center '>
+              <div>
+                <h1>No hay tracks en tu carrito, intenta agregar</h1>
+              </div>
+              <div className="pa2">
+                <img src={logo} />
+              </div>
+            </div>
+          </div>
+          :
+          <div className="flex felx-row justify-center pa5">
+            <div className='flex flex-colum justify-center ph5 pt4 '>
+              <div>
+                <h1>Por comprar ... </h1>
+              </div>
+              <div>
+                {
+                  tracks.map(track => (
+                    <CheckoutTrackListItem
+                      key={track.id}
+                      track={track}
+                    />
+                  ))
+                }
+              </div>
+              <div>
+                <CheckoutForm />
+              </div>
+            </div>
+          </div>
         }
-      </div>
+      </Fragment>
     );
   
   }

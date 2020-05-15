@@ -9,6 +9,8 @@ import { connect } from "react-redux";
 
 import * as selectors from "../../redux/root-reducer";
 import * as actions from '../../redux/cart/cart.actions';
+import Spinner from '../Spinner';
+
 
 //TODO: EN LOS FETCHS HAY QUE CAMBIAR Y MOSTRAR NO SOLO LAS CANCIONES ACTIVAS
 // SINO LAS CANCIONES ACTIVAS QUE NO HAYAN SIDO COMPRADAS YA POR EL CLIENTE
@@ -77,7 +79,7 @@ class StoreTracks extends Component {
     const { checkout } = this.props;
 
     const totalTracks = tracks.length;
-    if (totalTracks === 0) return (<h1 className="tc">No tracks yet...</h1>);
+    if (totalTracks === 0) return (<div className="tc"><Spinner/></div>);
 
     return (
       <div>

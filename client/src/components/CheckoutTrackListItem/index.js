@@ -17,7 +17,7 @@ class CheckoutTrackListItem extends Component {
 
 
   render() {
-    const { track, permissions, onDelete, total } = this.props;
+    const { track, permissions, onDelete } = this.props;
     return (
       <Fragment>
         <article className="dt w-100 bb b--black-05 pb2 mt2" href="#0">

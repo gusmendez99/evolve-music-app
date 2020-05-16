@@ -84,10 +84,6 @@ class StoreTracks extends Component {
     return (
       <div>
         <div className="pa1 ph5-l tc">
-          <button
-              className="f6 dim ph3 pv2 mb0 mr3 dib white bg-green h-100"
-              onClick={checkout}
-					>Probar Saga</button>
           <h1 className="f3 fw6">Search Tracks</h1>
           { currentPage && !searchField && (
             <h6>
@@ -140,20 +136,6 @@ const mapStateToProps = state => ({
   authUser: selectors.getAuthUser(state)
 })
 
-const mapDispatchToProps = (dispatch) => ({
-  checkout(){ 
-    dispatch(actions.startCheckout({
-      invoicedate: '2020/10/10',
-      billingaddress: 'A',
-      billingcity: 'B',
-      billingstate: 'C',
-      billingcountry: 'E',
-      billingpostalcode: 'X',
-      total: 0.99
-    }))
-  }
-});
-
-export default connect(mapStateToProps,mapDispatchToProps)(StoreTracks);
+export default connect(mapStateToProps,undefined)(StoreTracks);
 
 

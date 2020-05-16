@@ -31,25 +31,25 @@ class CheckOut extends Component {
                 <img src={logo} />
               </div>
             </div>
-          </div>
+          </div>  
           :
-          <div className="flex felx-row justify-center pa5">
-            <div className='flex flex-colum justify-center ph5 pt4 '>
-              <div>
-                <h1>Por comprar ... </h1>
+          <div>
+          <div className='flex justify-center'>
+            <h1>Por comprar ... </h1>
+          </div>
+            <div className='flex justify-around'>
+              <div  class="w-25 pa4 ">
+              <CheckoutForm />
               </div>
-              <div>
-                {
-                  tracks.map(track => (
-                    <CheckoutTrackListItem
-                      key={track.id}
-                      track={track}
-                    />
-                  ))
-                }
-              </div>
-              <div>
-                <CheckoutForm />
+              <div  class="w-25 pa4">
+              {
+                tracks.map(track => (
+                  <CheckoutTrackListItem
+                    key={track.id}
+                    track={track}
+                  />
+                ))
+              }
               </div>
             </div>
           </div>

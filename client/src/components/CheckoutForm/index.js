@@ -33,41 +33,79 @@ class CheckoutForm extends Component {
     });
   }
 
+  handleFieldChange = event => {
+    const { value, name } = event.target;
+    switch(name){
+      case 'billingaddres': {
+        return this.setState({billingaddress: value});
+      }
+      case 'billingcity': {
+        return this.setState({billingcity: value});
+      }
+      case 'billingstate': {
+        return this.setState({billingstate: value});
+      }
+      case 'billingcountry': {
+        return this.setState({billingcountry: value});
+        
+      }
+      case 'billingpostalcode': {
+        return this.setState({billingpostalcode: value});
+      }
+    }
+  }
+
   render() {
     const { onCheckout, isLoading } = this.props;
     return (
       <Fragment>
-          <div className="flex felx-row justify-center pa5">
-          <div className="flex flex-column pa5-ns">
-            <div className="w-100 tr">
-              <DatePicker selected={Date.now()} disabled={true}/>
-              <input
-              placeholder="Billing address"/>
-              <input
-              placeholder="Billing City" 
-              value={this.state.billingcity}/>
-              <input
-              placeholder="Billing State" 
-              value={this.state.billingstate}/>
-              <input
-              placeholder="Billing country" 
-              value={this.state.billingcountry}/>
-              <input
-              placeholder="Billing postalcode" 
-              value={this.state.billingpostalcode}/>
-              <input value={this.state.total} disabled={true}/>
+        <div className="w-100 tc">
+          <input
+            className='w-100 bb-l bt-0-l br-0-l bl-0-l ma3-l'
+            name={'billingaddres'}
+            placeholder="Billing address"
+            value={this.state.billingaddress}
+            onChange={this.handleFieldChange} />
+          <input
+            className='w-100 bb-l bt-0-l br-0-l bl-0-l ma3-l'
+            name={"billingcity"}
+            placeholder="Billing City"
+            value={this.state.billingcity}
+            onChange={this.handleFieldChange} />
+          <input
+            className='w-100 bb-l bt-0-l br-0-l bl-0-l ma3-l'
+            name={'billingstate'}
+            placeholder="Billing State"
+            value={this.state.billingstate}
+            onChange={this.handleFieldChange} />
+          <input
+            className='w-100 bb-l bt-0-l br-0-l bl-0-l ma3-l'
+            name='billingcountry'
+            placeholder="Billing country"
+            value={this.state.billingcountry}
+            onChange={this.handleFieldChange} />
+          <input
+            className='w-100 bb-l bt-0-l br-0-l bl-0-l ma3-l'
+            name={'billingpostalcode'}
+            placeholder="Billing postalcode"
+            value={this.state.billingpostalcode}
+            onChange={this.handleFieldChange} />
+          <input
+            className='w-100 bb-l bt-0-l br-0-l bl-0-l ma3-l bg-#e1ebfc' value={`Total: $ ${this.state.total}`} disabled={true} />
+            <DatePicker selected={Date.now()} disabled={true} />
+          <div className="tc">
+            {!isLoading ?
+              <button
+                className="f6 link dim ph3 pv2 mb2 dib white bg-dark-green w-100-ns  ma3-l" 
+                onClick={() => onCheckout(this.state)}
+              >Check Out!</button>
+              :
+              <Spinner />
+            }
+          </div>
+        </div>
 
-              {!isLoading ? 
-                <button
-                  className="f6 dim ph3 pv2 mb0 mr3 dib white bg-green h-100"
-                  onClick={() => onCheckout(this.state)}
-                >Check Out!</button>
-                :
-                <Spinner/>
-              }
-            </div>
-          </div>
-          </div>
+              
       </Fragment>
     );
   }
@@ -86,14 +124,3 @@ const mapDispatchToProps = (dispatch) => ({
   }
 });
 export default connect(mapStateToProps, mapDispatchToProps)(CheckoutForm);
-
-
-// dispatch(actions.startCheckout({
-//   invoicedate: '2020/10/10',
-//   billingaddress: 'A',
-//   billingcity: 'B',
-//   billingstate: 'C',
-//   billingcountry: 'E',
-//   billingpostalcode: 'X',
-//   total: 0.99
-// }))

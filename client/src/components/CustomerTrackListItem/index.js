@@ -36,6 +36,8 @@ class CustomerTrackListItem extends Component {
 
   render() {
     const { track, metadata } = this.state;
+    const { onTrackPlayed = f => f } = this.props;
+
     return (
       <Fragment>
         <article className="dt w-100 bb b--black-05 pb2 mt2" href="#0">
@@ -64,7 +66,8 @@ class CustomerTrackListItem extends Component {
           <div className="dtc v-mid">
             <div className="w-100 tr">
               {(metadata && metadata.previewurl) ? (
-                <button onClick={()=> window.open(`${metadata.previewurl}`, "_blank")} target="_blank" className="f6 button-reset bg-white ba b--black-10 dim pointer pv1 black-60" >
+                // window.open(`${metadata.previewurl}`, "_blank") target="_blank"
+                <button onClick={()=> onTrackPlayed({ id: track.trackid, thumbnail: metadata.image, title: track.name, audio: metadata.previewurl, artist: track.artistname }) }  className="f6 button-reset bg-white ba b--black-10 dim pointer pv1 black-60" >
                   Play
                 </button>
               ) : (

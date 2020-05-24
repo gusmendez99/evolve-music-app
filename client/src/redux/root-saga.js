@@ -9,7 +9,8 @@ import { genreSagas } from './genre/genre.sagas';
 import { mediaTypesSagas } from './mediatype/mediatype.sagas';
 import { trackSagas } from './track/track.sagas';
 import { watchCheckoutStarted, watchUploadInvoiceline } from './cart/cart.sagas';
+import { playbackSagas } from './playback/playback.sagas';
 
 export default function* rootSaga() {
-  yield all([call(authSagas), call(userSagas), call(roleSagas), call(artistSagas), call(genreSagas), call(mediaTypesSagas), call(albumSagas), call(trackSagas), call(watchCheckoutStarted), call(watchUploadInvoiceline)]);
+  yield all([call(authSagas), call(userSagas), call(roleSagas), call(artistSagas), call(genreSagas), call(mediaTypesSagas), call(albumSagas), call(trackSagas), call(watchCheckoutStarted), call(watchUploadInvoiceline), call(playbackSagas)]);
 }

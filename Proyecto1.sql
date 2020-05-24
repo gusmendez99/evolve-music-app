@@ -173,15 +173,14 @@ CREATE TABLE InactiveTrack
     TrackId INT NOT NULL,
     FOREIGN KEY (TrackId) REFERENCES Track(TrackId) ON DELETE CASCADE ON UPDATE NO ACTION
 );
-DROP TABLE IF EXISTS TrackHistory CASCADE;
-/* Que pasa si se eliminA TrackId?*/
+/* DROP TABLE IF EXISTS TrackHistory CASCADE;
 CREATE TABLE TrackHistory
 (
     UserId INT NOT NULL,
     TrackId INT NOT NULL,
     FOREIGN KEY (UserId) REFERENCES AppUser(UserId)  ON DELETE CASCADE ON UPDATE NO ACTION,
     FOREIGN KEY (TrackId) REFERENCES Track(TrackId) ON DELETE CASCADE ON UPDATE NO ACTION
-);
+); */
 
 DROP TABLE IF EXISTS LogBook CASCADE;
 CREATE TABLE LogBook
@@ -16024,7 +16023,7 @@ DROP TRIGGER IF EXISTS insertPlaylist on Playlist;
 DROP FUNCTION IF EXISTS registerPlaylistAction;
 
 
-DROP FUNCTION IF EXISTS addUserCount;
+/* DROP FUNCTION IF EXISTS addUserCount;
 CREATE OR REPLACE FUNCTION addUserCount (user_id int, track_id int)
     RETURNS void AS
     $BODY$
@@ -16032,7 +16031,7 @@ CREATE OR REPLACE FUNCTION addUserCount (user_id int, track_id int)
             INSERT INTO TrackHistory(UserId, TrackId) VALUES(user_id, track_id);
         END;
     $BODY$
-    LANGUAGE 'plpgsql' VOLATILE COST 100;
+    LANGUAGE 'plpgsql'; */
 
 DROP FUNCTION IF EXISTS updateLogbook;
 CREATE OR REPLACE FUNCTION updateLogbook(user_id INT, executed_action TEXT, item_id INT, item_type TEXT)
@@ -16211,3 +16210,13 @@ BEGIN
 END;
 $func$  	
 LANGUAGE plpgsql;
+
+DROP FUNCTION IF EXISTS addPlaybackRecord;
+CREATE OR REPLACE FUNCTION addPlaybackRecord(user_id int, track_id int)
+    RETURNS void AS
+    $BODY$
+        BEGIN
+            INSERT INTO PlaybackRecord(UserId, TrackId) VALUES(user_id, track_id);
+        END;
+    $BODY$
+    LANGUAGE 'plpgsql';

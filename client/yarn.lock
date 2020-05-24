@@ -4796,6 +4796,11 @@ fs.realpath@^1.0.0:
   resolved "https://registry.yarnpkg.com/fs.realpath/-/fs.realpath-1.0.0.tgz#1504ad2523158caa40db4a2787cb01411994ea4f"
   integrity sha1-FQStJSMVjKpA20onh8sBQRmU6k8=
 
+fscreen@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/fscreen/-/fscreen-1.0.2.tgz#c4c51d96d819d75a19d728e0df445f9be9bb984f"
+  integrity sha1-xMUdltgZ11oZ1yjg30Rfm+m7mE8=
+
 fsevents@2.1.2, fsevents@~2.1.2:
   version "2.1.2"
   resolved "https://registry.yarnpkg.com/fsevents/-/fsevents-2.1.2.tgz#4c0a1fb34bc68e543b4b82a9ec392bfbda840805"
@@ -8919,6 +8924,15 @@ react-virtualized@^9.21.2:
     loose-envify "^1.3.0"
     prop-types "^15.6.0"
     react-lifecycles-compat "^3.0.4"
+
+react-web-media-player@^1.1.6:
+  version "1.1.6"
+  resolved "https://registry.yarnpkg.com/react-web-media-player/-/react-web-media-player-1.1.6.tgz#459a29e63d343b9f0ca3afec9597e7f93826cf97"
+  integrity sha512-sh1+xSVggrgcfQcoFagGWkZPuSx4p6M0vkEIiq96M3NEQcJzdViy80esrgDxi+FvsRALTe0015icngXrspMb0g==
+  dependencies:
+    fscreen "^1.0.2"
+    react-redux "^7.2.0"
+    redux "^4.0.5"
 
 react@^16.13.0:
   version "16.13.1"

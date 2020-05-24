@@ -10,10 +10,11 @@ var indexRouter = require("./routes/index");
 var userRouter = require("./routes/user");
 var roleRouter = require("./routes/role");
 var permissionRouter = require("./routes/permission");
-var invoice = require("./routes/invoice");
-var invoiceline = require("./routes/invoiceline");
-var recommendation = require("./routes/recommendation");
-var script = require("./routes/mongo");
+var invoiceRouter = require("./routes/invoice");
+var invoicelineRouter = require("./routes/invoiceline");
+var recommendationRouter = require("./routes/recommendation");
+var playbackRouter = require('./routes/playback')
+var mongoRouter = require("./routes/mongo");
 
 // Original DB
 var albumRouter = require("./routes/album");
@@ -164,18 +165,21 @@ app.put("/playlists/:id", playlistRouter.updatePlaylist);
 app.delete("/playlists/:id", playlistRouter.deletePlaylist);
 
 // Invoice
-app.post("/invoice", invoice.getInvoice);
-app.get("/invoice/users-with-most-purchases", invoice.getUsersWithMorePurchasedSongs);
-app.post("/invoice/new", cors(),invoice.createInvoice);
+app.post("/invoice", invoiceRouter.getInvoice);
+app.get("/invoice/users-with-most-purchases", invoiceRouter.getUsersWithMorePurchasedSongs);
+app.post("/invoice/new", cors(),invoiceRouter.createInvoice);
 
 // InvoiceLine 
-app.post("/invoiceline", invoiceline.createInvoiceLine);
+app.post("/invoiceline", invoicelineRouter.createInvoiceLine);
  
 // Recommendations
-app.post("/track-recommendations", recommendation.getRecommendations)
+app.post("/track-recommendations", recommendationRouter.getRecommendations)
+
+// Playback Records
+app.post("/playback", playbackRouter.createPlaybackRecord)
 
 // Script
-app.post("/mongo", script.main);
+app.post("/mongo", mongoRouter.main);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

@@ -16,6 +16,7 @@
     "morgan": "~1.9.1",
     "node-fetch": "^2.6.0",
     "nodemon": "^2.0.2",
+    "pdfkit": "^0.11.0",
     "pg": "^7.4.3",
     "pg-format": "^1.0.4",
     "request": "^2.88.2",

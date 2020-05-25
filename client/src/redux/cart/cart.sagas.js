@@ -5,6 +5,8 @@ import {
 	select
 } from 'redux-saga/effects';
 
+import download from 'downloadjs';
+
 import * as selectors from "../root-reducer";
 import * as actions from "./cart.actions";
 import * as types from "./cart.types";
@@ -14,23 +16,33 @@ const INVOICE_LINE_API_ROUTE = "http://localhost:3000/invoiceline";
 
 
 function* uploadInvoiceLine(action) {
-	const { tracks, invoiceid } = action.payload;
+	const { tracks, invoiceid, invoicedata } = action.payload;
 	const invoiceLines = tracks.map(track => {
 		return [invoiceid, track.trackid, track.unitprice, track.quantity]
 	});
+
+	const data = {
+		invoiceLines,
+		invoicedata
+	}
+
 	try {
 		const response = yield call(
 			fetch,
 			`${INVOICE_LINE_API_ROUTE}`,
 			{
 				method: 'POST',
-				body: JSON.stringify(invoiceLines),
+				body: JSON.stringify(data),
 				headers: {
 					'Content-Type': 'application/json',
 				},
 			}
 		);
-		if (response.status === 201) {
+
+		const fileBlob = yield response.blob();
+		download(fileBlob);
+
+		if (response.status === 200) {
 			yield put(actions.completeUploadingInvoiceLine(response.status))
 			yield put(actions.completeCheckout())
 		}
@@ -58,9 +70,12 @@ function* checkout(action) {
 		);
 		if (response.status === 201) {
 			const data = yield response.json()
-			yield put(actions.startUploadingInvoiceLine(cartTracks, data.invoiceid))
+			const items = cartTracks.map(track => {
+				return {item: track.trackid, description: track.name, quantity: 1, amount: track.unitprice }
+			})
+			yield put(actions.startUploadingInvoiceLine(cartTracks, data.invoiceid, {...checkoutData, ...authUser, items}))
 		} else {
-			throw "Bad request from server...";
+			yield put(actions.failCheckout("Bad request from server..."));
 		}
 	} catch (error) {
 		yield put(actions.failCheckout(error.message));

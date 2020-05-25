@@ -34,11 +34,12 @@ export const failCheckout = (error) => ({
   },
 });
 
-export const startUploadingInvoiceLine = (tracks, invoiceid) => ({
+export const startUploadingInvoiceLine = (tracks, invoiceid, invoicedata) => ({
   type: types.UPLOAD_INVOICELINE_STARTED,
   payload: {
     tracks,
-    invoiceid
+    invoiceid,
+    invoicedata
   }
 });
 

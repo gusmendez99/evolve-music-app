@@ -82,11 +82,84 @@ function* checkout(action) {
 	}
 };
 
+function* uploadSimulatedInvoiceLine(action) {
+	const { tracks, invoiceid, invoicedata } = action.payload;
+	const invoiceLines = tracks.map(track => {
+		return [invoiceid, track.trackid, track.unitprice, track.quantity]
+	});
+	const data = {
+		invoiceLines,
+		invoicedata
+	}
 
+	try {
+		const response = yield call(
+			fetch,
+			`${INVOICE_LINE_API_ROUTE}`,
+			{
+				method: 'POST',
+				body: JSON.stringify(data),
+				headers: {
+					'Content-Type': 'application/json',
+				},
+			}
+		);
+
+		const fileBlob = yield response.blob();
+		download(fileBlob);
+
+		if (response.status === 200) {
+			yield put(actions.completeUploadingSimulatedInvoiceLine(response.status))
+			yield put(actions.completeCheckout())
+		}
+	} catch (error) {
+		yield put(actions.failUploadingSimulatedInvoiceLine(error.message))
+	}
+}
+
+
+function* simulateCheckout(action) {
+	const authUser = yield select(selectors.getAuthUser);
+	console.log('yay', action.payload)
+	const { checkoutData, cartTracks } = action.payload;
+	checkoutData["userid"] = authUser.userid;
+	try {
+		const response = yield call(
+			fetch,
+			`${INVOICE_API_ROUTE}`,
+			{
+				method: 'POST',
+				body: JSON.stringify(checkoutData),
+				headers: {
+					'Content-Type': 'application/json',
+				},
+			}
+		);
+		if (response.status === 201) {
+			const data = yield response.json()
+			const items = cartTracks.map(track => {
+				return {item: track.trackid, description: track.name, quantity: 1, amount: track.unitprice }
+			})
+			yield put(actions.startUploadingSimulatedInvoiceLine(cartTracks, data.invoiceid, {...checkoutData, ...authUser, items}))
+		} else {
+			yield put(actions.failCheckoutSimulation("Bad request from server..."));
+		}
+	} catch (error) {
+		yield put(actions.failCheckoutSimulation(error.message));
+	}
+};
+
+
+export function* watchCheckoutSimulationStarted() {
+	yield takeEvery(types.CHECKOUT_SIMULATION_STARTED, simulateCheckout);
+}
 export function* watchCheckoutStarted() {
 	yield takeEvery(types.CHECKOUT_STARTED, checkout);
 }
 
 export function* watchUploadInvoiceline() {
 	yield takeEvery(types.UPLOAD_INVOICELINE_STARTED, uploadInvoiceLine);
+}
+export function* watchUploadSimulatedInvoiceline() {
+	yield takeEvery(types.UPLOAD_SIMULATED_INVOICE_LINE_STARTED, uploadSimulatedInvoiceLine);
 }

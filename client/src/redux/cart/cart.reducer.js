@@ -25,6 +25,9 @@ const byId = (state = {}, action) => {
       case types.CHECKOUT_COMPLETED: {
 				return {};
       }
+      case types.CHECKOUT_SIMULATION_COMPLETED: {
+        return {};
+      }
       default: {
         return state;
       }
@@ -40,6 +43,9 @@ const isExecuting = (state = false, action) => {
         return false;
       }
       case types.CHECKOUT_COMPLETED: {
+        return false;
+      }
+      case types.CHECKOUT_SIMULATION_COMPLETED: {
         return false;
       }
       default: {
@@ -74,6 +80,15 @@ const invoiceLinesStatusCode = (state = null, action) => {
     }
     case types.UPLOAD_INVOICELINE_FAILED: {
       return null;
+    }
+    case types.UPLOAD_SIMULATED_INVOICE_LINE_STARTED: {
+      return null;
+    }
+    case types.UPLOAD_SIMULATED_INVOICE_LINE_COMPLETED: {
+      return action.payload
+    }
+    case types.UPLOAD_SIMULATED_INVOICE_LINE_FAILED: {
+      return null
     }
     default: {
       return state;

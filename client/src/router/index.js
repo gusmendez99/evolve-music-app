@@ -28,6 +28,7 @@ import StoreTracks from "../components/StoreTracks"
 import CheckOut from "../components/CheckOut";
 //Customer Home
 import CustomerTracks from '../components/CustomerTracks'
+import Simulation from "../components/Simulation";
 
 const RestrictedCreateRoute = ({ component: Component, authUser, canCreate, ...props }) => (
   <Route
@@ -192,6 +193,16 @@ class RouterApp extends React.Component {
               authUser={authUser}
               isAdmin={permissions.isAdmin}
             />
+
+
+            <RestrictedRoute
+              exact
+              path={`/${authUser.rolename}/simulation`}
+              component={Simulation}
+              authUser={authUser}
+              isAdmin={permissions.isAdmin}
+            />
+
 
           </Fragment>
         )}

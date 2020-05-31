@@ -19,7 +19,20 @@ const Nav = ({ authUser, permissions, onSignOut }) => {
           alt="Evolve"
         />
       </Link>
+
+    
       <div className="db dtc-l v-mid w-100 w-75-l tc tr-l">
+
+      {authUser &&  (
+        <Link
+          className="link dim dark-gray f6 f5-l dib mr3 mr4-l"
+          to={`/${authUser.rolename}/simulation`}
+          title="Simulation"
+        >
+          Simulation
+        </Link>
+      )}
+
         {authUser && permissions.canGenerateReport && (
           <Link
             className="link dim dark-gray f6 f5-l dib mr3 mr4-l"

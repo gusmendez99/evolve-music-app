@@ -1,4 +1,10 @@
 import React, { Component, Fragment } from "react";
+import sampleSize from 'lodash/sampleSize';
+import sumBy from 'lodash/sumBy';
+
+import axios from 'axios';
+import Spinner from '../Spinner';
+
 
 import DatePicker from "react-datepicker";
 import { connect } from "react-redux";
@@ -6,17 +12,46 @@ import { connect } from "react-redux";
 import * as actions from '../../redux/cart/cart.actions';
 import * as selectors from "../../redux/root-reducer";
 
+import getRandom from '../../utils/random.utils';
+
 class Simulation extends Component {
   constructor() {
     super();
     this.state = {
-      date : new Date(),
+      invoicedate : null,
       units : 1,
+      billingaddress: '',
+      billingcity: '',
+      billingstate: '',
+      billingcountry: '',
+      billingpostalcode: '',
+      total: 0,
+      tracks: [],
+      isFetching: true,
     };
   }
 
+  componentDidMount() {
+    axios.get(`http://localhost:3000/tracks/active`)
+    .then(response => {
+      this.setState({tracks: response.data})
+      this.setState({isFetching : false})
+    })
+    .catch(error => console.log(error));
+
+    const { user } = this.props;
+    this.setState({
+      invoicedate: new Date(),
+      billingcity: user.city,
+      billingstate: user.state,
+      billingcountry: user.country,
+      billingpostalcode: user.postalcode,
+    });
+  }
+
+
   handleDatePickerChange = date => {
-    this.setState({ date: date })
+    this.setState({ invoicedate : date })
   }
 
   handleChange = event => {
@@ -27,10 +62,37 @@ class Simulation extends Component {
     this.setState({ units: value});
   }
 
-  handleSubmit = (data) => {
-    const toStringDate = data.date.toISOString().split('T')[0]
-    const newData = {date: toStringDate, units: data.units}
-    this.props.startSimuli(newData);
+  handleSubmit = () => {
+    const checkoutData = {
+      invoicedate:this.state.invoicedate.toISOString().split('T')[0],
+      billingaddress: this.state.billingaddress,
+      billingcity: this.state.billingcity,
+      billingstate: this.state.billingstate,
+      billingcountry: this.state.billingcountry,
+      billingpostalcode: this.state.billingpostalcode,
+      total: this.state.total,
+    }
+    const module = this.state.units % 10;
+    let  iterations = (this.state.units - module) / 10;
+    console.log(iterations);
+    for(let i=0; i < iterations;i++){
+      setTimeout(() => {
+        const cartTracks = sampleSize(this.state.tracks, 10);
+        checkoutData.total =  (sumBy(cartTracks, item => parseFloat(item.unitprice))).toString();
+        console.log("Total ---->", checkoutData.total);
+        this.props.startSimuli(checkoutData, cartTracks);
+      }, 5000*i
+    );
+    }
+    if(module>0){
+      const cartTracks = sampleSize(this.state.tracks, module);
+      setTimeout(() => {
+        console.log("Finally ");
+        checkoutData.total =  (sumBy(cartTracks, item => parseFloat(item.unitprice))).toString();
+        this.props.startSimuli(checkoutData, cartTracks);
+      }, 6000
+      );
+    }
   }
 
   render() {
@@ -42,7 +104,7 @@ class Simulation extends Component {
             <h1 className="tc">Simulation</h1>
             <p className="mt2-m">Date</p>
             <DatePicker
-              selected={this.state.date}
+              selected={this.state.invoicedate}
               onChange={this.handleDatePickerChange}
             />
             <p className="mt2-m">Quantity of tracks</p>
@@ -55,12 +117,15 @@ class Simulation extends Component {
               value={this.state.units}
               onChange={this.handleChange}
               />
-            <button 
-            className="f6 link dim ph3 pv2 mb2 dib white bg-dark-green tc mt3-ns br3"
-            onClick={() => this.handleSubmit(this.state)}
-            >
-            Start
-            </button>
+            {
+              this.state.isFetching ? <Spinner /> :
+              <button 
+              className="f6 link dim ph3 pv2 mb2 dib white bg-dark-green tc mt3-ns br3"
+              onClick={() => this.handleSubmit()}
+              >
+              Start
+              </button>
+            }
           </div>
         </div>
       </Fragment>
@@ -71,19 +136,24 @@ class Simulation extends Component {
 }
 
 const mapStateToProps = (state) => ({
-  total: selectors.getTotalPriceInvoice(state),
-  user: selectors.getAuthUser(state),
+  user:selectors.getAuthUser(state),
   isLoading: selectors.isExecutingCheckout(state),
+  tracks: selectors.getCartTracks(state),
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  startSimuli(data) {
-    console.log("Detalles de la simulaicon", data);
-    // dispatch(actions.startCheckout(details))
+  startSimuli(checkoutData, cartTracks) {
+    //console.log("esto va", checkoutData, cartTracks);
+    dispatch(actions.startCheckoutSimulation(checkoutData, cartTracks ));
   }
 });
-export default connect(undefined, mapDispatchToProps)(Simulation);
+export default connect(mapStateToProps, mapDispatchToProps)(Simulation);
 
 
 
-
+      // invoicedate: new Date().toISOString().split('T')[0],
+      // billingcity: user.city,
+      // billingstate: user.state,
+      // billingcountry: user.country,
+      // billingpostalcode: user.postalcode,
+      // total,

@@ -11,10 +11,10 @@ const Pool = require('pg').Pool
 
 const pool = new Pool({
   user: 'root',
-  host: 'postgresql-8950-0.cloudclusters.net',
+  host: 'postgresql-9746-0.cloudclusters.net',
   database: 'evolve',
-  password: 'pinturilloteam',
-  port: 8960,
+  password: '1234',
+  port: 9746,
 })
 
 module.exports = pool;

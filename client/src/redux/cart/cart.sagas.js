@@ -85,7 +85,7 @@ function* checkout(action) {
 function* uploadSimulatedInvoiceLine(action) {
 	const { tracks, invoiceid, invoicedata } = action.payload;
 	const invoiceLines = tracks.map(track => {
-		return [invoiceid, track.trackid, track.unitprice, track.quantity]
+		return [invoiceid, track.trackid, track.unitprice, 1]
 	});
 	const data = {
 		invoiceLines,
@@ -109,6 +109,7 @@ function* uploadSimulatedInvoiceLine(action) {
 		download(fileBlob);
 
 		if (response.status === 200) {
+			console.log("Exito en la generacion de la invoice");
 			yield put(actions.completeUploadingSimulatedInvoiceLine(response.status))
 			yield put(actions.completeCheckout())
 		}

@@ -24,7 +24,6 @@ Demo of 30s. All requirements of `CC3057 - Proyecto2.pdf` done.
     - [Setup](#setup)
   - [Features](#features)
   - [Team](#team)
-- [| ![Gustavo](http://github.com/gusmendez99)    | [![Urbina](https://avatars3.githubusercontent.com/u/35355445?s=200&u=851bb2374c95ac3baaaca3de5f51212441ebff57&v=4)](http://github.com/virtualmonkey) | [![Roberto](https://avatars1.githubusercontent.com/u/35494933?s=200&u=5e617360d13f87fa6d62022e81bab94ebf50c4e3&v=4)](http://github.com/RobertoFigueroa)  |](#-img-srchttpsavatars0githubusercontentcomu19374517s200uc1481289dc10f8babb1bdd0853e0bcf82a213d26v4-altgustavo--img-srchttpsavatars3githubusercontentcomu35355445s200u851bb2374c95ac3baaaca3de5f51212441ebff57v4-alturbina--img-srchttpsavatars1githubusercontentcomu35494933s200u5e617360d13f87fa6d62022e81bab94ebf50c4e3v4-altroberto-)
   - [License](#license)
 
 
@@ -87,11 +86,7 @@ $ yarn start
 
 | Gustavo Mendez | Luis Urbina | Roberto Figueroa |
 | :---: |:---:| :---:|
-<<<<<<< HEAD
 | [![Gustavo](https://avatars0.githubusercontent.com/u/19374517?s=200&u=c1481289dc10f8babb1bdd0853e0bcf82a213d26&v=4)](http://github.com/gusmendez99)    | [![Urbina](https://avatars3.githubusercontent.com/u/35355445?s=200&u=851bb2374c95ac3baaaca3de5f51212441ebff57&v=4)](http://github.com/virtualmonkey) | [![Roberto](https://avatars1.githubusercontent.com/u/35494933?s=200&u=5e617360d13f87fa6d62022e81bab94ebf50c4e3&v=4)](http://github.com/RobertoFigueroa)  |
-=======
-| [![Gustavo](https://avatars0.githubusercontent.com/u/19374517?s=200&u=c1481289dc10f8babb1bdd0853e0bcf82a213d26&v=4)](http://fvcproductions.com)    | [![Urbina](https://avatars3.githubusercontent.com/u/35355445?s=200&u=851bb2374c95ac3baaaca3de5f51212441ebff57&v=4)](http://fvcproductions.com) | [![Roberto](https://avatars1.githubusercontent.com/u/35494933?s=200&u=5e617360d13f87fa6d62022e81bab94ebf50c4e3&v=4)](http://fvcproductions.com)  |
->>>>>>> 421d49457f992c82447e00449b1b126acc331e05
 | <a href="http://github.com/gusmendez99" target="_blank">`github.com/gusmendez99`</a> | <a href="http://github.com/virtualmonkey" target="_blank">`github.com/virtualmonkey`</a> | <a href="http://github.com/RobertoFigueroa" target="_blank">`github.com/RobertoFigueroa`</a> |
 
 ---

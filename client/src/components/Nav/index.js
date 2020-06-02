@@ -23,13 +23,13 @@ const Nav = ({ authUser, permissions, onSignOut }) => {
     
       <div className="db dtc-l v-mid w-100 w-75-l tc tr-l">
 
-      {authUser &&  (
+      {authUser && permissions.isAdmin &&  (
         <Link
           className="link dim dark-gray f6 f5-l dib mr3 mr4-l"
           to={`/${authUser.rolename}/simulation`}
           title="Simulation"
         >
-          Simulation
+          Simulation/Promotion
         </Link>
       )}
 

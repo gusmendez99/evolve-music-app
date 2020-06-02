@@ -1,9 +1,17 @@
 const MongoClient = require('mongodb').MongoClient;
 const fetch = require('node-fetch');
 const uri = "mongodb+srv://user1:12345@mycluster-gr3gp.mongodb.net/test?retryWrites=true&w=majority";
-const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+
+var options = {
+  useNewUrlParser: true, useUnifiedTopology: false
+};
+
+// useNewUrlParser: true, useUnifiedTopology: true
+
 
 async function main(request, response) {
+
+  const client = new MongoClient(uri, options);
 
   const { initial_date, final_date } = request.body;
 
@@ -44,20 +52,20 @@ async function main(request, response) {
   console.log('Passed 1')
   console.log(JSON.stringify(trackRecommendations))
 
-  createListings(listings, trackRecommendations).then(() => response.status(200).send("Ready lo logramos Apollo 13!!!")).catch(error => console.log(error));
+  createListings(client, listings, trackRecommendations).then(() => response.status(200).send("Ready lo logramos Apollo 13!!!")).catch(error => console.log(error));
 
 
 }
 
 // main().catch(console.error);
 
-async function createListings(newListings, trackRecommendations) {
+async function createListings(client, newListings, trackRecommendations) {
   try {
 
     // Invoice
     await client.connect();
 
-    await client.db("evolve1").collection("invoice").deleteMany({}, {})
+    await client.db("evolve1").collection("invoice").deleteMany({})
     const resultInvoice = await client.db("evolve1").collection("invoice").insertMany(newListings);
     console.log(`${resultInvoice.insertedCount} new listing(s) created with the following id(s):`);
     console.log(resultInvoice.insertedIds);
@@ -65,22 +73,17 @@ async function createListings(newListings, trackRecommendations) {
     console.log('Passed 2')
 
     //Recommendations
-    await client.db("evolve1").collection("recommendations").deleteMany({}, {})
+    await client.db("evolve1").collection("recommendations").deleteMany({})
     const resultRecommendations = await client.db("evolve1").collection("recommendations").insertMany(trackRecommendations)
     console.log(`${resultRecommendations.insertedCount} new listing(s) created with the following id(s):`);
     console.log(resultRecommendations.insertedIds);
 
     console.log('Passed 3')
 
-  }
-  catch (e) {
-
+  } catch (e) {
     console.error(e);
-
   } finally {
-
     await client.close();
-
   }
 }
 

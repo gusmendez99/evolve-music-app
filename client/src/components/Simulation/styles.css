@@ -1,0 +1,9 @@
+.simulation-container {
+    display: flex;
+    justify-content: space-between;
+    margin: 6px auto;
+  }
+  
+  .simulation-container > div {
+    margin: 10px;
+  }

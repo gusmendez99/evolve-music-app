@@ -38,7 +38,7 @@ class CheckoutTrackListItem extends Component {
               }
               <button
                 className="f6 dim ph3 pv2 mb0 mr3 dib red bg-white h-100"
-                onClick={onDelete}
+                onClick={() => onDelete(track.trackid)}
               >X</button>
             </div>
           </div>
@@ -52,9 +52,10 @@ const mapStateToProps = (state, { track }) => ({
   permissions: selectors.getAuthUserPermissions(state),
 });
 
-const mapDispatchToProps = (dispatch, { track }) => ({
-  onDelete() {
-    dispatch(actions.removeTrackFromCart(track.id))
+const mapDispatchToProps = (dispatch) => ({
+  onDelete(trackid) {
+    console.log(trackid)
+    dispatch(actions.removeTrackFromCart(trackid))
   }
 });
 

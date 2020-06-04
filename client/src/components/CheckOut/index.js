@@ -5,6 +5,7 @@ import CheckoutForm from '../CheckoutForm';
 import * as selectors from '../../redux/root-reducer';
 import { connect } from 'react-redux';
 import logo from '../../noItemsInCart.png';
+import { v4 as uuidv4 } from 'uuid';
 
 class CheckOut extends Component {
   constructor(){
@@ -38,14 +39,15 @@ class CheckOut extends Component {
             <h1>Por comprar ... </h1>
           </div>
             <div className='flex justify-around'>
-              <div  class="w-25 pa4 ">
+              <div  className="w-25 pa4 ">
               <CheckoutForm />
               </div>
-              <div  class="w-25 pa4">
+              <div  className="w-25 pa4">
               {
                 tracks.map(track => (
                   <CheckoutTrackListItem
-                    key={track.id}
+                    key={uuidv4()}
+                    id={track.id}
                     track={track}
                   />
                 ))
